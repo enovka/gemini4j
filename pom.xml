@@ -8,17 +8,22 @@
     <artifactId>gemini4j</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>Gemen4J</name>
-    <description>A powerful and easy-to-use Java library that simplifies interactions with a cutting-edge language model API. This library provides a comprehensive set of tools for developers to seamlessly integrate advanced language capabilities into their applications.</description>
+    <name>Gemini4J</name>
+    <description>A powerful and easy-to-use Java library that simplifies
+        interactions with a cutting-edge language model API. This library
+        provides a comprehensive set of tools for developers to seamlessly
+        integrate advanced language capabilities into their applications.
+    </description>
     <url>https://github.com/your-username/gemini4j</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <jackson.version>2.17.1</jackson.version>
         <junit.version>4.13.2</junit.version>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.reporting.outputEncoding>UTF-8
+        </project.reporting.outputEncoding>
         <maven.javadoc.encoding>UTF-8</maven.javadoc.encoding>
         <maven.javadoc.locale>en_US</maven.javadoc.locale>
     </properties>
@@ -48,6 +53,19 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-maven-plugin</artifactId>
+            <version>1.18.20.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -102,6 +120,21 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.18.20.0</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
