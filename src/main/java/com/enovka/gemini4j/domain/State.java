@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.StateEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * States for the lifecycle of a Chunk.
@@ -11,7 +12,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class State {
 
@@ -19,19 +20,19 @@ public class State {
    * The default value. This value is used if the state is omitted.
    */
   @JsonProperty("STATE_UNSPECIFIED")
-  private StateEnum stateUnspecified;
+  private com.enovka.gemini4j.domain.types.StateEnum stateUnspecified;
 
   /**
    * Chunk is being processed (embedding and vector storage).
    */
   @JsonProperty("STATE_PENDING_PROCESSING")
-  private StateEnum statePendingProcessing;
+  private com.enovka.gemini4j.domain.types.StateEnum statePendingProcessing;
 
   /**
    * Chunk is processed and available for querying.
    */
   @JsonProperty("STATE_ACTIVE")
-  private StateEnum stateActive;
+  private com.enovka.gemini4j.domain.types.StateEnum stateActive;
 
   /**
    * Chunk failed processing.

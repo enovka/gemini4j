@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.HarmCategoryEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * The category of a rating.
@@ -14,7 +15,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HarmCategory {
 
@@ -22,56 +23,61 @@ public class HarmCategory {
    * The Category is unspecified.
    */
   @JsonProperty("HARM_CATEGORY_UNSPECIFIED")
-  private HarmCategoryEnum harmCategoryUnspecified;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum
+          harmCategoryUnspecified;
 
   /**
    * Negative or harmful comments focusing on identity and/or protected attribute.
    */
   @JsonProperty("HARM_CATEGORY_DEROGATORY")
-  private HarmCategoryEnum harmCategoryDerogatory;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum
+          harmCategoryDerogatory;
 
   /**
    * Content that is rude, disrespectful, or profane.
    */
   @JsonProperty("HARM_CATEGORY_TOXICITY")
-  private HarmCategoryEnum harmCategoryToxicity;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum harmCategoryToxicity;
 
   /**
    * Describes scenarios depicting violence against an individual or group, or
    * general descriptions of gore.
    */
   @JsonProperty("HARM_CATEGORY_VIOLENCE")
-  private HarmCategoryEnum harmCategoryViolence;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum harmCategoryViolence;
 
   /**
    * Contains references to sexual acts or other lewd content.
    */
   @JsonProperty("HARM_CATEGORY_SEXUAL")
-  private HarmCategoryEnum harmCategorySexual;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum harmCategorySexual;
 
   /**
    * Promotes unchecked medical advice.
    */
   @JsonProperty("HARM_CATEGORY_MEDICAL")
-  private HarmCategoryEnum harmCategoryMedical;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum harmCategoryMedical;
 
   /**
    * Dangerous content that promotes, facilitates, or encourages harmful acts.
    */
   @JsonProperty("HARM_CATEGORY_DANGEROUS")
-  private HarmCategoryEnum harmCategoryDangerous;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum
+          harmCategoryDangerous;
 
   /**
    * Harassment content.
    */
   @JsonProperty("HARM_CATEGORY_HARASSMENT")
-  private HarmCategoryEnum harmCategoryHarassment;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum
+          harmCategoryHarassment;
 
   /**
    * Hate speech and content.
    */
   @JsonProperty("HARM_CATEGORY_HATE_SPEECH")
-  private HarmCategoryEnum harmCategoryHateSpeech;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum
+          harmCategoryHateSpeech;
 
   /**
    * Sexually explicit content.
@@ -83,6 +89,7 @@ public class HarmCategory {
    * Dangerous content.
    */
   @JsonProperty("HARM_CATEGORY_DANGEROUS_CONTENT")
-  private HarmCategoryEnum harmCategoryDangerousContent;
+  private com.enovka.gemini4j.domain.types.HarmCategoryEnum
+          harmCategoryDangerousContent;
 
 }

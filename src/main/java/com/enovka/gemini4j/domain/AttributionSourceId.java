@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Identifier for the source contributing to this attribution.
@@ -11,7 +12,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AttributionSourceId {
 

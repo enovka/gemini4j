@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.AnswerStyleEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Style for grounded answers.
@@ -11,7 +12,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AnswerStyle {
 
@@ -19,19 +20,20 @@ public class AnswerStyle {
    * Unspecified answer style.
    */
   @JsonProperty("ANSWER_STYLE_UNSPECIFIED")
-  private AnswerStyleEnum answerStyleUnspecified;
+  private com.enovka.gemini4j.domain.types.AnswerStyleEnum
+          answerStyleUnspecified;
 
   /**
    * Succinct but abstract style.
    */
   @JsonProperty("ABSTRACTIVE")
-  private AnswerStyleEnum abstractive;
+  private com.enovka.gemini4j.domain.types.AnswerStyleEnum abstractive;
 
   /**
    * Very brief and extractive style.
    */
   @JsonProperty("EXTRACTIVE")
-  private AnswerStyleEnum extractive;
+  private com.enovka.gemini4j.domain.types.AnswerStyleEnum extractive;
 
   /**
    * Verbose style including extra details. The response may be formatted as a

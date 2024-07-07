@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
 /**
  * Represents a cached content.
  * <p>
- * Content that has been preprocessed and can be used in subsequent requests to
+ * Content that has been preprocessed and can be used in later requests to
  * GenerativeService.
  * <p>
  * Cached content can be only used with the model it was created for.
@@ -18,7 +19,7 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CachedContent {
 

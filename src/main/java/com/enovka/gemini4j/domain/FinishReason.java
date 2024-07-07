@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.FinishReasonEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Defines the reason why the model stopped generating tokens.
@@ -11,7 +12,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FinishReason {
 
@@ -19,7 +20,8 @@ public class FinishReason {
    * Default value. This value is unused.
    */
   @JsonProperty("FINISH_REASON_UNSPECIFIED")
-  private FinishReasonEnum finishReasonUnspecified;
+  private com.enovka.gemini4j.domain.types.FinishReasonEnum
+          finishReasonUnspecified;
 
   /**
    * Natural stop point of the model or provided a stop sequence.
@@ -31,24 +33,24 @@ public class FinishReason {
    * The maximum number of tokens as specified in the request was reached.
    */
   @JsonProperty("MAX_TOKENS")
-  private FinishReasonEnum maxTokens;
+  private com.enovka.gemini4j.domain.types.FinishReasonEnum maxTokens;
 
   /**
    * The candidate content was flagged for safety reasons.
    */
   @JsonProperty("SAFETY")
-  private FinishReasonEnum safety;
+  private com.enovka.gemini4j.domain.types.FinishReasonEnum safety;
 
   /**
    * The candidate content was flagged for recitation reasons.
    */
   @JsonProperty("RECITATION")
-  private FinishReasonEnum recitation;
+  private com.enovka.gemini4j.domain.types.FinishReasonEnum recitation;
 
   /**
    * Unknown reason.
    */
   @JsonProperty("OTHER")
-  private FinishReasonEnum other;
+  private com.enovka.gemini4j.domain.types.FinishReasonEnum other;
 
 }

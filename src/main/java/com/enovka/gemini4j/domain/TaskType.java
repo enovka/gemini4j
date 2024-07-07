@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.TaskTypeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Type of task for which the embedding will be used.
@@ -11,7 +12,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TaskType {
 
@@ -19,37 +20,37 @@ public class TaskType {
    * Unset value, which will default to one of the other enum values.
    */
   @JsonProperty("TASK_TYPE_UNSPECIFIED")
-  private TaskTypeEnum taskTypeUnspecified;
+  private com.enovka.gemini4j.domain.types.TaskTypeEnum taskTypeUnspecified;
 
   /**
    * Specifies the given text is a query in a search/retrieval setting.
    */
   @JsonProperty("RETRIEVAL_QUERY")
-  private TaskTypeEnum retrievalQuery;
+  private com.enovka.gemini4j.domain.types.TaskTypeEnum retrievalQuery;
 
   /**
    * Specifies the given text is a document from the corpus being searched.
    */
   @JsonProperty("RETRIEVAL_DOCUMENT")
-  private TaskTypeEnum retrievalDocument;
+  private com.enovka.gemini4j.domain.types.TaskTypeEnum retrievalDocument;
 
   /**
    * Specifies the given text will be used for STS.
    */
   @JsonProperty("SEMANTIC_SIMILARITY")
-  private TaskTypeEnum semanticSimilarity;
+  private com.enovka.gemini4j.domain.types.TaskTypeEnum semanticSimilarity;
 
   /**
    * Specifies that the given text will be classified.
    */
   @JsonProperty("CLASSIFICATION")
-  private TaskTypeEnum classification;
+  private com.enovka.gemini4j.domain.types.TaskTypeEnum classification;
 
   /**
    * Specifies that the embeddings will be used for clustering.
    */
   @JsonProperty("CLUSTERING")
-  private TaskTypeEnum clustering;
+  private com.enovka.gemini4j.domain.types.TaskTypeEnum clustering;
 
   /**
    * Specifies that the given text will be used for question answering.
@@ -61,6 +62,6 @@ public class TaskType {
    * Specifies that the given text will be used for fact verification.
    */
   @JsonProperty("FACT_VERIFICATION")
-  private TaskTypeEnum factVerification;
+  private com.enovka.gemini4j.domain.types.TaskTypeEnum factVerification;
 
 }

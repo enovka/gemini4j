@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.HarmProbabilityEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * The probability that a piece of content is harmful.
@@ -14,7 +15,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HarmProbability {
 
@@ -22,13 +23,14 @@ public class HarmProbability {
    * The Probability is unspecified.
    */
   @JsonProperty("HARM_PROBABILITY_UNSPECIFIED")
-  private HarmProbabilityEnum harmProbabilityUnspecified;
+  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum
+          harmProbabilityUnspecified;
 
   /**
    * Content has a negligible chance of being unsafe.
    */
   @JsonProperty("NEGLIGIBLE")
-  private HarmProbabilityEnum negligible;
+  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum negligible;
 
   /**
    * Content has a low chance of being unsafe.
@@ -40,12 +42,12 @@ public class HarmProbability {
    * Content has a medium chance of being unsafe.
    */
   @JsonProperty("MEDIUM")
-  private HarmProbabilityEnum medium;
+  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum medium;
 
   /**
    * Content has a high chance of being unsafe.
    */
   @JsonProperty("HIGH")
-  private HarmProbabilityEnum high;
+  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum high;
 
 }

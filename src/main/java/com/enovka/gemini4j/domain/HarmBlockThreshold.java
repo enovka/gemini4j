@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Block at and beyond a specified harm probability.
@@ -11,7 +12,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HarmBlockThreshold {
 
@@ -19,7 +20,8 @@ public class HarmBlockThreshold {
    * The Threshold is unspecified.
    */
   @JsonProperty("HARM_BLOCK_THRESHOLD_UNSPECIFIED")
-  private HarmBlockThresholdEnum harmBlockThresholdUnspecified;
+  private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum
+          harmBlockThresholdUnspecified;
 
   /**
    * Content with NEGLIGIBLE will be allowed.
@@ -31,18 +33,19 @@ public class HarmBlockThreshold {
    * Content with NEGLIGIBLE and LOW will be allowed.
    */
   @JsonProperty("BLOCK_MEDIUM_AND_ABOVE")
-  private HarmBlockThresholdEnum blockMediumAndAbove;
+  private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum
+          blockMediumAndAbove;
 
   /**
    * Content with NEGLIGIBLE, LOW, and MEDIUM will be allowed.
    */
   @JsonProperty("BLOCK_ONLY_HIGH")
-  private HarmBlockThresholdEnum blockOnlyHigh;
+  private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum blockOnlyHigh;
 
   /**
    * All content will be allowed.
    */
   @JsonProperty("BLOCK_NONE")
-  private HarmBlockThresholdEnum blockNone;
+  private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum blockNone;
 
 }

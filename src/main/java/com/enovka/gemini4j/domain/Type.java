@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.TypeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Type contains the list of OpenAPI data types as defined by
@@ -12,7 +13,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Type {
 
@@ -20,7 +21,7 @@ public class Type {
    * Not specified, should not be used.
    */
   @JsonProperty("TYPE_UNSPECIFIED")
-  private TypeEnum typeUnspecified;
+  private com.enovka.gemini4j.domain.types.TypeEnum typeUnspecified;
 
   /**
    * String type.
@@ -32,30 +33,30 @@ public class Type {
    * Number type.
    */
   @JsonProperty("NUMBER")
-  private TypeEnum number;
+  private com.enovka.gemini4j.domain.types.TypeEnum number;
 
   /**
    * Integer type.
    */
   @JsonProperty("INTEGER")
-  private TypeEnum integer;
+  private com.enovka.gemini4j.domain.types.TypeEnum integer;
 
   /**
    * Boolean type.
    */
   @JsonProperty("BOOLEAN")
-  private TypeEnum booleanValue;
+  private com.enovka.gemini4j.domain.types.TypeEnum booleanValue;
 
   /**
    * Array type.
    */
   @JsonProperty("ARRAY")
-  private TypeEnum array;
+  private com.enovka.gemini4j.domain.types.TypeEnum array;
 
   /**
    * Object type.
    */
   @JsonProperty("OBJECT")
-  private TypeEnum object;
+  private com.enovka.gemini4j.domain.types.TypeEnum object;
 
 }

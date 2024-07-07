@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.types.PermissionStateEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * The permission's state.
@@ -11,7 +12,7 @@ import lombok.Data;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionState {
 
@@ -25,12 +26,12 @@ public class PermissionState {
    * Permission is active.
    */
   @JsonProperty("ACTIVE")
-  private PermissionStateEnum active;
+  private com.enovka.gemini4j.domain.types.PermissionStateEnum active;
 
   /**
    * Permission is inactive.
    */
   @JsonProperty("INACTIVE")
-  private PermissionStateEnum inactive;
+  private com.enovka.gemini4j.domain.types.PermissionStateEnum inactive;
 
 }
