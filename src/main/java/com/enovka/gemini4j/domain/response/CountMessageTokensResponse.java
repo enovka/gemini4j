@@ -17,12 +17,12 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CountMessageTokensResponse {
 
-  /**
-   * The number of tokens that the model tokenizes the prompt into.
-   * <p>
-   * Always non-negative.
-   */
-  @JsonProperty("tokenCount")
-  private Integer tokenCount;
+    /**
+     * The number of tokens that the model tokenizes the prompt into.
+     * <p>
+     * Always non-negative.
+     */
+    @JsonProperty("tokenCount")
+    private Integer tokenCount;
 
 }

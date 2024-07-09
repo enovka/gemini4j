@@ -16,19 +16,19 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SemanticRetrieverChunk {
 
-  /**
-   * Output only. Name of the source matching the request's
-   * SemanticRetrieverConfig.source. Example: `corpora/123` or
-   * `corpora/123/documents/abc`
-   */
-  @JsonProperty("source")
-  private String source;
+    /**
+     * Output only. Name of the source matching the request's
+     * SemanticRetrieverConfig.source. Example: `corpora/123` or
+     * `corpora/123/documents/abc`
+     */
+    @JsonProperty("source")
+    private String source;
 
-  /**
-   * Output only. Name of the Chunk containing the attributed text. Example:
-   * `corpora/123/documents/abc/chunks/xyz`
-   */
-  @JsonProperty("chunk")
-  private String chunk;
+    /**
+     * Output only. Name of the Chunk containing the attributed text. Example:
+     * `corpora/123/documents/abc/chunks/xyz`
+     */
+    @JsonProperty("chunk")
+    private String chunk;
 
 }

@@ -15,16 +15,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroundingAttribution {
 
-  /**
-   * Output only. Identifier for the source contributing to this attribution.
-   */
-  @JsonProperty("sourceId")
-  private AttributionSourceId sourceId;
+    /**
+     * Output only. Identifier for the source contributing to this attribution.
+     */
+    @JsonProperty("sourceId")
+    private AttributionSourceId sourceId;
 
-  /**
-   * Grounding source content that makes up this attribution.
-   */
-  @JsonProperty("content")
-  private Content content;
+    /**
+     * Grounding source content that makes up this attribution.
+     */
+    @JsonProperty("content")
+    private Content content;
 
 }

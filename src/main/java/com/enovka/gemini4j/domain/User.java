@@ -15,16 +15,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
-  /**
-   * Optional. The user's display name.
-   */
-  @JsonProperty("displayName")
-  private String displayName;
+    /**
+     * Optional. The user's display name.
+     */
+    @JsonProperty("displayName")
+    private String displayName;
 
-  /**
-   * Optional. The user's email address.
-   */
-  @JsonProperty("email")
-  private String email;
+    /**
+     * Optional. The user's email address.
+     */
+    @JsonProperty("email")
+    private String email;
 
 }

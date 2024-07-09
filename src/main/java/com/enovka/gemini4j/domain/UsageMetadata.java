@@ -15,10 +15,10 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UsageMetadata {
 
-  /**
-   * Total number of tokens that the cached content consumes.
-   */
-  @JsonProperty("totalTokenCount")
-  private Integer totalTokenCount;
+    /**
+     * Total number of tokens that the cached content consumes.
+     */
+    @JsonProperty("totalTokenCount")
+    private Integer totalTokenCount;
 
 }

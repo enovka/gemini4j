@@ -20,22 +20,22 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SafetyRating {
 
-  /**
-   * Required. The category for this rating.
-   */
-  @JsonProperty("category")
-  private HarmCategory category;
+    /**
+     * Required. The category for this rating.
+     */
+    @JsonProperty("category")
+    private HarmCategory category;
 
-  /**
-   * Required. The probability of harm for this content.
-   */
-  @JsonProperty("probability")
-  private HarmProbability probability;
+    /**
+     * Required. The probability of harm for this content.
+     */
+    @JsonProperty("probability")
+    private HarmProbability probability;
 
-  /**
-   * Was this content blocked because of this rating?
-   */
-  @JsonProperty("blocked")
-  private Boolean blocked;
+    /**
+     * Was this content blocked because of this rating?
+     */
+    @JsonProperty("blocked")
+    private Boolean blocked;
 
 }

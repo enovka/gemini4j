@@ -17,10 +17,10 @@ import java.util.List;
  * prompt in GenerateContentResponse.prompt_feedback and for each candidate in
  * finishReason and in safetyRatings. the API contract is that:
  * <p>
- * - either all requested candidates are returned or no candidates at all
- * - no candidates are returned only if there was something wrong with the prompt
- * (see promptFeedback)
- * - feedback on each candidate is reported on finishReason and safetyRatings.
+ * - either all requested candidates are returned or no candidates at all - no
+ * candidates are returned only if there was something wrong with the prompt
+ * (see promptFeedback) - feedback on each candidate is reported on finishReason
+ * and safetyRatings.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
@@ -29,22 +29,22 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GenerateContentResponse {
 
-  /**
-   * Candidate responses from the model.
-   */
-  @JsonProperty("candidates")
-  private List<Candidate> candidates;
+    /**
+     * Candidate responses from the model.
+     */
+    @JsonProperty("candidates")
+    private List<Candidate> candidates;
 
-  /**
-   * Returns the prompt's feedback related to the content filters.
-   */
-  @JsonProperty("promptFeedback")
-  private PromptFeedback promptFeedback;
+    /**
+     * Returns the prompt's feedback related to the content filters.
+     */
+    @JsonProperty("promptFeedback")
+    private PromptFeedback promptFeedback;
 
-  /**
-   * Output only. Metadata on the generation requests' token usage.
-   */
-  @JsonProperty("usageMetadata")
-  private UsageMetadata usageMetadata;
+    /**
+     * Output only. Metadata on the generation requests' token usage.
+     */
+    @JsonProperty("usageMetadata")
+    private UsageMetadata usageMetadata;
 
 }

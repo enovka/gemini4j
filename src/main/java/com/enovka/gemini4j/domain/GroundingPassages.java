@@ -17,10 +17,10 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroundingPassages {
 
-  /**
-   * List of passages.
-   */
-  @JsonProperty("passages")
-  private List<GroundingPassage> passages;
+    /**
+     * List of passages.
+     */
+    @JsonProperty("passages")
+    private List<GroundingPassage> passages;
 
 }

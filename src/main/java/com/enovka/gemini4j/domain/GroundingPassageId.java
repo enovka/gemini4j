@@ -15,18 +15,18 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroundingPassageId {
 
-  /**
-   * Output only. ID of the passage matching the GenerateAnswerRequest's
-   * GroundingPassage.id.
-   */
-  @JsonProperty("passageId")
-  private String passageId;
+    /**
+     * Output only. ID of the passage matching the GenerateAnswerRequest's
+     * GroundingPassage.id.
+     */
+    @JsonProperty("passageId")
+    private String passageId;
 
-  /**
-   * Output only. Index of the part within the GenerateAnswerRequest's
-   * GroundingPassage.content.
-   */
-  @JsonProperty("partIndex")
-  private Integer partIndex;
+    /**
+     * Output only. Index of the part within the GenerateAnswerRequest's
+     * GroundingPassage.content.
+     */
+    @JsonProperty("partIndex")
+    private Integer partIndex;
 
 }

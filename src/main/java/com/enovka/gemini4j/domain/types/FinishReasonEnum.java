@@ -7,45 +7,47 @@ import lombok.Getter;
 /**
  * Defines the possible reasons why the model stopped generating tokens.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public enum FinishReasonEnum {
 
-  /**
-   * The reason for stopping token generation is unspecified.
-   */
-  @JsonProperty("FINISH_REASON_UNSPECIFIED")
-  FINISH_REASON_UNSPECIFIED,
+    /**
+     * The reason for stopping token generation is unspecified.
+     */
+    @JsonProperty("FINISH_REASON_UNSPECIFIED")
+    FINISH_REASON_UNSPECIFIED,
 
-  /**
-   * The model reached a natural stopping point or encountered a provided stop sequence.
-   */
-  @JsonProperty("STOP")
-  STOP,
+    /**
+     * The model reached a natural stopping point or encountered a provided stop
+     * sequence.
+     */
+    @JsonProperty("STOP")
+    STOP,
 
-  /**
-   * The model reached the maximum number of tokens specified in the request.
-   */
-  @JsonProperty("MAX_TOKENS")
-  MAX_TOKENS,
+    /**
+     * The model reached the maximum number of tokens specified in the request.
+     */
+    @JsonProperty("MAX_TOKENS")
+    MAX_TOKENS,
 
-  /**
-   * The generated content was flagged for safety violations.
-   */
-  @JsonProperty("SAFETY")
-  SAFETY,
+    /**
+     * The generated content was flagged for safety violations.
+     */
+    @JsonProperty("SAFETY")
+    SAFETY,
 
-  /**
-   * The generated content was flagged for potential copyright violations (recitation).
-   */
-  @JsonProperty("RECITATION")
-  RECITATION,
+    /**
+     * The generated content was flagged for potential copyright violations
+     * (recitation).
+     */
+    @JsonProperty("RECITATION")
+    RECITATION,
 
-  /**
-   * The reason for stopping token generation is unknown.
-   */
-  @JsonProperty("OTHER")
-  OTHER
+    /**
+     * The reason for stopping token generation is unknown.
+     */
+    @JsonProperty("OTHER")
+    OTHER
 }

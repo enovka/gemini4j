@@ -16,10 +16,10 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EmbedContentResponse {
 
-  /**
-   * Output only. The embedding generated from the input content.
-   */
-  @JsonProperty("embedding")
-  private ContentEmbedding embedding;
+    /**
+     * Output only. The embedding generated from the input content.
+     */
+    @JsonProperty("embedding")
+    private ContentEmbedding embedding;
 
 }

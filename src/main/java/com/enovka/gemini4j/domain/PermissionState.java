@@ -16,22 +16,22 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionState {
 
-  /**
-   * Permission state is unspecified.
-   */
-  @JsonProperty("PERMISSION_STATE_UNSPECIFIED")
-  private PermissionStateEnum permissionStateUnspecified;
+    /**
+     * Permission state is unspecified.
+     */
+    @JsonProperty("PERMISSION_STATE_UNSPECIFIED")
+    private PermissionStateEnum permissionStateUnspecified;
 
-  /**
-   * Permission is active.
-   */
-  @JsonProperty("ACTIVE")
-  private com.enovka.gemini4j.domain.types.PermissionStateEnum active;
+    /**
+     * Permission is active.
+     */
+    @JsonProperty("ACTIVE")
+    private com.enovka.gemini4j.domain.types.PermissionStateEnum active;
 
-  /**
-   * Permission is inactive.
-   */
-  @JsonProperty("INACTIVE")
-  private com.enovka.gemini4j.domain.types.PermissionStateEnum inactive;
+    /**
+     * Permission is inactive.
+     */
+    @JsonProperty("INACTIVE")
+    private com.enovka.gemini4j.domain.types.PermissionStateEnum inactive;
 
 }

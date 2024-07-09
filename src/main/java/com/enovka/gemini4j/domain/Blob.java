@@ -17,21 +17,21 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Blob {
 
-  /**
-   * The IANA standard MIME type of the source data. Examples: - image/png -
-   * image/jpeg If an unsupported MIME type is provided, an error will be
-   * returned. For a complete list of supported types, see Supported file
-   * formats.
-   */
-  @JsonProperty("mimeType")
-  private String mimeType;
+    /**
+     * The IANA standard MIME type of the source data. Examples: - image/png -
+     * image/jpeg If an unsupported MIME type is provided, an error will be
+     * returned. For a complete list of supported types, see Supported file
+     * formats.
+     */
+    @JsonProperty("mimeType")
+    private String mimeType;
 
-  /**
-   * Raw bytes for media formats.
-   * <p>
-   * A base64-encoded string.
-   */
-  @JsonProperty("data")
-  private String data;
+    /**
+     * Raw bytes for media formats.
+     * <p>
+     * A base64-encoded string.
+     */
+    @JsonProperty("data")
+    private String data;
 
 }

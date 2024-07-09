@@ -15,24 +15,24 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Message {
 
-  /**
-   * The content of the message.
-   */
-  @JsonProperty("content")
-  private Content content;
+    /**
+     * The content of the message.
+     */
+    @JsonProperty("content")
+    private Content content;
 
-  /**
-   * Optional. The producer of the content. Must be either 'user' or 'model'.
-   * Useful to set for multi-turn conversations, otherwise can be left blank or
-   * unset.
-   */
-  @JsonProperty("role")
-  private String role;
+    /**
+     * Optional. The producer of the content. Must be either 'user' or 'model'.
+     * Useful to set for multi-turn conversations, otherwise can be left blank
+     * or unset.
+     */
+    @JsonProperty("role")
+    private String role;
 
-  /**
-   * Optional. The user that sent this message.
-   */
-  @JsonProperty("user")
-  private User user;
+    /**
+     * Optional. The user that sent this message.
+     */
+    @JsonProperty("user")
+    private User user;
 
 }

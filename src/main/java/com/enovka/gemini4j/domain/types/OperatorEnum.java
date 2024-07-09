@@ -5,64 +5,68 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 /**
- * Defines the operators that can be applied to key-value pairs when filtering content based on metadata.
+ * Defines the operators that can be applied to key-value pairs when filtering
+ * content based on metadata.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public enum OperatorEnum {
-  /**
-   * The operator is unspecified. This is the default value and should not be used.
-   */
-  @JsonProperty("OPERATOR_UNSPECIFIED")
-  OPERATOR_UNSPECIFIED,
+    /**
+     * The operator is unspecified. This is the default value and should not be
+     * used.
+     */
+    @JsonProperty("OPERATOR_UNSPECIFIED")
+    OPERATOR_UNSPECIFIED,
 
-  /**
-   * Less than. Only supported for numeric values.
-   */
-  @JsonProperty("LESS")
-  LESS,
+    /**
+     * Less than. Only supported for numeric values.
+     */
+    @JsonProperty("LESS")
+    LESS,
 
-  /**
-   * Less than or equal to. Only supported for numeric values.
-   */
-  @JsonProperty("LESS_EQUAL")
-  LESS_EQUAL,
+    /**
+     * Less than or equal to. Only supported for numeric values.
+     */
+    @JsonProperty("LESS_EQUAL")
+    LESS_EQUAL,
 
-  /**
-   * Equal to. Supported for both numeric and string values.
-   */
-  @JsonProperty("EQUAL")
-  EQUAL,
+    /**
+     * Equal to. Supported for both numeric and string values.
+     */
+    @JsonProperty("EQUAL")
+    EQUAL,
 
-  /**
-   * Greater than or equal to. Only supported for numeric values.
-   */
-  @JsonProperty("GREATER_EQUAL")
-  GREATER_EQUAL,
+    /**
+     * Greater than or equal to. Only supported for numeric values.
+     */
+    @JsonProperty("GREATER_EQUAL")
+    GREATER_EQUAL,
 
-  /**
-   * Greater than. Only supported for numeric values.
-   */
-  @JsonProperty("GREATER")
-  GREATER,
+    /**
+     * Greater than. Only supported for numeric values.
+     */
+    @JsonProperty("GREATER")
+    GREATER,
 
-  /**
-   * Not equal to. Supported for both numeric and string values.
-   */
-  @JsonProperty("NOT_EQUAL")
-  NOT_EQUAL,
+    /**
+     * Not equal to. Supported for both numeric and string values.
+     */
+    @JsonProperty("NOT_EQUAL")
+    NOT_EQUAL,
 
-  /**
-   * Includes. Only supported for string values when the CustomMetadata value for the given key has a StringList value.
-   */
-  @JsonProperty("INCLUDES")
-  INCLUDES,
+    /**
+     * Includes. Only supported for string values when the CustomMetadata value
+     * for the given key has a StringList value.
+     */
+    @JsonProperty("INCLUDES")
+    INCLUDES,
 
-  /**
-   * Excludes. Only supported for string values when the CustomMetadata value for the given key has a StringList value.
-   */
-  @JsonProperty("EXCLUDES")
-  EXCLUDES
+    /**
+     * Excludes. Only supported for string values when the CustomMetadata value
+     * for the given key has a StringList value.
+     */
+    @JsonProperty("EXCLUDES")
+    EXCLUDES
 }

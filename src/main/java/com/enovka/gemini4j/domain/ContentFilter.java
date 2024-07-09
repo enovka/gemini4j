@@ -18,16 +18,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContentFilter {
 
-  /**
-   * The reason content was blocked during request processing.
-   */
-  @JsonProperty("reason")
-  private BlockedReason reason;
+    /**
+     * The reason content was blocked during request processing.
+     */
+    @JsonProperty("reason")
+    private BlockedReason reason;
 
-  /**
-   * A string that describes the filtering behavior in more detail.
-   */
-  @JsonProperty("message")
-  private String message;
+    /**
+     * A string that describes the filtering behavior in more detail.
+     */
+    @JsonProperty("message")
+    private String message;
 
 }

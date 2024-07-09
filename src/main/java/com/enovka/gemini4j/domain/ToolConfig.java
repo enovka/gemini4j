@@ -16,10 +16,10 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ToolConfig {
 
-  /**
-   * Optional. Function calling config.
-   */
-  @JsonProperty("functionCallingConfig")
-  private FunctionCallingConfig functionCallingConfig;
+    /**
+     * Optional. Function calling config.
+     */
+    @JsonProperty("functionCallingConfig")
+    private FunctionCallingConfig functionCallingConfig;
 
 }

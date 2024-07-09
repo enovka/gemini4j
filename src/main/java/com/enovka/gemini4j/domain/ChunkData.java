@@ -15,11 +15,11 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChunkData {
 
-  /**
-   * The Chunk content as a string. The maximum number of tokens per chunk is
-   * 2043.
-   */
-  @JsonProperty("stringValue")
-  private String stringValue;
+    /**
+     * The Chunk content as a string. The maximum number of tokens per chunk is
+     * 2043.
+     */
+    @JsonProperty("stringValue")
+    private String stringValue;
 
 }

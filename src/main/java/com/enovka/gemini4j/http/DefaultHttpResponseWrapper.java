@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.http;
 
-import com.enovka.gemini4j.http.exception.GeminiHttpException;
+import com.enovka.gemini4j.http.exception.HttpException;
 import com.enovka.gemini4j.http.spec.HttpResponseWrapper;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -14,18 +14,21 @@ import java.util.Map;
  * Wrapper class for Apache HttpClient response, implementing
  * HttpResponseWrapper interface.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 1.0.0-beta
  */
 public class DefaultHttpResponseWrapper implements HttpResponseWrapper {
 
-    private static final String ERROR_MESSAGE_RESPONSE_BODY_IS_NULL = "Response body is null";
-    private static final String ERROR_MESSAGE_ERROR_READING_RESPONSE_BODY = "Error reading response body";
+    private static final String ERROR_MESSAGE_RESPONSE_BODY_IS_NULL
+            = "Response body is null";
+    private static final String ERROR_MESSAGE_ERROR_READING_RESPONSE_BODY
+            = "Error reading response body";
 
     private final HttpResponse httpResponse;
 
     /**
-     * Constructs a new DefaultHttpResponseWrapper with the specified HttpResponse.
+     * Constructs a new DefaultHttpResponseWrapper with the specified
+     * HttpResponse.
      *
      * @param httpResponse The HttpResponse to wrap.
      */
@@ -57,25 +60,28 @@ public class DefaultHttpResponseWrapper implements HttpResponseWrapper {
      * Returns the response body as a String.
      *
      * @return The response body as a String.
-     * @throws GeminiHttpException If an error occurs reading the response body.
+     * @throws HttpException If an error occurs reading the response body.
      */
     @Override
-    public String body() throws GeminiHttpException {
+    public String body() throws HttpException {
         try {
-            String responseBody = EntityUtils.toString(httpResponse.getEntity());
+            String responseBody = EntityUtils.toString(
+                    httpResponse.getEntity());
             if (responseBody != null) {
                 return responseBody;
             } else {
-                throw new GeminiHttpException(ERROR_MESSAGE_RESPONSE_BODY_IS_NULL);
+                throw new HttpException(ERROR_MESSAGE_RESPONSE_BODY_IS_NULL);
             }
         } catch (IOException e) {
-            throw new GeminiHttpException(ERROR_MESSAGE_ERROR_READING_RESPONSE_BODY, e);
+            throw new HttpException(ERROR_MESSAGE_ERROR_READING_RESPONSE_BODY,
+                    e);
         }
     }
 
     /**
-     * Wraps an existing HttpResponseWrapper with this DefaultHttpResponseWrapper.
-     * This is used to delegate response handling to the wrapped HttpResponseWrapper.
+     * Wraps an existing HttpResponseWrapper with this
+     * DefaultHttpResponseWrapper. This is used to delegate response handling to
+     * the wrapped HttpResponseWrapper.
      *
      * @param response The HttpResponseWrapper to wrap.
      * @return The wrapped HttpResponseWrapper.

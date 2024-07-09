@@ -18,17 +18,18 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InputFeedback {
 
-  /**
-   * Ratings for safety of the input. There is at most one rating per category.
-   */
-  @JsonProperty("safetyRatings")
-  private List<SafetyRating> safetyRatings;
+    /**
+     * Ratings for safety of the input. There is at most one rating per
+     * category.
+     */
+    @JsonProperty("safetyRatings")
+    private List<SafetyRating> safetyRatings;
 
-  /**
-   * Optional. If set, the input was blocked and no candidates are returned.
-   * Rephrase your input.
-   */
-  @JsonProperty("blockReason")
-  private BlockReason blockReason;
+    /**
+     * Optional. If set, the input was blocked and no candidates are returned.
+     * Rephrase your input.
+     */
+    @JsonProperty("blockReason")
+    private BlockReason blockReason;
 
 }

@@ -18,17 +18,18 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PromptFeedback {
 
-  /**
-   * Optional. If set, the prompt was blocked and no candidates are returned.
-   * Rephrase your prompt.
-   */
-  @JsonProperty("blockReason")
-  private BlockReason blockReason;
+    /**
+     * Optional. If set, the prompt was blocked and no candidates are returned.
+     * Rephrase your prompt.
+     */
+    @JsonProperty("blockReason")
+    private BlockReason blockReason;
 
-  /**
-   * Ratings for safety of the prompt. There is at most one rating per category.
-   */
-  @JsonProperty("safetyRatings")
-  private List<SafetyRating> safetyRatings;
+    /**
+     * Ratings for safety of the prompt. There is at most one rating per
+     * category.
+     */
+    @JsonProperty("safetyRatings")
+    private List<SafetyRating> safetyRatings;
 
 }

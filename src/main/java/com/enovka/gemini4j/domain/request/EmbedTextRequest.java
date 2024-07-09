@@ -15,17 +15,17 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EmbedTextRequest {
 
-  /**
-   * Required. The model name to use with the format `model=models/{model}`.
-   */
-  @JsonProperty("model")
-  private String model;
+    /**
+     * Required. The model name to use with the format `model=models/{model}`.
+     */
+    @JsonProperty("model")
+    private String model;
 
-  /**
-   * Optional. The free-form input text that the model will turn into an
-   * embedding.
-   */
-  @JsonProperty("text")
-  private String text;
+    /**
+     * Optional. The free-form input text that the model will turn into an
+     * embedding.
+     */
+    @JsonProperty("text")
+    private String text;
 
 }

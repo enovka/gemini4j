@@ -18,18 +18,18 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ListPermissionsResponse {
 
-  /**
-   * Returned permissions.
-   */
-  @JsonProperty("permissions")
-  private List<Permission> permissions;
+    /**
+     * Returned permissions.
+     */
+    @JsonProperty("permissions")
+    private List<Permission> permissions;
 
-  /**
-   * A token, which can be sent as `pageToken` to retrieve the next page.
-   * <p>
-   * If this field is omitted, there are no more pages.
-   */
-  @JsonProperty("nextPageToken")
-  private String nextPageToken;
+    /**
+     * A token, which can be sent as `pageToken` to retrieve the next page.
+     * <p>
+     * If this field is omitted, there are no more pages.
+     */
+    @JsonProperty("nextPageToken")
+    private String nextPageToken;
 
 }

@@ -17,10 +17,10 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContentEmbedding {
 
-  /**
-   * The embedding values.
-   */
-  @JsonProperty("values")
-  private List<Double> values;
+    /**
+     * The embedding values.
+     */
+    @JsonProperty("values")
+    private List<Double> values;
 
 }

@@ -15,17 +15,17 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroundingPassage {
 
-  /**
-   * Identifier for the passage for attributing this passage in grounded
-   * answers.
-   */
-  @JsonProperty("id")
-  private String id;
+    /**
+     * Identifier for the passage for attributing this passage in grounded
+     * answers.
+     */
+    @JsonProperty("id")
+    private String id;
 
-  /**
-   * Content of the passage.
-   */
-  @JsonProperty("content")
-  private Content content;
+    /**
+     * Content of the passage.
+     */
+    @JsonProperty("content")
+    private Content content;
 
 }

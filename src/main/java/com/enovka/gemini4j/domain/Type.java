@@ -17,46 +17,46 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Type {
 
-  /**
-   * Not specified, should not be used.
-   */
-  @JsonProperty("TYPE_UNSPECIFIED")
-  private com.enovka.gemini4j.domain.types.TypeEnum typeUnspecified;
+    /**
+     * Not specified, should not be used.
+     */
+    @JsonProperty("TYPE_UNSPECIFIED")
+    private com.enovka.gemini4j.domain.types.TypeEnum typeUnspecified;
 
-  /**
-   * String type.
-   */
-  @JsonProperty("STRING")
-  private TypeEnum string;
+    /**
+     * String type.
+     */
+    @JsonProperty("STRING")
+    private TypeEnum string;
 
-  /**
-   * Number type.
-   */
-  @JsonProperty("NUMBER")
-  private com.enovka.gemini4j.domain.types.TypeEnum number;
+    /**
+     * Number type.
+     */
+    @JsonProperty("NUMBER")
+    private com.enovka.gemini4j.domain.types.TypeEnum number;
 
-  /**
-   * Integer type.
-   */
-  @JsonProperty("INTEGER")
-  private com.enovka.gemini4j.domain.types.TypeEnum integer;
+    /**
+     * Integer type.
+     */
+    @JsonProperty("INTEGER")
+    private com.enovka.gemini4j.domain.types.TypeEnum integer;
 
-  /**
-   * Boolean type.
-   */
-  @JsonProperty("BOOLEAN")
-  private com.enovka.gemini4j.domain.types.TypeEnum booleanValue;
+    /**
+     * Boolean type.
+     */
+    @JsonProperty("BOOLEAN")
+    private com.enovka.gemini4j.domain.types.TypeEnum booleanValue;
 
-  /**
-   * Array type.
-   */
-  @JsonProperty("ARRAY")
-  private com.enovka.gemini4j.domain.types.TypeEnum array;
+    /**
+     * Array type.
+     */
+    @JsonProperty("ARRAY")
+    private com.enovka.gemini4j.domain.types.TypeEnum array;
 
-  /**
-   * Object type.
-   */
-  @JsonProperty("OBJECT")
-  private com.enovka.gemini4j.domain.types.TypeEnum object;
+    /**
+     * Object type.
+     */
+    @JsonProperty("OBJECT")
+    private com.enovka.gemini4j.domain.types.TypeEnum object;
 
 }

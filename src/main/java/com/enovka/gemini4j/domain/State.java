@@ -16,28 +16,28 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class State {
 
-  /**
-   * The default value. This value is used if the state is omitted.
-   */
-  @JsonProperty("STATE_UNSPECIFIED")
-  private com.enovka.gemini4j.domain.types.StateEnum stateUnspecified;
+    /**
+     * The default value. This value is used if the state is omitted.
+     */
+    @JsonProperty("STATE_UNSPECIFIED")
+    private com.enovka.gemini4j.domain.types.StateEnum stateUnspecified;
 
-  /**
-   * Chunk is being processed (embedding and vector storage).
-   */
-  @JsonProperty("STATE_PENDING_PROCESSING")
-  private com.enovka.gemini4j.domain.types.StateEnum statePendingProcessing;
+    /**
+     * Chunk is being processed (embedding and vector storage).
+     */
+    @JsonProperty("STATE_PENDING_PROCESSING")
+    private com.enovka.gemini4j.domain.types.StateEnum statePendingProcessing;
 
-  /**
-   * Chunk is processed and available for querying.
-   */
-  @JsonProperty("STATE_ACTIVE")
-  private com.enovka.gemini4j.domain.types.StateEnum stateActive;
+    /**
+     * Chunk is processed and available for querying.
+     */
+    @JsonProperty("STATE_ACTIVE")
+    private com.enovka.gemini4j.domain.types.StateEnum stateActive;
 
-  /**
-   * Chunk failed processing.
-   */
-  @JsonProperty("STATE_FAILED")
-  private StateEnum stateFailed;
+    /**
+     * Chunk failed processing.
+     */
+    @JsonProperty("STATE_FAILED")
+    private StateEnum stateFailed;
 
 }

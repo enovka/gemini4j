@@ -18,16 +18,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SafetySetting {
 
-  /**
-   * Required. The category for this setting.
-   */
-  @JsonProperty("category")
-  private HarmCategory category;
+    /**
+     * Required. The category for this setting.
+     */
+    @JsonProperty("category")
+    private HarmCategory category;
 
-  /**
-   * Required. Controls the probability threshold at which harm is blocked.
-   */
-  @JsonProperty("threshold")
-  private HarmBlockThreshold threshold;
+    /**
+     * Required. Controls the probability threshold at which harm is blocked.
+     */
+    @JsonProperty("threshold")
+    private HarmBlockThreshold threshold;
 
 }

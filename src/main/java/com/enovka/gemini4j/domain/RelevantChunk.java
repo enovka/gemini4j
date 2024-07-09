@@ -15,16 +15,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RelevantChunk {
 
-  /**
-   * Chunk relevance to the query.
-   */
-  @JsonProperty("chunkRelevanceScore")
-  private Double chunkRelevanceScore;
+    /**
+     * Chunk relevance to the query.
+     */
+    @JsonProperty("chunkRelevanceScore")
+    private Double chunkRelevanceScore;
 
-  /**
-   * Chunk associated with the query.
-   */
-  @JsonProperty("chunk")
-  private Chunk chunk;
+    /**
+     * Chunk associated with the query.
+     */
+    @JsonProperty("chunk")
+    private Chunk chunk;
 
 }

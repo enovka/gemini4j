@@ -17,14 +17,14 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CountTokensResponse {
 
-  /**
-   * The number of tokens that the model tokenizes the prompt into.
-   * <p>
-   * Always non-negative. When cachedContent is set, this is still the total
-   * effective prompt size. I.e., this includes the number of tokens in the
-   * cached content.
-   */
-  @JsonProperty("totalTokens")
-  private Integer totalTokens;
+    /**
+     * The number of tokens that the model tokenizes the prompt into.
+     * <p>
+     * Always non-negative. When cachedContent is set, this is still the total
+     * effective prompt size. I.e., this includes the number of tokens in the
+     * cached content.
+     */
+    @JsonProperty("totalTokens")
+    private Integer totalTokens;
 
 }

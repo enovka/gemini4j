@@ -15,16 +15,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AttributionSourceId {
 
-  /**
-   * Identifier for an inline passage.
-   */
-  @JsonProperty("groundingPassage")
-  private GroundingPassageId groundingPassage;
+    /**
+     * Identifier for an inline passage.
+     */
+    @JsonProperty("groundingPassage")
+    private GroundingPassageId groundingPassage;
 
-  /**
-   * Identifier for a Chunk fetched via Semantic Retriever.
-   */
-  @JsonProperty("semanticRetrieverChunk")
-  private SemanticRetrieverChunk semanticRetrieverChunk;
+    /**
+     * Identifier for a Chunk fetched via Semantic Retriever.
+     */
+    @JsonProperty("semanticRetrieverChunk")
+    private SemanticRetrieverChunk semanticRetrieverChunk;
 
 }

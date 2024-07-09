@@ -20,13 +20,13 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessagePrompt {
 
-  /**
-   * Required. The structured textual input given to the model as a prompt.
-   * <p>
-   * Given a prompt, the model will return what it predicts is the next message
-   * in the discussion.
-   */
-  @JsonProperty("messages")
-  private List<Message> messages;
+    /**
+     * Required. The structured textual input given to the model as a prompt.
+     * <p>
+     * Given a prompt, the model will return what it predicts is the next
+     * message in the discussion.
+     */
+    @JsonProperty("messages")
+    private List<Message> messages;
 
 }

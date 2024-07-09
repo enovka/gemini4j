@@ -15,28 +15,28 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomMetadata {
 
-  /**
-   * Required. The key of the metadata to store.
-   */
-  @JsonProperty("key")
-  private String key;
+    /**
+     * Required. The key of the metadata to store.
+     */
+    @JsonProperty("key")
+    private String key;
 
-  /**
-   * The string value of the metadata to store.
-   */
-  @JsonProperty("stringValue")
-  private String stringValue;
+    /**
+     * The string value of the metadata to store.
+     */
+    @JsonProperty("stringValue")
+    private String stringValue;
 
-  /**
-   * The StringList value of the metadata to store.
-   */
-  @JsonProperty("stringListValue")
-  private StringList stringListValue;
+    /**
+     * The StringList value of the metadata to store.
+     */
+    @JsonProperty("stringListValue")
+    private StringList stringListValue;
 
-  /**
-   * The numeric value of the metadata to store.
-   */
-  @JsonProperty("numericValue")
-  private Double numericValue;
+    /**
+     * The numeric value of the metadata to store.
+     */
+    @JsonProperty("numericValue")
+    private Double numericValue;
 
 }

@@ -13,9 +13,8 @@ import java.util.List;
  * <p>
  * Example (genre = drama OR genre = action):
  * <p>
- * key = "document.custom_metadata.genre"
- * conditions = [{stringValue = "drama", operation = EQUAL}, {stringValue =
- * "action", operation = EQUAL}]
+ * key = "document.custom_metadata.genre" conditions = [{stringValue = "drama",
+ * operation = EQUAL}, {stringValue = "action", operation = EQUAL}]
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
@@ -24,17 +23,17 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MetadataFilter {
 
-  /**
-   * Required. The key of the metadata to filter on.
-   */
-  @JsonProperty("key")
-  private String key;
+    /**
+     * Required. The key of the metadata to filter on.
+     */
+    @JsonProperty("key")
+    private String key;
 
-  /**
-   * Required. The Conditions for the given key that will trigger this filter.
-   * Multiple Conditions are joined by logical ORs.
-   */
-  @JsonProperty("conditions")
-  private List<Condition> conditions;
+    /**
+     * Required. The Conditions for the given key that will trigger this filter.
+     * Multiple Conditions are joined by logical ORs.
+     */
+    @JsonProperty("conditions")
+    private List<Condition> conditions;
 
 }

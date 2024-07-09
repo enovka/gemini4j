@@ -18,11 +18,11 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BatchEmbedContentsResponse {
 
-  /**
-   * Output only. The embeddings for each request, in the same order as provided
-   * in the batch request.
-   */
-  @JsonProperty("embeddings")
-  private List<ContentEmbedding> embeddings;
+    /**
+     * Output only. The embeddings for each request, in the same order as
+     * provided in the batch request.
+     */
+    @JsonProperty("embeddings")
+    private List<ContentEmbedding> embeddings;
 
 }

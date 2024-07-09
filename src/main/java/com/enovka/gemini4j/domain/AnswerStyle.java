@@ -16,30 +16,30 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AnswerStyle {
 
-  /**
-   * Unspecified answer style.
-   */
-  @JsonProperty("ANSWER_STYLE_UNSPECIFIED")
-  private com.enovka.gemini4j.domain.types.AnswerStyleEnum
-          answerStyleUnspecified;
+    /**
+     * Unspecified answer style.
+     */
+    @JsonProperty("ANSWER_STYLE_UNSPECIFIED")
+    private com.enovka.gemini4j.domain.types.AnswerStyleEnum
+            answerStyleUnspecified;
 
-  /**
-   * Succinct but abstract style.
-   */
-  @JsonProperty("ABSTRACTIVE")
-  private com.enovka.gemini4j.domain.types.AnswerStyleEnum abstractive;
+    /**
+     * Succinct but abstract style.
+     */
+    @JsonProperty("ABSTRACTIVE")
+    private com.enovka.gemini4j.domain.types.AnswerStyleEnum abstractive;
 
-  /**
-   * Very brief and extractive style.
-   */
-  @JsonProperty("EXTRACTIVE")
-  private com.enovka.gemini4j.domain.types.AnswerStyleEnum extractive;
+    /**
+     * Very brief and extractive style.
+     */
+    @JsonProperty("EXTRACTIVE")
+    private com.enovka.gemini4j.domain.types.AnswerStyleEnum extractive;
 
-  /**
-   * Verbose style including extra details. The response may be formatted as a
-   * sentence, paragraph, multiple paragraphs, or bullet points, etc.
-   */
-  @JsonProperty("VERBOSE")
-  private AnswerStyleEnum verbose;
+    /**
+     * Verbose style including extra details. The response may be formatted as a
+     * sentence, paragraph, multiple paragraphs, or bullet points, etc.
+     */
+    @JsonProperty("VERBOSE")
+    private AnswerStyleEnum verbose;
 
 }

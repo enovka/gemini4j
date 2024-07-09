@@ -15,16 +15,16 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FileData {
 
-  /**
-   * Optional. The IANA standard MIME type of the source data.
-   */
-  @JsonProperty("mimeType")
-  private String mimeType;
+    /**
+     * Optional. The IANA standard MIME type of the source data.
+     */
+    @JsonProperty("mimeType")
+    private String mimeType;
 
-  /**
-   * Required. URI.
-   */
-  @JsonProperty("fileUri")
-  private String fileUri;
+    /**
+     * Required. URI.
+     */
+    @JsonProperty("fileUri")
+    private String fileUri;
 
 }

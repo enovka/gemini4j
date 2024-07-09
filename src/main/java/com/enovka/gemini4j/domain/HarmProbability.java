@@ -19,35 +19,35 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HarmProbability {
 
-  /**
-   * The Probability is unspecified.
-   */
-  @JsonProperty("HARM_PROBABILITY_UNSPECIFIED")
-  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum
-          harmProbabilityUnspecified;
+    /**
+     * The Probability is unspecified.
+     */
+    @JsonProperty("HARM_PROBABILITY_UNSPECIFIED")
+    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum
+            harmProbabilityUnspecified;
 
-  /**
-   * Content has a negligible chance of being unsafe.
-   */
-  @JsonProperty("NEGLIGIBLE")
-  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum negligible;
+    /**
+     * Content has a negligible chance of being unsafe.
+     */
+    @JsonProperty("NEGLIGIBLE")
+    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum negligible;
 
-  /**
-   * Content has a low chance of being unsafe.
-   */
-  @JsonProperty("LOW")
-  private HarmProbabilityEnum low;
+    /**
+     * Content has a low chance of being unsafe.
+     */
+    @JsonProperty("LOW")
+    private HarmProbabilityEnum low;
 
-  /**
-   * Content has a medium chance of being unsafe.
-   */
-  @JsonProperty("MEDIUM")
-  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum medium;
+    /**
+     * Content has a medium chance of being unsafe.
+     */
+    @JsonProperty("MEDIUM")
+    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum medium;
 
-  /**
-   * Content has a high chance of being unsafe.
-   */
-  @JsonProperty("HIGH")
-  private com.enovka.gemini4j.domain.types.HarmProbabilityEnum high;
+    /**
+     * Content has a high chance of being unsafe.
+     */
+    @JsonProperty("HIGH")
+    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum high;
 
 }

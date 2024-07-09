@@ -18,10 +18,10 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BatchEmbedTextResponse {
 
-  /**
-   * Output only. The embeddings generated from the input text.
-   */
-  @JsonProperty("embeddings")
-  private List<Embedding> embeddings;
+    /**
+     * Output only. The embeddings generated from the input text.
+     */
+    @JsonProperty("embeddings")
+    private List<Embedding> embeddings;
 
 }
