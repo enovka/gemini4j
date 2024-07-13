@@ -35,6 +35,15 @@ jobs:
           cache: maven
         # Set up JDK 11 and cache Maven dependencies
 
+      # Await WireMock to be ready
+      - name: Await WireMock
+        uses: actions/dependency-review-action@v4
+        with:
+          hostname: localhost
+          port: 8089
+          attempts: 5
+          interval: 10
+
       - name: Build with Maven
         run: mvn -B package --file ${{ github.workspace }}/pom.xml
         # Run the Maven build
