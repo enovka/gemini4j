@@ -24,15 +24,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * HTTP responses and verifies the client's ability to handle GET and POST
  * requests, headers, and response parsing.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public class DefaultHttpClientTest extends BaseClass {
 
     private static final int WIREMOCK_PORT = 8089;
     private static final String TEST_URL = "/test";
-    private static final String TEST_RESPONSE_BODY
-            = "{\"message\": \"Hello, World!\"}";
+    private static final String TEST_RESPONSE_BODY = "{\"message\": \"Hello, World!\"}";
     private static WireMockServer wireMockServer;
     private DefaultHttpClient httpClient;
 
@@ -42,9 +41,12 @@ public class DefaultHttpClientTest extends BaseClass {
     @BeforeAll
     public static void setUpClass() {
         wireMockServer = new WireMockServer(
-                WireMockConfiguration.options().port(WIREMOCK_PORT));
+                WireMockConfiguration.options()
+                        .port(WIREMOCK_PORT)
+                        .bindAddress("0.0.0.0")); // Bind to all interfaces
         wireMockServer.start();
-        WireMock.configureFor("localhost", WIREMOCK_PORT);
+        // Configure WireMock to use the dynamic port assigned by GitHub Actions
+        WireMock.configureFor("localhost", wireMockServer.port());
     }
 
     /**
@@ -82,9 +84,9 @@ public class DefaultHttpClientTest extends BaseClass {
         headers.put("Accept", "application/json");
         headers.put("Custom-Header", "test-value");
 
-        // Execute the GET request
+        // Execute the GET request using the dynamic WireMock port
         HttpResponse response = httpClient.get(
-                "http://localhost:" + WIREMOCK_PORT + TEST_URL, headers);
+                "http://localhost:" + wireMockServer.port() + TEST_URL, headers);
 
         // Assertions
         assertEquals(200, response.getStatusCode());
@@ -110,9 +112,9 @@ public class DefaultHttpClientTest extends BaseClass {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
-        // Execute the POST request
+        // Execute the POST request using the dynamic WireMock port
         HttpResponse response = httpClient.post(
-                "http://localhost:" + WIREMOCK_PORT + TEST_URL,
+                "http://localhost:" + wireMockServer.port() + TEST_URL,
                 TEST_RESPONSE_BODY,
                 headers);
 
@@ -131,9 +133,9 @@ public class DefaultHttpClientTest extends BaseClass {
         stubFor(get(urlEqualTo(TEST_URL))
                 .willReturn(aResponse().withStatus(404)));
 
-        // Execute the GET request and assert that it throws an HttpException
+        // Execute the GET request using the dynamic WireMock port and assert that it throws an HttpException
         assertThrows(HttpException.class, () -> httpClient.get(
-                "http://localhost:" + WIREMOCK_PORT + TEST_URL,
+                "http://localhost:" + wireMockServer.port() + TEST_URL,
                 new HashMap<>()));
         logDebug("HttpClientError test successful.");
     }
@@ -147,9 +149,9 @@ public class DefaultHttpClientTest extends BaseClass {
         stubFor(get(urlEqualTo(TEST_URL))
                 .willReturn(aResponse().withStatus(500)));
 
-        // Execute the GET request and assert that it throws an HttpException
+        // Execute the GET request using the dynamic WireMock port and assert that it throws an HttpException
         assertThrows(HttpException.class, () -> httpClient.get(
-                "http://localhost:" + WIREMOCK_PORT + TEST_URL,
+                "http://localhost:" + wireMockServer.port() + TEST_URL,
                 new HashMap<>()));
         logDebug("HttpServerError test successful.");
     }
