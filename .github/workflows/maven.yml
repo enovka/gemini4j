@@ -25,7 +25,7 @@ jobs:
       - name: Setup Wiremock
         uses: williamhaw/setup-wiremock-action@v0.1.3
         with:
-          port: 8081
+          port: 8080
   test:
     runs-on: ubuntu-latest
     needs: [build, wiremock]

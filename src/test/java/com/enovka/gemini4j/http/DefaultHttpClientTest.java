@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class DefaultHttpClientTest extends BaseClass {
 
     private static final String WIREMOCK_HOST = "localhost";
-    private static final int WIREMOCK_PORT = 8089;
+    private static final int WIREMOCK_PORT = 8080;
     private static final String TEST_URL = "/test";
     private static final String TEST_RESPONSE_BODY = "{\"message\": \"Hello, World!\"}";
     private static WireMockServer wireMockServer;
