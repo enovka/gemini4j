@@ -22,9 +22,19 @@ jobs:
       - name: Update dependency graph
         uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
-  test:
+  wiremock:
     runs-on: ubuntu-latest
     needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start WireMock
+        run: |
+          docker run -d -p 8080:8080 wiremock/wiremock
+          sleep 20 # Aguardar o WireMock iniciar
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [build, wiremock]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 11
@@ -33,10 +43,6 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-      - name: Start WireMock
-        run: |
-          docker run -d -p 8080:8080 wiremock/wiremock
-          sleep 30 # Aguardar o WireMock iniciar
       - name: Run Tests
         run: mvn test
       - name: Stop WireMock
