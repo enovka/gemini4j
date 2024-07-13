@@ -9,11 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      wiremock:
-        image: wiremock/wiremock:latest
-        ports:
-          - 8089:8089
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 11
@@ -22,13 +17,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-      - name: Await WireMock
-        run: |
-          for i in {1..30}; do
-            docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" wiremock | grep -q healthy && echo "WireMock is ready!" && break
-            echo "Waiting for WireMock... (attempt $i)"
-            sleep 2
-          done
+      - name: Setup Wiremock
+        uses: williamhaw/setup-wiremock-action@v0.1.3
       - name: Build with Maven
         run: mvn -B package --file ${{ github.workspace }}/pom.xml
       - name: Update dependency graph
