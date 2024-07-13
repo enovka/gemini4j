@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.resource.impl;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.ListModel;
+import com.enovka.gemini4j.http.exception.HttpException;
 import com.enovka.gemini4j.http.spec.HttpResponse;
+import com.enovka.gemini4j.json.exception.JsonException;
 import com.enovka.gemini4j.json.spec.JsonService;
 import com.enovka.gemini4j.resource.spec.AbstractResource;
 import com.enovka.gemini4j.resource.spec.ModelResource;
@@ -19,6 +20,7 @@ public class ModelResourceImpl extends AbstractResource
         implements ModelResource {
 
     private static final String LIST_MODELS_ENDPOINT = "/models";
+    private final JsonService jsonService;
 
     /**
      * Constructs a new ModelResourceImpl with the required GeminiClient and
@@ -31,25 +33,19 @@ public class ModelResourceImpl extends AbstractResource
      */
     public ModelResourceImpl(GeminiClient geminiClient,
                              JsonService jsonService) {
-        super(geminiClient, jsonService);
+        super(geminiClient);
+        this.jsonService = jsonService;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ListModel listModels() throws GeminiApiException {
+    public ListModel listModels() throws HttpException, JsonException {
         logDebug(
                 "Listing Gemini models from endpoint: " + LIST_MODELS_ENDPOINT);
-
-        try {
-            HttpResponse response = get(LIST_MODELS_ENDPOINT,
-                    geminiClient.buildAuthHeaders());
-            return jsonService.deserialize(response.getBody(), ListModel.class);
-        } catch (Exception e) {
-            logError("Error listing models: " + e.getMessage(), e);
-            throw new GeminiApiException(500,
-                    "Error listing models: " + e.getMessage(), e);
-        }
+        HttpResponse response = get(LIST_MODELS_ENDPOINT,
+                geminiClient.buildAuthHeaders());
+        return jsonService.deserialize(response.getBody(), ListModel.class);
     }
 }

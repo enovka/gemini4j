@@ -42,11 +42,18 @@ public interface GeminiClient {
     void setModel(String model);
 
     /**
-     * Builds the headers for API authentication.
+     * Returns the base URL for the Gemini API.
      *
-     * @return A map containing the authentication headers.
+     * @return The base URL.
      */
-    Map<String, String> buildAuthHeaders();
+    String getBaseUrl();
+
+    /**
+     * Sets the base URL for the Gemini API.
+     *
+     * @param baseUrl The base URL.
+     */
+    void setBaseUrl(String baseUrl);
 
     /**
      * Returns the JSON service used for serialization and deserialization.
@@ -54,4 +61,18 @@ public interface GeminiClient {
      * @return The JSON service instance.
      */
     JsonService getJsonService();
+
+    /**
+     * Sets the JSON service used for serialization and deserialization.
+     *
+     * @param jsonService The JSON service instance.
+     */
+    void setJsonService(JsonService jsonService);
+
+    /**
+     * Builds the headers for API authentication.
+     *
+     * @return A map containing the authentication headers.
+     */
+    Map<String, String> buildAuthHeaders();
 }

@@ -1,11 +1,9 @@
 package com.enovka.gemini4j.resource.spec;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.common.BaseClass;
 import com.enovka.gemini4j.http.exception.HttpException;
 import com.enovka.gemini4j.http.spec.HttpResponse;
-import com.enovka.gemini4j.json.spec.JsonService;
 
 import java.util.Map;
 
@@ -18,28 +16,16 @@ import java.util.Map;
  */
 public abstract class AbstractResource extends BaseClass {
 
-    protected static final String DEFAULT_BASE_URL
-            = "https://generativelanguage.googleapis.com/v1beta";
-
     protected final GeminiClient geminiClient;
-    protected final String baseUrl;
-    protected final JsonService jsonService;
 
     /**
-     * Constructs a new AbstractResource with the required GeminiClient and
-     * JsonService.
+     * Constructs a new AbstractResource with the required GeminiClient.
      *
      * @param geminiClient The {@link GeminiClient} instance to use for API
      * communication.
-     * @param jsonService The {@link JsonService} instance to use for JSON
-     * serialization/deserialization.
      */
-    protected AbstractResource(GeminiClient geminiClient,
-                               JsonService jsonService) {
+    protected AbstractResource(GeminiClient geminiClient) {
         this.geminiClient = geminiClient;
-        this.jsonService = jsonService;
-        this.baseUrl
-                = DEFAULT_BASE_URL; // You can make this configurable if needed
     }
 
     /**
@@ -48,17 +34,13 @@ public abstract class AbstractResource extends BaseClass {
      * @param endpoint The API endpoint to request.
      * @param headers The headers to include in the request.
      * @return The {@link HttpResponse} object.
-     * @throws GeminiApiException If an error occurs during the request.
+     * @throws HttpException If an error occurs during the request.
      */
     protected HttpResponse get(String endpoint, Map<String, String> headers)
-            throws GeminiApiException {
-        try {
-            return geminiClient.getHttpClient().get(baseUrl + endpoint + "?key="
-                    + geminiClient.getApiKey(), headers);
-        } catch (HttpException e) {
-            logError("Error making GET request: " + e.getMessage(), e);
-            throw new GeminiApiException(e.getStatusCode(), e.getMessage(), e);
-        }
+            throws HttpException {
+        return geminiClient.getHttpClient()
+                .get(geminiClient.getBaseUrl() + endpoint + "?key="
+                        + geminiClient.getApiKey(), headers);
     }
 
     /**
@@ -68,18 +50,20 @@ public abstract class AbstractResource extends BaseClass {
      * @param body The request body.
      * @param headers The headers to include in the request.
      * @return The {@link HttpResponse} object.
-     * @throws GeminiApiException If an error occurs during the request.
+     * @throws HttpException If an error occurs during the request.
      */
     protected HttpResponse post(String endpoint, String body,
                                 Map<String, String> headers)
-            throws GeminiApiException {
+            throws HttpException {
+        HttpResponse response;
         try {
-            return geminiClient.getHttpClient()
-                    .post(baseUrl + endpoint + "?key="
+            response = geminiClient.getHttpClient()
+                    .post(geminiClient.getBaseUrl() + endpoint + "?key="
                             + geminiClient.getApiKey(), body, headers);
-        } catch (HttpException e) {
-            logError("Error making POST request: " + e.getMessage(), e);
-            throw new GeminiApiException(e.getStatusCode(), e.getMessage(), e);
+        } catch (Exception e) {
+            throw new HttpException("Error executing POST request: "
+                    + e.getMessage(), e);
         }
+        return response;
     }
 }

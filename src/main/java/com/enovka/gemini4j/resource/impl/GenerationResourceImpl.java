@@ -6,7 +6,9 @@ import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.Part;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GenerateContentResponse;
+import com.enovka.gemini4j.http.exception.HttpException;
 import com.enovka.gemini4j.http.spec.HttpResponse;
+import com.enovka.gemini4j.json.exception.JsonException;
 import com.enovka.gemini4j.json.spec.JsonService;
 import com.enovka.gemini4j.resource.spec.AbstractResource;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
@@ -28,6 +30,8 @@ public class GenerationResourceImpl extends AbstractResource
     private static final String GENERATE_CONTENT_ENDPOINT
             = "/{model}:generateContent";
 
+    private final JsonService jsonService;
+
     /**
      * Constructs a new GenerationResourceImpl with the required GeminiClient
      * and JsonService.
@@ -39,7 +43,8 @@ public class GenerationResourceImpl extends AbstractResource
      */
     public GenerationResourceImpl(GeminiClient geminiClient,
                                   JsonService jsonService) {
-        super(geminiClient, jsonService);
+        super(geminiClient);
+        this.jsonService = jsonService;
     }
 
     /**
@@ -47,27 +52,22 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(
-            GenerateContentRequest request) throws GeminiApiException {
+            GenerateContentRequest request) throws JsonException,
+            HttpException {
         String model = request.getModel();
         if (model == null || model.isEmpty()) {
-            throw new GeminiApiException(400,
+            throw new IllegalArgumentException(
                     "Model is required in the GenerateContentRequest.");
         }
 
         String endpoint = GENERATE_CONTENT_ENDPOINT.replace("{model}", model);
         logDebug("Generating content from endpoint: " + endpoint);
 
-        try {
-            String requestBody = jsonService.serialize(request);
-            HttpResponse response = post(endpoint, requestBody,
-                    geminiClient.buildAuthHeaders());
-            return jsonService.deserialize(response.getBody(),
-                    GenerateContentResponse.class);
-        } catch (Exception e) {
-            logError("Error generating content: " + e.getMessage(), e);
-            throw new GeminiApiException(500,
-                    "Error generating content: " + e.getMessage(), e);
-        }
+        String requestBody = jsonService.serialize(request);
+        HttpResponse response = post(endpoint, requestBody,
+                geminiClient.buildAuthHeaders());
+        return jsonService.deserialize(response.getBody(),
+                GenerateContentResponse.class);
     }
 
     /**
@@ -75,7 +75,7 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput)
-            throws GeminiApiException {
+            throws GeminiApiException, HttpException, JsonException {
         return generateContent(userInput, null);
     }
 
@@ -85,7 +85,7 @@ public class GenerationResourceImpl extends AbstractResource
     @Override
     public GenerateContentResponse generateContent(String userInput,
                                                    String systemInstructions)
-            throws GeminiApiException {
+            throws GeminiApiException, JsonException, HttpException {
         Content systemContent = null;
         Content content = Content.builder()
                 .withRole("user")

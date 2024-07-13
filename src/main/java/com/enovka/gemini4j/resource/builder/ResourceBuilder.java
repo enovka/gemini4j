@@ -21,7 +21,31 @@ import lombok.Data;
 public class ResourceBuilder {
 
     private GeminiClient geminiClient;
-    private JsonService jsonService;
+    @Builder.Default
+    private JsonService jsonService = JsonServiceBuilder.builder().build()
+            .build();
+
+    /**
+     * Sets the {@link GeminiClient} to use for the resources.
+     *
+     * @param geminiClient The GeminiClient instance.
+     * @return The builder instance for method chaining.
+     */
+    public ResourceBuilder withGeminiClient(GeminiClient geminiClient) {
+        this.geminiClient = geminiClient;
+        return this;
+    }
+
+    /**
+     * Sets the {@link JsonService} to use for the resources.
+     *
+     * @param jsonService The JsonService instance.
+     * @return The builder instance for method chaining.
+     */
+    public ResourceBuilder withJsonService(JsonService jsonService) {
+        this.jsonService = jsonService;
+        return this;
+    }
 
     /**
      * Creates a new {@link GenerationResource} instance based on the builder
@@ -33,10 +57,6 @@ public class ResourceBuilder {
         if (geminiClient == null) {
             throw new IllegalArgumentException(
                     "GeminiClient is required to build a GenerationResource.");
-        }
-        // Use a default JsonService if not provided
-        if (jsonService == null) {
-            jsonService = JsonServiceBuilder.builder().build().build();
         }
         return new GenerationResourceImpl(geminiClient, jsonService);
     }
@@ -51,10 +71,6 @@ public class ResourceBuilder {
         if (geminiClient == null) {
             throw new IllegalArgumentException(
                     "GeminiClient is required to build a ModelResource.");
-        }
-        // Use a default JsonService if not provided
-        if (jsonService == null) {
-            jsonService = JsonServiceBuilder.builder().build().build();
         }
         return new ModelResourceImpl(geminiClient, jsonService);
     }

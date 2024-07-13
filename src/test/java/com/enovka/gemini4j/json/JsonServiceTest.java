@@ -2,35 +2,36 @@ package com.enovka.gemini4j.json;
 
 import com.enovka.gemini4j.common.BaseClass;
 import com.enovka.gemini4j.domain.Model;
+import com.enovka.gemini4j.json.builder.JsonServiceBuilder;
 import com.enovka.gemini4j.json.exception.JsonException;
-import com.enovka.gemini4j.json.impl.JacksonJsonService;
-import org.junit.jupiter.api.BeforeEach;
+import com.enovka.gemini4j.json.spec.JsonService;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Collections;
 
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Test class for the {@link JacksonJsonService}. It verifies the service's
- * ability to serialize and deserialize JSON data correctly, handling various
- * data types and potential error scenarios.
+ * Test class for the {@link JsonService} implementations. It verifies the
+ * service's ability to serialize and deserialize JSON data correctly, handling
+ * various data types and potential error scenarios.
  *
  * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
-public class JacksonJsonServiceTest extends BaseClass {
+public class JsonServiceTest extends BaseClass {
 
-    private JacksonJsonService jsonService;
+    @RegisterExtension
+    static WireMockExtension wireMockExtension = WireMockExtension.newInstance()
+            .options(wireMockConfig().dynamicPort())
+            .build();
 
-    /**
-     * Initializes the {@link JacksonJsonService} before each test.
-     */
-    @BeforeEach
-    public void setUp() {
-        jsonService = new JacksonJsonService();
-    }
+    private final JsonService jsonService = JsonServiceBuilder.builder()
+            .build().build();
 
     /**
      * Tests the serialization of a simple object to a JSON string.
@@ -39,6 +40,8 @@ public class JacksonJsonServiceTest extends BaseClass {
      */
     @Test
     public void testSerialize() throws JsonException {
+        System.out.println("Starting testSerialize...");
+
         Model model = new Model().setName("models/test-model")
                 .setBaseModelId("test-model")
                 .setVersion("001")
@@ -52,12 +55,16 @@ public class JacksonJsonServiceTest extends BaseClass {
                 .setTopP(0.8)
                 .setTopK(40);
 
-        logDebug("Model object before serialization: " + model);
-        String expectedJson = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
+        System.out.println("Model object: " + model);
+
+        String expectedJson
+                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
+
         String actualJson = jsonService.serialize(model);
+        System.out.println("Serialized JSON: " + actualJson);
 
         assertEquals(expectedJson, actualJson);
-        logDebug("Serialization successful.");
+        System.out.println("Serialization successful.");
     }
 
     /**
@@ -67,7 +74,12 @@ public class JacksonJsonServiceTest extends BaseClass {
      */
     @Test
     public void testDeserialize() throws JsonException {
-        String json = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
+        System.out.println("Starting testDeserialize...");
+
+        String json
+                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
+
+        System.out.println("JSON string: " + json);
 
         Model expectedModel = new Model().setName("models/test-model")
                 .setBaseModelId("test-model")
@@ -83,9 +95,10 @@ public class JacksonJsonServiceTest extends BaseClass {
                 .setTopK(40);
 
         Model actualModel = jsonService.deserialize(json, Model.class);
+        System.out.println("Deserialized model: " + actualModel);
 
         assertEquals(expectedModel, actualModel);
-        logDebug("Deserialization successful.");
+        System.out.println("Deserialization successful.");
     }
 
     /**
@@ -94,11 +107,14 @@ public class JacksonJsonServiceTest extends BaseClass {
      */
     @Test
     public void testDeserializeInvalidJson() {
+        System.out.println("Starting testDeserializeInvalidJson...");
+
         String invalidJson = "{\"name\":\"models/test-model\",";
+        System.out.println("Invalid JSON string: " + invalidJson);
 
         assertThrows(JsonException.class,
                 () -> jsonService.deserialize(invalidJson, Model.class));
-        logDebug("DeserializeInvalidJson test successful.");
+        System.out.println("DeserializeInvalidJson test successful.");
     }
 
     /**
@@ -107,11 +123,15 @@ public class JacksonJsonServiceTest extends BaseClass {
      */
     @Test
     public void testDeserializeMissingFields() {
+        System.out.println("Starting testDeserializeMissingFields...");
+
         String jsonWithMissingFields = "{}";
+        System.out.println("JSON string with missing fields: "
+                + jsonWithMissingFields);
 
         assertThrows(JsonException.class,
                 () -> jsonService.deserialize(jsonWithMissingFields,
                         Model.class));
-        logDebug("DeserializeMissingFields test successful.");
+        System.out.println("DeserializeMissingFields test successful.");
     }
 }

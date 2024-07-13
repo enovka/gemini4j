@@ -50,7 +50,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <jackson.version>2.17.1</jackson.version>
-        <junit.version>4.13.2</junit.version>
         <project.reporting.outputEncoding>UTF-8
         </project.reporting.outputEncoding>
         <maven.javadoc.encoding>UTF-8</maven.javadoc.encoding>
@@ -68,6 +67,7 @@
         <jsonassert.version>1.5.3</jsonassert.version>
         <wiremock.version>3.8.0</wiremock.version>
         <maven.dependency.plugin.version>3.7.1</maven.dependency.plugin.version>
+        <maven.failsafe.plugin>3.3.1</maven.failsafe.plugin>
     </properties>
 
     <dependencies>
@@ -76,6 +76,7 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -126,37 +127,6 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest.assured.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>${jsonassert.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- WireMock -->
         <dependency>
             <groupId>org.wiremock</groupId>
@@ -170,8 +140,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>${wiremock.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Maven Plugins -->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -183,11 +157,6 @@
                     <artifactId>plexus-container-default</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>${maven.project.info.reports.plugin.version}</version>
         </dependency>
     </dependencies>
 
@@ -215,6 +184,29 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-wrapper-plugin</artifactId>
+                <version>3.3.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wrapper</goal>
+                        </goals>
+                        <configuration>
+                            <mavenVersion>${maven.compiler.plugin.version}
+                            </mavenVersion>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

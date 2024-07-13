@@ -13,13 +13,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default implementation of the {@link HttpClient} interface using Apache HttpClient.
- * This class provides basic HTTP request functionalities such as GET and POST.
+ * Default implementation of the {@link HttpClient} interface using Apache
+ * HttpClient. This class provides basic HTTP request functionalities such as
+ * GET and POST.
  *
  * @author Everson Novka
  * @since 0.0.1
@@ -35,50 +35,80 @@ public class DefaultHttpClient extends AbstractHttpClient {
         this.apacheHttpClient = HttpClientBuilder.create().build();
     }
 
+    public DefaultHttpClient(Integer responseTimeout,
+                             Integer connectionTimeout) {
+        this.responseTimeout = responseTimeout;
+        this.connectionTimeout = connectionTimeout;
+        this.apacheHttpClient = HttpClientBuilder.create().build();
+    }
+
     /**
      * Executes a GET request to the specified URL with the provided headers.
      *
      * @param url The URL to send the GET request to.
      * @param headers The headers to include in the request.
-     * @return An {@link HttpResponse} object containing the response status code, headers, and body.
+     * @return An {@link HttpResponse} object containing the response status
+     * code, headers, and body.
      * @throws HttpException If an error occurs during the request execution.
      */
     @Override
-    public HttpResponse get(String url, Map<String, String> headers) throws HttpException {
-        HttpGet request = new HttpGet(url);
-        addHeadersToRequest(request, headers);
+    public HttpResponse get(String url, Map<String, String> headers)
+            throws HttpException {
+        HttpGet request;
+        try {
+            request = new HttpGet(url);
+            addHeadersToRequest(request, headers);
+        } catch (Exception e) {
+            throw new HttpException(
+                    "Error creating GET request: " + e.getMessage(), e);
+        }
 
-        try (CloseableHttpResponse response = apacheHttpClient.execute(request)) {
-            if (response.getStatusLine().getStatusCode() >=400) {
-                throw new HttpException("GET request failed with status code: " + response.getStatusLine().getStatusCode());
+        try (CloseableHttpResponse response = apacheHttpClient.execute(
+                request)) {
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new HttpException("GET request failed with status code: "
+                        + response.getStatusLine().getStatusCode(), null,
+                        response.getStatusLine().getStatusCode());
             }
             return createHttpResponse(response);
         } catch (Exception e) {
-            throw new HttpException("Error executing GET request: " + e.getMessage(), e);
+            throw new HttpException(
+                    "Error executing GET request: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Executes a POST request to the specified URL with the provided body and headers.
+     * Executes a POST request to the specified URL with the provided body and
+     * headers.
      *
      * @param url The URL to send the POST request to.
      * @param body The body to include in the request.
      * @param headers The headers to include in the request.
-     * @return An {@link HttpResponse} object containing the response status code, headers, and body.
+     * @return An {@link HttpResponse} object containing the response status
+     * code, headers, and body.
      * @throws HttpException If an error occurs during the request execution.
      */
     @Override
-    public HttpResponse post(String url, String body, Map<String, String> headers) throws HttpException {
-        HttpPost request = new HttpPost(url);
-        addHeadersToRequest(request, headers);
+    public HttpResponse post(String url, String body,
+                             Map<String, String> headers) throws HttpException {
+        HttpPost request;
+        try {
+            request = new HttpPost(url);
+            addHeadersToRequest(request, headers);
+        } catch (Exception e) {
+            throw new HttpException(
+                    "Error creating POST request: " + e.getMessage(), e);
+        }
 
         try {
             request.setEntity(new StringEntity(body));
-            try (CloseableHttpResponse response = apacheHttpClient.execute(request)) {
+            try (CloseableHttpResponse response = apacheHttpClient.execute(
+                    request)) {
                 return createHttpResponse(response);
             }
         } catch (Exception e) {
-            throw new HttpException("Error executing POST request: " + e.getMessage(), e);
+            throw new HttpException(
+                    "Error executing POST request: " + e.getMessage(), e);
         }
     }
 
@@ -88,7 +118,8 @@ public class DefaultHttpClient extends AbstractHttpClient {
      * @param request The HTTP request to add headers to.
      * @param headers The headers to add.
      */
-    private void addHeadersToRequest(org.apache.http.HttpRequest request, Map<String, String> headers) {
+    private void addHeadersToRequest(org.apache.http.HttpRequest request,
+                                     Map<String, String> headers) {
         if (headers != null) {
             headers.forEach(request::addHeader);
         }
@@ -98,20 +129,26 @@ public class DefaultHttpClient extends AbstractHttpClient {
      * Creates an {@link HttpResponse} from a {@link CloseableHttpResponse}.
      *
      * @param response The CloseableHttpResponse to convert.
-     * @return An HttpResponse containing the status code, headers, and body of the response.
-     * @throws HttpException If an error occurs while reading the response body.
+     * @return An HttpResponse containing the status code, headers, and body of
+     * the response.
+     * @throws HttpException If an error occurs while reading the response
+     * body.
      */
-    private HttpResponse createHttpResponse(CloseableHttpResponse response) throws HttpException {
-        int statusCode = response.getStatusLine().getStatusCode();
-        Map<String, String> responseHeaders = new HashMap<>();
-        for (Header header : response.getAllHeaders()) {
-            responseHeaders.put(header.getName(), header.getValue());
-        }
+    private HttpResponse createHttpResponse(CloseableHttpResponse response)
+            throws HttpException {
         String responseBody;
+        Map<String, String> responseHeaders;
+        int statusCode;
         try {
+            statusCode = response.getStatusLine().getStatusCode();
+            responseHeaders = new HashMap<>();
+            for (Header header : response.getAllHeaders()) {
+                responseHeaders.put(header.getName(), header.getValue());
+            }
             responseBody = EntityUtils.toString(response.getEntity());
         } catch (Exception e) {
-            throw new HttpException("Error reading response body: " + e.getMessage(), e);
+            throw new HttpException(
+                    "Error reading response body: " + e.getMessage(), e);
         }
 
         return new HttpResponse(statusCode, responseHeaders, responseBody);

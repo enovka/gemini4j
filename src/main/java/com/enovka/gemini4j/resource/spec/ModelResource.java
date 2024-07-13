@@ -2,6 +2,8 @@ package com.enovka.gemini4j.resource.spec;
 
 import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.domain.ListModel;
+import com.enovka.gemini4j.http.exception.HttpException;
+import com.enovka.gemini4j.json.exception.JsonException;
 
 /**
  * Interface defining the contract for interacting with the Model resource of
@@ -18,5 +20,6 @@ public interface ModelResource {
      * @return A {@link ListModel} containing the available models.
      * @throws GeminiApiException If an error occurs while fetching the models.
      */
-    ListModel listModels() throws GeminiApiException;
+    ListModel listModels()
+            throws GeminiApiException, HttpException, JsonException;
 }

@@ -3,6 +3,8 @@ package com.enovka.gemini4j.resource.spec;
 import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GenerateContentResponse;
+import com.enovka.gemini4j.http.exception.HttpException;
+import com.enovka.gemini4j.json.exception.JsonException;
 
 /**
  * Interface defining the contract for interacting with the Generation resource
@@ -23,7 +25,7 @@ public interface GenerationResource {
      * @throws GeminiApiException If an error occurs during content generation.
      */
     GenerateContentResponse generateContent(GenerateContentRequest request)
-            throws GeminiApiException;
+            throws GeminiApiException, JsonException, HttpException;
 
     /**
      * Generates content using the specified user input.
@@ -34,7 +36,7 @@ public interface GenerationResource {
      * @throws GeminiApiException If an error occurs during content generation.
      */
     GenerateContentResponse generateContent(String userInput)
-            throws GeminiApiException;
+            throws GeminiApiException, HttpException, JsonException;
 
     /**
      * Generates content using the specified user input and system
@@ -49,5 +51,5 @@ public interface GenerationResource {
      */
     GenerateContentResponse generateContent(String userInput,
                                             String systemInstructions)
-            throws GeminiApiException;
+            throws GeminiApiException, JsonException, HttpException;
 }
