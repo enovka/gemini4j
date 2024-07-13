@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.OperatorEnum;
+import com.enovka.gemini4j.domain.type.OperatorEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -20,31 +20,31 @@ public class Operator {
      * The default value. This value is unused.
      */
     @JsonProperty("OPERATOR_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.types.OperatorEnum operatorUnspecified;
+    private com.enovka.gemini4j.domain.type.OperatorEnum operatorUnspecified;
 
     /**
      * Supported by numeric.
      */
     @JsonProperty("LESS")
-    private com.enovka.gemini4j.domain.types.OperatorEnum less;
+    private com.enovka.gemini4j.domain.type.OperatorEnum less;
 
     /**
      * Supported by numeric.
      */
     @JsonProperty("LESS_EQUAL")
-    private com.enovka.gemini4j.domain.types.OperatorEnum lessEqual;
+    private com.enovka.gemini4j.domain.type.OperatorEnum lessEqual;
 
     /**
      * Supported by numeric and string.
      */
     @JsonProperty("EQUAL")
-    private com.enovka.gemini4j.domain.types.OperatorEnum equal;
+    private com.enovka.gemini4j.domain.type.OperatorEnum equal;
 
     /**
      * Supported by numeric.
      */
     @JsonProperty("GREATER_EQUAL")
-    private com.enovka.gemini4j.domain.types.OperatorEnum greaterEqual;
+    private com.enovka.gemini4j.domain.type.OperatorEnum greaterEqual;
 
     /**
      * Supported by numeric.
@@ -56,20 +56,20 @@ public class Operator {
      * Supported by numeric and string.
      */
     @JsonProperty("NOT_EQUAL")
-    private com.enovka.gemini4j.domain.types.OperatorEnum notEqual;
+    private com.enovka.gemini4j.domain.type.OperatorEnum notEqual;
 
     /**
      * Supported by string only when CustomMetadata value type for the given key
      * has a stringListValue.
      */
     @JsonProperty("INCLUDES")
-    private com.enovka.gemini4j.domain.types.OperatorEnum includes;
+    private com.enovka.gemini4j.domain.type.OperatorEnum includes;
 
     /**
      * Supported by string only when CustomMetadata value type for the given key
      * has a stringListValue.
      */
     @JsonProperty("EXCLUDES")
-    private com.enovka.gemini4j.domain.types.OperatorEnum excludes;
+    private com.enovka.gemini4j.domain.type.OperatorEnum excludes;
 
 }

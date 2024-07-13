@@ -8,7 +8,7 @@ import lombok.Getter;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @see <a href="https://ai.google.dev/api/rest/v1beta/models">Gemini API
  * Documentation</a>
- * @since 1.0.0-beta
+ * @since 0.0.1-beta
  */
 public class HttpException extends Throwable {
 

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  * {@code logInfo}, {@code logWarn}, and {@code logError}.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 1.0.0-beta
+ * @since 0.0.1-beta
  */
 public abstract class BaseClass {
 

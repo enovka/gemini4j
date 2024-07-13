@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.BlockedReasonEnum;
+import com.enovka.gemini4j.domain.type.BlockedReasonEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -26,12 +26,12 @@ public class BlockedReason {
      * Content was blocked by safety settings.
      */
     @JsonProperty("SAFETY")
-    private com.enovka.gemini4j.domain.types.BlockedReasonEnum safety;
+    private com.enovka.gemini4j.domain.type.BlockedReasonEnum safety;
 
     /**
      * Content was blocked, but the reason is uncategorized.
      */
     @JsonProperty("OTHER")
-    private com.enovka.gemini4j.domain.types.BlockedReasonEnum other;
+    private com.enovka.gemini4j.domain.type.BlockedReasonEnum other;
 
 }

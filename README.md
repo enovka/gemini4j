@@ -1,434 +1,515 @@
-## Gemini4J Library
+## Gemini4J: A Java Library for the Google Gemini API
 
-This document outlines the initial architecture of the Gemini4J library, a Java
-library designed to interact with the Gemini language model API. The library is
-currently in Beta and will evolve alongside the Gemini API, which is also in
-Beta. This analysis aims to provide a clear understanding of the initial
-structure, design choices, and future development plans.
+Gemini4J is an intuitive and easy-to-use Java library that allows you to
+integrate the powerful Google Gemini API into your applications. With Gemini4J,
+you can leverage Gemini's advanced artificial intelligence capabilities to
+generate text, translate languages, write different kinds of creative content,
+and answer your questions in an informative way.
 
-**Disclaimer:** This is an initial architecture analysis for the Gemini4J
-library, which is currently in development and does not have a stable release
-yet. As the Gemini API evolves, Gemini4J will adapt to provide compatibility and
-support for new features.
+**Key features of Google Gemini:**
 
-**Project Overview:**
+* **Advanced Text Generation:** Gemini is a state-of-the-art language model that
+  can generate natural and creative text in various styles and formats.
+* **Natural Language Understanding:** Gemini has a deep understanding of human
+  language, enabling it to answer complex questions, translate languages
+  accurately, and generate contextually relevant content.
+* **Creative and Informative Content:** Gemini can be used to write stories,
+  poems, articles, emails, and much more. It can also provide informative
+  summaries and answer questions based on its vast knowledge.
+* **Flexibility and Customization:** The Gemini API offers customization options
+  to adjust the model's behavior, such as temperature and top-k sampling,
+  allowing you to control the level of creativity and randomness in the
+  responses.
 
-Gemini4J is a powerful and easy-to-use Java library that simplifies interactions
-with the cutting-edge Gemini language model API. The library leverages SOLID
-principles, Clean Code practices, and modern Java 8 features to provide a robust
-and user-friendly experience.
+**Gemini4J simplifies integration with the Gemini API by providing:**
 
-**Design Principles:**
+* **Abstraction of API complexity:** Gemini4J encapsulates the details of HTTP
+  communication and JSON serialization, allowing you to focus on your
+  application logic.
+* **Intuitive and easy-to-use interface:** Gemini4J offers a high-level
+  interface to interact with the Gemini API resources, making integration quick
+  and easy.
+* **Support for key Gemini features:** Gemini4J allows you to generate text,
+  list available models, and more.
 
-The library follows these key design principles:
+**Example Usage:**
 
-* **SOLID:** The library adheres to the SOLID principles:
-    * **Single Responsibility Principle (SRP):** Each class is responsible for a
-      single, well-defined task.
-    * **Open/Closed Principle (OCP):** New features can be added without
-      modifying existing code.
-    * **Liskov Substitution Principle (LSP):** Subclasses can be used
-      interchangeably with their base classes without compromising
-      functionality.
-    * **Interface Segregation Principle (ISP):** Interfaces are tailored to
-      specific clients and avoid unnecessary dependencies.
-    * **Dependency Inversion Principle (DIP):** High-level modules should not
-      depend on low-level modules. Both should depend on abstractions.
+```java
+import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
+import com.enovka.gemini4j.client.exception.GeminiApiException;
+import com.enovka.gemini4j.client.spec.GeminiClient;
+import com.enovka.gemini4j.domain.ListModel;
+import com.enovka.gemini4j.domain.response.GenerateContentResponse;
+import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.spec.GenerationResource;
+import com.enovka.gemini4j.resource.spec.ModelResource;
 
-* **Clean Code:** The code is well-organized, readable, and follows conventions
-  for naming, formatting, and commenting.
+public class SimpleExample {
 
-* **Code Reusability:** The library emphasizes code reusability through design
-  patterns and generics, minimizing duplication and promoting maintainability.
+    public static void main(String[] args) {
+        // Replace "YOUR_API_KEY" with your Google Gemini API key
+        String apiKey = "YOUR_API_KEY";
 
-* **Thread Safety:** The Gemini4J library is designed to be thread-safe,
-  ensuring that multiple instances can make requests concurrently without
-  compromising data integrity.
+        // Create a GeminiClient instance
+        GeminiClient client = GeminiClientBuilder.builder()
+                .withApiKey(apiKey)
+                .build().build();
 
-* **Object-Oriented Design:**  The library utilizes advanced object-oriented
-  principles like encapsulation, inheritance, polymorphism, and design patterns.
+        // Create instances of ModelResource and GenerationResource
+        ModelResource modelResource = ResourceBuilder.builder()
+                .withGeminiClient(client)
+                .build()
+                .buildModelResource();
 
-**Package Structure:**
+        GenerationResource generationResource = ResourceBuilder.builder()
+                .withGeminiClient(client)
+                .build()
+                .buildGenerationResource();
 
-The proposed package structure reflects the modular organization of the project
-and facilitates navigation and understanding of the code:
+        try {
+            // List available models
+            ListModel models = modelResource.listModels();
+            System.out.println("Available Models: " + models.getModels());
 
-``` markdown
-com.enovka.gemini4j
-├── domain
-│   ├── request
-│   │   ├── EmbedContentRequest.java
-│   │   ├── EmbedTextRequest.java
-│   │   ├── GenerateAnswerRequest.java
-│   │   ├── GenerateContentRequest.java
-│   │   └── GenerateTextRequest.java
-│   └── response
-│       ├── BatchEmbedContentsResponse.java
-│       ├── BatchEmbedTextResponse.java
-│       ├── CountMessageTokensResponse.java
-│       ├── CountTextTokensResponse.java
-│       ├── CountTokensResponse.java
-│       ├── EmbedContentResponse.java
-│       ├── EmbedTextResponse.java
-│       ├── FunctionResponse.java
-│       ├── GenerateAnswerResponse.java
-│       ├── GenerateContentResponse.java
-│       ├── GenerateTextResponse.java
-│       ├── ListCachedContentsResponse.java
-│       ├── ListPermissionsResponse.java
-│       ├── ListModel.java
-│       └── Response.java
-├── client
-│   ├── GeminiClient.java
-│   ├── GeminiClientFactory.java
-│   ├── GeminiClientBuilder.java
-│   └── exception
-│       ├── GeminiApiException.java
-│       ├── GeminiInvalidArgumentException.java
-│       ├── GeminiFailedPreconditionException.java
-│       ├── GeminiPermissionDeniedException.java
-│       ├── GeminiNotFoundException.java
-│       ├── GeminiResourceExhaustedException.java
-│       ├── GeminiInternalException.java
-│       └── GeminiUnavailableException.java
-├── utils
-│   └── JsonUtils.java
-└── types
-    ├── AnswerStyleEnum.java
-    ├── BlockedReasonEnum.java
-    ├── BlockReasonEnum.java
-    ├── FinishReasonEnum.java
-    ├── HarmBlockThresholdEnum.java
-    ├── HarmCategoryEnum.java
-    ├── HarmProbabilityEnum.java
-    ├── ModeEnum.java
-    ├── OperatorEnum.java
-    ├── PermissionStateEnum.java
-    ├── StateEnum.java
-    └── TaskTypeEnum.java
+            // Set the desired model for text generation
+            client.setModel(
+                    "models/gemini-pro-vision-001"); // Replace with the desired model name
+
+            // Generate text based on user input
+            GenerateContentResponse response
+                    = generationResource.generateContent(
+                    "Hello, Gemini! How are you today?");
+            System.out.println(
+                    "Gemini Response: " + response.getCandidates().get(0)
+                            .getContent().getParts().get(0).getText());
+
+        } catch (GeminiApiException e) {
+            System.err.println(
+                    "Error interacting with Gemini API: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
 ```
 
-## Class Descriptions
-
-### **Domain Classes**
-
-**`domain.request`:**  Contains classes representing requests to the Gemini API.
-
-* **`EmbedContentRequest.java`:** Represents a request to embed content and
-  generate an embedding from the model.
-* **`EmbedTextRequest.java`:** Represents a request to generate a text embedding
-  from the model.
-* **`GenerateAnswerRequest.java`:** Represents a request to generate a grounded
-  answer from the model given an input.
-* **`GenerateContentRequest.java`:** Represents a request to generate a
-  completion from the model given an input.
-* **`GenerateTextRequest.java`:**  Represents a request to generate text from
-  the model given a prompt.
-
-**`domain.response`:**  Contains classes representing responses from the Gemini
-API.
-
-* **`Response.java`:**  The base class for all Gemini API responses. This class
-  can hold common attributes across all responses, like timestamps, usage
-  metadata, etc.
-* **`BatchEmbedContentsResponse.java`:**  Represents the response to a batch
-  embedding request.
-* **`BatchEmbedTextResponse.java`:** Represents the response to a batch text
-  embedding request.
-* **`CountMessageTokensResponse.java`:** Represents the response to a request to
-  count message tokens.
-* **`CountTextTokensResponse.java`:**  Represents the response to a request to
-  count text tokens.
-* **`CountTokensResponse.java`:** Represents the response to a request to count
-  tokens in the overall input.
-* **`EmbedContentResponse.java`:**  Represents the response to a request to
-  embed a single content item.
-* **`EmbedTextResponse.java`:**  Represents the response to a request to embed
-  text.
-* **`FunctionResponse.java`:** Represents the response from a function call.
-* **`GenerateAnswerResponse.java`:** Represents the response to a grounded
-  answer request.
-* **`GenerateContentResponse.java`:**  Represents the response to a completion
-  request.
-* **`GenerateTextResponse.java`:** Represents the response to a text generation
-  request.
-* **`ListCachedContentsResponse.java`:** Represents the response to a request to
-  list cached contents.
-* **`ListPermissionsResponse.java`:**  Represents the response to a request to
-  list permissions.
-* **`ListModel.java`:**  Represents the response to a request to list models.
-
-### **Client Classes**
-
-**`client`:**  Contains classes related to the Gemini client.
-
-* **`GeminiClient.java`:** The main class responsible for interacting with the
-  Gemini API. It handles HTTP requests, manages JSON
-  serialization/deserialization, and maps requests and responses to DTO classes.
-* **`GeminiClientFactory.java`:**  Provides a way to create instances of the
-  GeminiClient.
-* **`GeminiClientBuilder.java`:**  Allows customization of GeminiClient
-  instances during creation.
-
-### **Exception Classes**
-
-**`client.exception`:** Contains classes for handling exceptions raised by the
-Gemini API.
-
-* **`GeminiApiException.java`:**  The base class for all Gemini API exceptions.
-  Stores the HTTP error code and error message.
-* **`GeminiInvalidArgumentException.java`:**  Thrown when the request contains
-  an invalid argument (HTTP 400 - INVALID_ARGUMENT).
-* **`GeminiFailedPreconditionException.java`:**  Thrown when a precondition is
-  not met (HTTP 400 - FAILED_PRECONDITION).
-* **`GeminiPermissionDeniedException.java`:** Thrown when the API key doesn't
-  have sufficient permissions (HTTP 403 - PERMISSION_DENIED).
-* **`GeminiNotFoundException.java`:** Thrown when the requested resource is not
-  found (HTTP 404 - NOT_FOUND).
-* **`GeminiResourceExhaustedException.java`:**  Thrown when the rate limit is
-  exceeded (HTTP 429 - RESOURCE_EXHAUSTED).
-* **`GeminiInternalException.java`:**  Thrown when an unexpected error occurs on
-  the server side (HTTP 500 - INTERNAL).
-* **`GeminiUnavailableException.java`:** Thrown when the service is temporarily
-  overloaded or unavailable (HTTP 503 - UNAVAILABLE).
-
-### **Utility Classes**
-
-**`utils`:**  Contains utility classes.
-
-* **`JsonUtils.java`:** Provides methods for JSON serialization and
-  deserialization.
-
-### **Enum Classes**
-
-**`types`:**  Contains enums for representing various data types defined by the
-Gemini API.
-
-* **`AnswerStyleEnum.java`:** Represents the styles for grounded answers.
-* **`BlockedReasonEnum.java`:** Represents reasons why content may have been
-  blocked.
-* **`BlockReasonEnum.java`:** Represents reasons why input was blocked.
-* **`FinishReasonEnum.java`:** Represents reasons why the model stopped
-  generating tokens.
-* **`HarmBlockThresholdEnum.java`:** Represents thresholds for blocking content
-  based on harm probability.
-* **`HarmCategoryEnum.java`:** Represents categories of harm in content.
-* **`HarmProbabilityEnum.java`:** Represents the probability levels for harm in
-  content.
-* **`ModeEnum.java`:** Represents different modes for function calling.
-* **`OperatorEnum.java`:** Represents operators that can be applied in filtering
-  conditions.
-* **`PermissionStateEnum.java`:** Represents states for permissions.
-* **`StateEnum.java`:** Represents states for Chunks.
-* **`TaskTypeEnum.java`:** Represents the types of tasks for which embeddings
-  are used.
-
-**Responsibility:** Handles HTTP requests to the Gemini API, mapping requests
-and responses to DTO classes, managing JSON serialization/deserialization, and
-handling exceptions. Provides methods for both synchronous and asynchronous
-requests.
-
-**Attributes:**
-
-* **apiKey (String):** The API key used for authentication in requests.
-* **httpClient (HttpClient):** The HTTP client used for making requests (using
-  Java's native HTTP client).
-* **baseUrl (String):** The base URL of the Gemini API.
-
-**Methods:**
-
-* **batchEmbedContents(String model, List<EmbedContentRequest> requests):**
-  Sends a batch request to generate embeddings from multiple content items.
-  Returns a BatchEmbedContentsResponse.
-* **countTokens(String model, List<Content> contents, GenerateContentRequest
-  generateContentRequest):** Counts the total number of tokens in the request.
-  Returns a CountTokensResponse.
-* **embedContent(String model, EmbedContentRequest request):** Generates an
-  embedding from a single content item. Returns an EmbedContentResponse.
-* **generateAnswer(String model, GenerateAnswerRequest request):** Generates a
-  grounded answer based on a content item. Returns a GenerateAnswerResponse.
-* **generateContent(String model, GenerateContentRequest request):** Generates a
-  response based on a content item. Returns a GenerateContentResponse.
-* **getModel(String model):** Retrieves information about a specific model.
-  Returns a Model.
-* **listModels(int pageSize, String pageToken):** Lists the available models on
-  the API. Returns a ListModel.
-* **batchEmbedContentsAsync(String model, List<EmbedContentRequest> requests):**
-  Asynchronous version of the batchEmbedContents method. Returns a
-  CompletableFuture<BatchEmbedContentsResponse>.
-* **countTokensAsync(String model, List<Content> contents,
-  GenerateContentRequest generateContentRequest):** Asynchronous version of the
-  countTokens method. Returns a CompletableFuture<CountTokensResponse>.
-* **embedContentAsync(String model, EmbedContentRequest request):** Asynchronous
-  version of the embedContent method. Returns a
-  CompletableFuture<EmbedContentResponse>.
-* **generateAnswerAsync(String model, GenerateAnswerRequest request):**
-  Asynchronous version of the generateAnswer method. Returns a
-  CompletableFuture<GenerateAnswerResponse>.
-* **generateContentAsync(String model, GenerateContentRequest request):**
-  Asynchronous version of the generateContent method. Returns a
-  CompletableFuture<GenerateContentResponse>.
-* **getModelAsync(String model):** Asynchronous version of the getModel method.
-  Returns a CompletableFuture<Model>.
-* **listModelsAsync(int pageSize, String pageToken):** Asynchronous version of
-  the listModels method. Returns a CompletableFuture<ListModel>.
-
-**2. GeminiClientFactory.java**
-
-**Responsibility:** Creates instances of the GeminiClient.
-
-**Methods:**
-
-* **createClient(String apiKey):** Creates a new GeminiClient instance using the
-  provided API key.
-
-**3. GeminiClientBuilder.java**
-
-**Responsibility:** Allows for customizing the creation of GeminiClient
-instances.
-
-**Methods:**
-
-* **withApiKey(String apiKey):** Sets the API key for authentication.
-* **withHttpClient(HttpClient httpClient):** Sets a custom HTTP client (
-  optional).
-* **withBaseUrl(String baseUrl):** Sets the base URL of the Gemini API.
-* **build():** Constructs the GeminiClient instance with the specified
-  configurations.
-
-**4. GeminiApiException.java**
-
-**Responsibility:** The base class for exceptions raised by the Gemini4J
-library.
-
-**Attributes:**
-
-* **errorCode (Integer):** The error code from the Gemini API.
-* **errorMessage (String):** The error message from the Gemini API.
-
-**Methods:**
-
-* **getErrorCode():** Returns the error code from the exception.
-* **getErrorMessage():** Returns the error message from the exception.
-
-**5. GeminiErrorResponse.java**
-
-**Responsibility:** Represents the error data returned by the Gemini API.
-
-**Attributes:**
-
-* **error (GeminiApiException):** The exception object containing the error
-  information.
-
-**Methods:**
-
-* **getError():** Returns the exception object.
-
-**6. JsonUtils.java**
-
-**Responsibility:** Handles JSON serialization and deserialization of objects.
-
-**Methods:**
-
-* **serialize(Object object):** Serializes a Java object into a JSON string.
-* **deserialize(String json, Class<?> clazz):** Deserializes a JSON string into
-  a Java object.
-
-**Design Patterns:**
-
-The library utilizes various design patterns to improve organization,
-modularity, and code reusability, such as:
-
-* **Factory:** The GeminiClientFactory class creates instances of the
-  GeminiClient.
-* **Builder:** The GeminiClientBuilder class allows for customization of
-  GeminiClient instance creation.
-* **Strategy:** Can be implemented for different authentication modes (e.g., API
-  key, OAuth).
-* **Template Method:** Can be utilized for the implementation of synchronous and
-  asynchronous methods, sharing common code.
-
-**Generics:**
-
-Generics are used to make the code more flexible and reusable, allowing the
-library to work with different types of objects.
-
-**Code Reusability:**
-
-The library is designed to promote code reuse through the use of:
-
-* **Abstract Classes:** The GeminiApiException class is an abstract class that
-  defines the base for specific exceptions.
-* **Interfaces:** Interfaces are used to define contracts between classes.
-* **Utility Classes:** The JsonUtils class and other utility classes encapsulate
-  common functionality for reuse.
-
-**Thread Safety:**
-
-The library is thread-safe through the use of:
-
-* **Immutable Classes:** DTO classes and other relevant classes are immutable,
-  preventing concurrent modification of internal state.
-* **Synchronized Methods:** Methods that access shared resources are
-  synchronized to guarantee mutual exclusion and prevent race conditions.
-
-**API Key Management:**
-
-The API key is managed through the GeminiClientBuilder to ensure it is a
-mandatory parameter during client creation. This approach ensures security and
-ease of use for developers.
-
-**HTTP Client:**
-
-The Gemini4J library utilizes Java's native HTTP client (
-java.net.http.HttpClient) for performing requests. This choice offers
-flexibility and control over the request process.
-
-**Future Development:**
-
-The Gemini4J library will evolve as the Gemini API matures. Future development
-plans include:
-
-* **Support for New Gemini API Features:** As the Gemini API introduces new
-  features, the library will adapt to support them.
-* **Improved Error Handling:** The library will provide more granular and
-  informative error handling, making it easier to diagnose and resolve issues.
-* **Additional Models:** The library will support a wider range of Gemini
-  models.
-* **Advanced Features:**  The library may eventually include advanced features
-  like custom model tuning and caching.
-
-Ok, aqui está uma seção em inglês que você pode adicionar ao final do seu
-arquivo `README.md` para explicar o arquivo `GEMINI-API.md`:
-
-## Gemini API Documentation
-
-This repository includes a document titled `GEMINI-API.md` that provides a
-consolidated view of the Gemini API REST documentation. This document is a
-direct compilation of the official Gemini API documentation from Google, found
-at [https://ai.google.dev/api/rest/v1beta/models](https://ai.google.dev/api/rest/v1beta/models).
-
-No modifications or alterations have been made to the original documentation.
-The `GEMINI-API.md` file simply combines the various sections of the official
-documentation into a single, easy-to-navigate file. This makes it convenient for
-developers to access all the essential API information in one place.
-
-We encourage developers to refer to the `GEMINI-API.md` file for a comprehensive
-understanding of the Gemini API's structure, methods, and data formats.
-
-This file is provided for informational purposes and may not always reflect the
-latest updates to the official Gemini API documentation. It's recommended to
-consult the official Google Cloud documentation for the most up-to-date
-information: [https://ai.google.dev/api/rest/v1beta/models](https://ai.google.dev/api/rest/v1beta/models).
-
-## Conclusion
-
-This architecture analysis provides a foundation for the development of a
-modern, robust, and easy-to-use Java library for interacting with the Gemini
-language model API. By adhering to SOLID principles, Clean Code practices, and
-modern Java 8 features, the Gemini4J library aims to provide a high-quality user
-experience and promote maintainability and code reuse.
-
-**Remember:** The library is in Beta, and new features and changes will be
-released as the Gemini API evolves. 
-
+## Gemini4J Roadmap: Version 1.0.0
+
+This roadmap outlines the key milestones for the initial release of Gemini4J,
+focusing on providing a comprehensive and robust set of features for interacting
+with the Google Gemini API.
+
+### Phase 1: Core Functionality and Essential Resources
+
+* **Complete GenerationResource:**
+    * Implement all remaining methods of the `GenerationResource` interface,
+      providing full coverage of the content generation capabilities offered by
+      the Gemini API.
+    * **Crucial Feature:** Implement **incremental conversation support**,
+      enabling developers to build conversational experiences by maintaining
+      context across multiple interactions with the API.
+* **Enhance ModelResource:**
+    * Add the `getModel()` method to the `ModelResource` interface, allowing
+      developers to retrieve detailed information about specific Gemini models.
+* **Implement EmbedResource:**
+    * Create a new `EmbedResource` interface and its corresponding
+      implementation to expose the embedding functionalities of the Gemini API.
+      This will allow developers to generate embeddings for text and content,
+      enabling various downstream tasks like semantic search and similarity
+      comparisons.
+
+### Phase 2: Advanced Features and Usability Enhancements
+
+* **Maven Central Release:**
+    * Publish the Gemini4J artifact to Maven Central, making it easily
+      accessible to developers through a standard dependency management system.
+* **Caching Mechanism:**
+    * Implement a caching mechanism to store and reuse API responses, reducing
+      latency and improving performance for repeated requests. This feature will
+      be configurable, allowing developers to control caching behavior based on
+      their specific needs.
+* **JSON Schema Validation:**
+    * Integrate JSON schema validation for requests and responses, ensuring data
+      integrity and providing early detection of potential errors. This will
+      enhance the reliability and robustness of the library.
+
+### Phase 3: Extended Capabilities and Real-World Examples
+
+* **Script Execution Resource:**
+    * Introduce a new `ScriptExecutionResource` interface and implementation to
+      enable the execution of custom scripts within the Gemini environment. This
+      will empower developers to extend the capabilities of the API and perform
+      more complex tasks.
+* **Comprehensive Documentation and Examples:**
+    * Expand the documentation to cover all implemented features and provide
+      detailed usage examples for real-world scenarios. This will help
+      developers quickly understand and effectively utilize the library's
+      capabilities.
+
+### Future Development
+
+Beyond version 1.0, the roadmap for Gemini4J will focus on:
+
+* **Implementing additional API resources:** Continuously expanding the
+  library's coverage to encompass the full range of functionalities offered by
+  the Google Gemini API.
+* **Exploring advanced use cases:** Providing examples and guidance for
+  leveraging Gemini4J in areas like chatbot development, code generation,
+  creative writing assistance, and more.
+* **Community engagement:** Fostering a vibrant community around Gemini4J by
+  encouraging contributions, addressing feedback, and promoting collaboration.
+
+This roadmap reflects the initial vision for Gemini4J, aiming to provide a
+powerful and versatile tool for developers to harness the capabilities of the
+Google Gemini API. The development process will be iterative and responsive to
+community feedback, ensuring that the library remains relevant and valuable for
+a wide range of applications.
+
+## Library Architecture
+
+Gemini4J is designed with a layered architecture to promote modularity, code
+reusability, and ease of maintenance. This approach ensures a clear separation
+of concerns, making the codebase easier to understand, extend, and maintain. The
+library is structured into the following layers:
+
+### HTTP Layer
+
+The HTTP layer abstracts the underlying HTTP client used for communication with
+the Google Gemini API. This design choice allows developers to seamlessly
+integrate Gemini4J with their existing HTTP client infrastructure, promoting
+consistency and minimizing potential dependency conflicts. By default, Gemini4J
+utilizes the Apache HttpClient, but it provides the flexibility to use any HTTP
+client through a custom adapter.
+
+**Key responsibilities of the HTTP layer:**
+
+* **Handling HTTP requests and responses:** This includes sending GET and POST
+  requests to the Gemini API endpoints and processing the corresponding
+  responses.
+* **Managing connection and response timeouts:** Ensuring efficient and reliable
+  communication with the API.
+* **Providing a consistent interface for different HTTP clients:** Enabling
+  developers to use their preferred HTTP client without modifying the core
+  library code.
+
+### JSON Layer
+
+The JSON layer handles the serialization and deserialization of data exchanged
+with the Google Gemini API. It provides a standardized way to convert Java
+objects into their JSON representation and vice versa, ensuring smooth data flow
+between the application and the API. While Gemini4J defaults to the Jackson
+library for JSON processing, it allows for easy customization to accommodate
+different JSON libraries based on project requirements.
+
+**Key responsibilities of the JSON layer:**
+
+* **Serializing Java objects into JSON strings:** Converting data structures
+  used within the application into a format suitable for transmission to the
+  Gemini API.
+* **Deserializing JSON responses into Java objects:** Transforming data received
+  from the API into Java objects for convenient processing within the
+  application.
+* **Providing a consistent interface for different JSON libraries:** Allowing
+  developers to choose their preferred JSON library without affecting the core
+  library functionality.
+
+### Resource Layer
+
+The Resource layer provides a high-level, intuitive interface for interacting
+with the various resources offered by the Google Gemini API. It abstracts the
+complexities of HTTP communication and JSON serialization, allowing developers
+to focus on the specific tasks they want to accomplish with the API, such as
+generating text, translating languages, or managing models. Each API resource is
+represented by a dedicated interface and implementation within this layer.
+
+**Key responsibilities of the Resource layer:**
+
+* **Defining clear contracts for interacting with API resources:** Each
+  interface outlines the available methods and parameters for a specific
+  resource.
+* **Encapsulating the logic for making API calls:** The implementations handle
+  the details of constructing requests, sending them to the API, and processing
+  the responses.
+* **Providing a user-friendly abstraction over the lower-level layers:**
+  Developers can work with the API resources without needing to deal with the
+  intricacies of HTTP and JSON handling.
+
+### Client
+
+The `GeminiClient` acts as the central entry point for interacting with the
+Google Gemini API. It encapsulates common configuration settings, such as the
+API key and the chosen HTTP client, providing a unified interface for accessing
+all available API resources. The `GeminiClient` is not a layer in itself but
+rather a facade that simplifies interaction with the underlying layers.
+
+**Key responsibilities of the Client:**
+
+* **Managing global configuration settings:** This includes storing the API key,
+  setting timeouts, and configuring the HTTP client.
+* **Providing access to the API resources:** The `GeminiClient` exposes methods
+  for obtaining instances of the various resource interfaces, allowing
+  developers to work with the desired API functionalities.
+* **Simplifying the overall interaction with the API:** Developers can use a
+  single `GeminiClient` instance to access all API resources, streamlining the
+  development process.
+
+### HTTP Layer: Flexibility and Customization
+
+The HTTP layer in Gemini4J plays a crucial role in enabling seamless
+communication with the Google Gemini API. It's designed with flexibility and
+customization in mind, allowing developers to integrate their preferred HTTP
+client library without being restricted to a specific implementation. This
+approach ensures compatibility with existing project infrastructure and
+minimizes potential dependency conflicts.
+
+**Why is a custom HTTP client important?**
+
+* **Leveraging existing infrastructure:** Many applications already utilize a
+  specific HTTP client library like OkHttp, Retrofit, or Apache HttpClient. By
+  allowing custom HTTP clients, Gemini4J avoids introducing a new dependency and
+  potential conflicts.
+* **Fine-grained control:** Custom HTTP clients offer more control over network
+  configurations, such as connection pooling, caching, and interceptors. This
+  level of control can be crucial for optimizing performance and handling
+  specific network requirements.
+* **Testing and Mocking:** Using a custom HTTP client simplifies testing by
+  allowing developers to mock network requests and responses, ensuring reliable
+  and predictable test outcomes.
+
+**Implementing a custom HTTP client with OkHttp:**
+
+To use a custom HTTP client, you need to create an adapter that implements
+the `com.enovka.gemini4j.http.spec.HttpClient` interface. This interface defines
+the methods for sending GET and POST requests, as well as setting connection and
+response timeouts.
+
+Here's a step-by-step guide on how to implement a custom HTTP client adapter
+using OkHttp and integrate it with Gemini4J:
+
+**1. Create the OkHttp Adapter:**
+
+```java
+import com.enovka.gemini4j.http.exception.HttpException;
+import com.enovka.gemini4j.http.spec.HttpClient;
+import com.enovka.gemini4j.http.spec.HttpResponse;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import java.io.IOException;
+import java.util.Map;
+
+public class OkHttpAdapter implements HttpClient {
+
+    private final OkHttpClient okHttpClient;
+
+    public OkHttpAdapter(OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
+    }
+
+    @Override
+    public HttpResponse get(String url, Map<String, String> headers)
+            throws HttpException {
+        Request.Builder requestBuilder = new Request.Builder().url(url);
+        headers.forEach(requestBuilder::addHeader);
+        Request request = requestBuilder.build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return new HttpResponse(response.code(),
+                    response.headers().toMultimap(), response.body().string());
+        } catch (IOException e) {
+            throw new HttpException("Error executing GET request", e);
+        }
+    }
+
+    @Override
+    public HttpResponse post(String url, String body,
+                             Map<String, String> headers) throws HttpException {
+        RequestBody requestBody = RequestBody.create(body,
+                okhttp3.MediaType.parse("application/json"));
+
+        Request.Builder requestBuilder = new Request.Builder().url(url)
+                .post(requestBody);
+        headers.forEach(requestBuilder::addHeader);
+        Request request = requestBuilder.build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return new HttpResponse(response.code(),
+                    response.headers().toMultimap(), response.body().string());
+        } catch (IOException e) {
+            throw new HttpException("Error executing POST request", e);
+        }
+    }
+
+    @Override
+    public void setConnectionTimeout(int connectionTimeout) {
+        // OkHttp uses seconds for timeout configuration
+        this.okHttpClient.newBuilder().connectTimeout(connectionTimeout / 1000,
+                java.util.concurrent.TimeUnit.SECONDS).build();
+    }
+
+    @Override
+    public void setResponseTimeout(int responseTimeout) {
+        // OkHttp uses seconds for timeout configuration
+        this.okHttpClient.newBuilder().readTimeout(responseTimeout / 1000,
+                java.util.concurrent.TimeUnit.SECONDS).build();
+    }
+}
+```
+
+**2. Configure the GeminiClientBuilder:**
+
+```java
+import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
+import com.enovka.gemini4j.client.spec.GeminiClient;
+import com.enovka.gemini4j.http.factory.HttpClientBuilder;
+import com.enovka.gemini4j.http.factory.HttpClientType;
+import okhttp3.OkHttpClient;
+
+public class CustomHttpClientExample {
+
+    public static void main(String[] args) {
+        // Create an OkHttpClient instance
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        // Create the OkHttpAdapter
+        OkHttpAdapter okHttpAdapter = new OkHttpAdapter(okHttpClient);
+
+        // Build the GeminiClient with the custom OkHttpAdapter
+        GeminiClient client = GeminiClientBuilder.builder()
+                .withApiKey("YOUR_API_KEY")
+                .withHttpClient(HttpClientBuilder.builder()
+                        .withHttpClientType(HttpClientType.CUSTOM)
+                        .withCustomClient(okHttpAdapter)
+                        .build().build())
+                .build().build();
+
+        // Now you can use the 'client' instance to interact with the Gemini API
+        // ...
+    }
+}
+```
+
+By following these steps, you can leverage the flexibility of the HTTP layer in
+Gemini4J to integrate your preferred HTTP client, ensuring seamless integration
+with your existing application infrastructure.
+
+### JSON Layer: Flexibility and Customization for Data Handling
+
+The JSON layer in Gemini4J is the backbone of data exchange with the Google
+Gemini API. It's responsible for seamlessly converting Java objects used within
+your application into their JSON representation for transmission to the API, and
+vice versa, transforming JSON responses from the API back into Java objects for
+easy processing. This layer ensures smooth and efficient communication between
+your application and the Gemini API.
+
+**Why is a customizable JSON layer important?**
+
+* **Project Consistency and Dependency Management:** Many applications already
+  utilize a specific JSON library, such as Gson, Jackson, or Moshi. By allowing
+  custom JSON processors, Gemini4J avoids introducing a new dependency and
+  potential conflicts, promoting consistency within your project's technology
+  stack.
+* **Performance Optimization:** Different JSON libraries exhibit varying
+  performance characteristics. Choosing a specific library based on its
+  performance profile can significantly impact your application's speed and
+  efficiency, especially when dealing with large volumes of data.
+* **Feature Flexibility:** Certain JSON libraries offer unique features or
+  customization options that might be crucial for your project. For instance,
+  you might need specific handling of date formats, custom serializers for
+  complex objects, or fine-grained control over the serialization process.
+
+**Implementing a Custom JSON Processor with Gson:**
+
+Gemini4J defaults to the Jackson library for JSON processing. However, you can
+easily integrate your preferred JSON library by creating an adapter that
+implements the `com.enovka.gemini4j.json.spec.JsonService` interface. This
+interface defines the core methods for JSON serialization and deserialization:
+
+* **`serialize(T object)`:** Converts a Java object of type `T` into a JSON
+  string representation.
+* **`deserialize(String json, Class<T> type)`:** Parses a JSON string and
+  transforms it into a Java object of the specified type `T`.
+
+Here's a step-by-step guide on implementing a custom JSON processor adapter
+using Gson and integrating it with Gemini4J:
+
+**1. Create the Gson Adapter:**
+
+```java
+import com.enovka.gemini4j.json.exception.JsonException;
+import com.enovka.gemini4j.json.spec.JsonService;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+public class GsonAdapter implements JsonService {
+
+    private final Gson gson;
+
+    public GsonAdapter(Gson gson) {
+        this.gson = gson;
+    }
+
+    @Override
+    public <T> String serialize(T object) throws JsonException {
+        try {
+            // Utilize Gson's toJson method to serialize the object
+            return gson.toJson(object);
+        } catch (Exception e) {
+            // Wrap any exceptions in a JsonException for consistent error handling
+            throw new JsonException("Error serializing object to JSON", e);
+        }
+    }
+
+    @Override
+    public <T> T deserialize(String json, Class<T> type) throws JsonException {
+        try {
+            // Utilize Gson's fromJson method to deserialize the JSON string
+            return gson.fromJson(json, type);
+        } catch (JsonSyntaxException e) {
+            // Wrap any exceptions in a JsonException for consistent error handling
+            throw new JsonException("Error deserializing JSON string", e);
+        }
+    }
+}
+```
+
+**2. Configure the GeminiClientBuilder:**
+
+```java
+import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
+import com.enovka.gemini4j.client.spec.GeminiClient;
+import com.enovka.gemini4j.json.builder.JsonServiceBuilder;
+import com.enovka.gemini4j.json.builder.JsonServiceType;
+import com.google.gson.Gson;
+
+public class CustomJsonProcessorExample {
+
+    public static void main(String[] args) {
+        // Create a Gson instance with your desired configurations
+        Gson gson = new Gson();
+
+        // Create the GsonAdapter instance
+        GsonAdapter gsonAdapter = new GsonAdapter(gson);
+
+        // Build the GeminiClient, injecting the custom GsonAdapter
+        GeminiClient client = GeminiClientBuilder.builder()
+                .withApiKey("YOUR_API_KEY")
+                .withJsonService(JsonServiceBuilder.builder()
+                        .withJsonServiceType(JsonServiceType.CUSTOM)
+                        .withCustomJsonService(gsonAdapter)
+                        .build().build())
+                .build().build();
+
+        // Now you can use the 'client' instance to interact with the Gemini API. 
+        // All resources will utilize the custom GsonAdapter for JSON processing.
+        // ...
+    }
+}
+```
+
+By following these steps, you can seamlessly integrate your preferred JSON
+library with Gemini4J, ensuring consistency with your project setup and
+potentially benefiting from enhanced performance or specific features offered by
+your chosen library. This level of customization makes Gemini4J a flexible and
+adaptable tool for interacting with the Google Gemini API.

@@ -1,9 +1,11 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.TypeEnum;
+import com.enovka.gemini4j.domain.type.TypeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -15,13 +17,15 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Type {
 
     /**
      * Not specified, should not be used.
      */
     @JsonProperty("TYPE_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.types.TypeEnum typeUnspecified;
+    private com.enovka.gemini4j.domain.type.TypeEnum typeUnspecified;
 
     /**
      * String type.
@@ -33,30 +37,30 @@ public class Type {
      * Number type.
      */
     @JsonProperty("NUMBER")
-    private com.enovka.gemini4j.domain.types.TypeEnum number;
+    private com.enovka.gemini4j.domain.type.TypeEnum number;
 
     /**
      * Integer type.
      */
     @JsonProperty("INTEGER")
-    private com.enovka.gemini4j.domain.types.TypeEnum integer;
+    private com.enovka.gemini4j.domain.type.TypeEnum integer;
 
     /**
      * Boolean type.
      */
     @JsonProperty("BOOLEAN")
-    private com.enovka.gemini4j.domain.types.TypeEnum booleanValue;
+    private com.enovka.gemini4j.domain.type.TypeEnum booleanValue;
 
     /**
      * Array type.
      */
     @JsonProperty("ARRAY")
-    private com.enovka.gemini4j.domain.types.TypeEnum array;
+    private com.enovka.gemini4j.domain.type.TypeEnum array;
 
     /**
      * Object type.
      */
     @JsonProperty("OBJECT")
-    private com.enovka.gemini4j.domain.types.TypeEnum object;
+    private com.enovka.gemini4j.domain.type.TypeEnum object;
 
 }

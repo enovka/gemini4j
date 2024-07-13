@@ -1,52 +1,41 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Block at and beyond a specified harm probability.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
-@Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@Getter
 public class HarmBlockThreshold {
 
-    /**
-     * The Threshold is unspecified.
-     */
-    @JsonProperty("HARM_BLOCK_THRESHOLD_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum
-            harmBlockThresholdUnspecified;
+    private HarmBlockThresholdEnum value;
 
     /**
-     * Content with NEGLIGIBLE will be allowed.
+     * Creates a HarmBlockThreshold from a string value.
+     *
+     * @param value The string representation of the harm block threshold.
+     * @return The corresponding HarmBlockThresholdEnum value.
      */
-    @JsonProperty("BLOCK_LOW_AND_ABOVE")
-    private HarmBlockThresholdEnum blockLowAndAbove;
+    @JsonCreator
+    public static HarmBlockThreshold fromValue(String value) {
+        return new HarmBlockThreshold(
+                HarmBlockThresholdEnum.valueOf(value.toUpperCase()));
+    }
 
     /**
-     * Content with NEGLIGIBLE and LOW will be allowed.
+     * Returns the string representation of the harm block threshold.
+     *
+     * @return The string representation of the harm block threshold.
      */
-    @JsonProperty("BLOCK_MEDIUM_AND_ABOVE")
-    private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum
-            blockMediumAndAbove;
-
-    /**
-     * Content with NEGLIGIBLE, LOW, and MEDIUM will be allowed.
-     */
-    @JsonProperty("BLOCK_ONLY_HIGH")
-    private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum
-            blockOnlyHigh;
-
-    /**
-     * All content will be allowed.
-     */
-    @JsonProperty("BLOCK_NONE")
-    private com.enovka.gemini4j.domain.types.HarmBlockThresholdEnum blockNone;
-
+    @JsonValue
+    public String getValue() {
+        return value.name();
+    }
 }

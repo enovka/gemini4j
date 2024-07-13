@@ -2,7 +2,10 @@ package com.enovka.gemini4j.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -14,7 +17,10 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
+@Builder(setterPrefix = "with")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Model {
 
     /**
@@ -97,6 +103,14 @@ public class Model {
      */
     @JsonProperty("temperature")
     private Double temperature;
+
+    /**
+     * Max value supported by model.
+     * <p>
+     * Values can range over [0.1,2.0]
+     */
+    @JsonProperty("maxTemperature")
+    private Double maxTemperature;
 
     /**
      * For Nucleus sampling.

@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.ModeEnum;
+import com.enovka.gemini4j.domain.type.ModeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class Mode {
      * Unspecified function calling mode. This value should not be used.
      */
     @JsonProperty("MODE_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.types.ModeEnum modeUnspecified;
+    private com.enovka.gemini4j.domain.type.ModeEnum modeUnspecified;
 
     /**
      * Default model behavior, model decides to predict either a function call
@@ -37,13 +37,13 @@ public class Mode {
      * call will be any one of the provided "functionDeclarations".
      */
     @JsonProperty("ANY")
-    private com.enovka.gemini4j.domain.types.ModeEnum any;
+    private com.enovka.gemini4j.domain.type.ModeEnum any;
 
     /**
      * The Model will not predict any function call. Model behavior is the same
      * as when not passing any function declarations.
      */
     @JsonProperty("NONE")
-    private com.enovka.gemini4j.domain.types.ModeEnum none;
+    private com.enovka.gemini4j.domain.type.ModeEnum none;
 
 }

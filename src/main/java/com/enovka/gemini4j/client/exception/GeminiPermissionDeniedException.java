@@ -7,7 +7,7 @@ package com.enovka.gemini4j.client.exception;
  * @see <a href="https://ai.google.dev/api/rest/v1beta/models">Gemini API
  * Documentation</a>
  * @see GeminiApiException
- * @since 1.0.0-beta
+ * @since 0.0.1-beta
  */
 public class GeminiPermissionDeniedException extends GeminiApiException {
 

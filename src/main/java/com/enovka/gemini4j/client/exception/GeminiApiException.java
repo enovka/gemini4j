@@ -6,7 +6,7 @@ import lombok.Getter;
  * Base class for all exceptions thrown by the Gemini4J library.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 1.0.0-beta
+ * @since 0.0.1-beta
  */
 @Getter
 public class GeminiApiException extends Exception {
@@ -34,4 +34,20 @@ public class GeminiApiException extends Exception {
         this.errorMessage = errorMessage;
     }
 
+    /**
+     * Constructs a new GeminiApiException with the specified error code and
+     * message.
+     *
+     * @param errorCode The HTTP error code returned by the Gemini API.
+     * @param errorMessage The error message returned by the Gemini API.
+     * @param cause The original exception that caused this exception.
+     * @see <a href="https://ai.google.dev/api/rest/v1beta/models">Gemini API
+     * Documentation</a>
+     */
+    public GeminiApiException(int errorCode, String errorMessage,
+                              Throwable cause) {
+        super(errorMessage, cause);
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
 }

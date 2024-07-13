@@ -1,38 +1,45 @@
 ## HTTP Client Abstraction Layer for Java - Documentation
 
-This document provides a comprehensive guide to the HTTP client abstraction
+This document provides a comprehensive guide to the HTTP clientService
+abstraction
 layer, detailing its architecture, usage, and customization options. This
-abstraction allows for flexibility in choosing the most suitable HTTP client
+abstraction allows for flexibility in choosing the most suitable HTTP
+clientService
 library for your Java project, promoting adaptability and maintainability.
 
 **1. Introduction**
 
 Many Java projects require interaction with external APIs or services through
-HTTP requests. However, the choice of the HTTP client library can vary depending
+HTTP requests. However, the choice of the HTTP clientService library can vary
+depending
 on project needs, dependencies, and developer preferences. To ensure flexibility
-and avoid tight coupling to a specific client library, a robust abstraction
+and avoid tight coupling to a specific clientService library, a robust
+abstraction
 layer for HTTP communication is beneficial.
 
 **2. Architecture Overview**
 
-The HTTP client abstraction layer follows a layered architecture, designed to
+The HTTP clientService abstraction layer follows a layered architecture,
+designed to
 promote modularity and maintainability. The key components are:
 
 * **`HttpClientService` Interface:** This interface defines the core methods for
-  making HTTP requests (GET and POST), serving as a contract for all HTTP client
+  making HTTP requests (GET and POST), serving as a contract for all HTTP
+  clientService
   implementations. It acts as a high-level abstraction, hiding the underlying
-  details of the chosen HTTP client library.
+  details of the chosen HTTP clientService library.
 
 * **`AbstractHttpClientService` Class:** This abstract class implements
   the `HttpClientService` interface, providing common functionalities like URL
   and header validation. It delegates the actual HTTP request execution to
   concrete implementations through abstract methods (`doGET` and `doPOST`). This
-  class simplifies the development of specific client implementations by
+  class simplifies the development of specific clientService implementations by
   handling essential tasks.
 
 * **Concrete HTTP Client Implementations:** This layer provides concrete
   implementations of the `HttpClientService` interface, each tailored to a
-  specific HTTP client library (e.g., Apache HttpClient, Spring WebClient,
+  specific HTTP clientService library (e.g., Apache HttpClient, Spring
+  WebClient,
   OkHttp, etc.). These implementations handle the library-specific details,
   including:
     * Sending HTTP requests.
@@ -41,44 +48,53 @@ promote modularity and maintainability. The key components are:
 
 * **`HttpResponseWrapper` Interface:**  This interface defines a generic
   representation of the HTTP response, decoupling the `HttpClientService`
-  interface from specific HTTP client response classes. It provides a unified
+  interface from specific HTTP clientService response classes. It provides a
+  unified
   interface for accessing response data, regardless of the underlying HTTP
-  client library.
+  clientService library.
 
 * **Concrete `HttpResponseWrapper` Implementations:** Concrete implementations
-  of the `HttpResponseWrapper` interface are created for each HTTP client
+  of the `HttpResponseWrapper` interface are created for each HTTP clientService
   library used. These classes encapsulate the logic for extracting the status
-  code, headers, and body from the response object of the specific HTTP client,
+  code, headers, and body from the response object of the specific HTTP
+  clientService,
   offering a consistent way to interact with the response data.
 
 * **`HttpClientServiceFactory` Class:** This factory class provides methods to
-  create instances of `HttpClientService` based on the desired client type (
+  create instances of `HttpClientService` based on the desired clientService
+  type (
   e.g., default Apache HttpClient, custom Spring WebClient, etc.). It promotes
-  loose coupling and facilitates the selection of the appropriate HTTP client
+  loose coupling and facilitates the selection of the appropriate HTTP
+  clientService
   implementation.
 
 **3. Benefits of the Architecture**
 
-* **Flexibility:**  You can easily adapt to different HTTP client libraries by
+* **Flexibility:**  You can easily adapt to different HTTP clientService
+  libraries by
   simply implementing the `HttpClientService` interface. This allows you to
-  choose the most suitable HTTP client for your project's requirements.
+  choose the most suitable HTTP clientService for your project's requirements.
 
 * **Maintainability:** The abstraction layer separates the core HTTP logic from
-  the client-specific implementations. This makes it easier to maintain and
-  update your code as new HTTP client libraries are introduced or existing ones
+  the clientService-specific implementations. This makes it easier to maintain
+  and
+  update your code as new HTTP clientService libraries are introduced or
+  existing ones
   evolve.
 
 * **Testability:** The abstraction layer allows for independent testing of the
-  HTTP client implementations without affecting the core HTTP interaction logic.
+  HTTP clientService implementations without affecting the core HTTP interaction
+  logic.
   This simplifies unit testing and increases the reliability of your codebase.
 
 * **Extensibility:** The factory pattern (`HttpClientServiceFactory`) makes
-  adding new HTTP client implementations easy without modifying existing code.
+  adding new HTTP clientService implementations easy without modifying existing
+  code.
   This promotes a flexible and adaptable system.
 
 **4. Basic Usage**
 
-To use the HTTP client abstraction layer, you need to:
+To use the HTTP clientService abstraction layer, you need to:
 
 * **Include the library in your project:** You can add the library to your
   project using Maven or Gradle.
@@ -92,7 +108,8 @@ To use the HTTP client abstraction layer, you need to:
 
 **5. Customizing the HTTP Client**
 
-You can customize the HTTP client by using the `HttpClientServiceFactory`. The
+You can customize the HTTP clientService by using
+the `HttpClientServiceFactory`. The
 factory provides methods to create `HttpClientService` instances with different
 configurations, including:
 
@@ -113,10 +130,11 @@ configurations, including:
    HttpClientService httpClientService = HttpClientServiceFactory.create(HttpClientServiceFactory.ClientType.DEFAULT, customValidator);
    ```
 
-* **Custom Client:** You can create a custom client, such as Spring WebClient or
+* **Custom Client:** You can create a custom clientService, such as Spring
+  WebClient or
   OkHttp, and use it with the abstraction layer. You need to provide a custom
   implementation of `HttpClientService` and `HttpResponseWrapper` for your
-  custom client:
+  custom clientService:
 
    ```java
    WebClient webClient = WebClient.builder().baseUrl("https://api.example.com").build();
@@ -127,7 +145,7 @@ configurations, including:
 
 **6. Example: Using Spring WebClient**
 
-Here's an example of how to use Spring WebClient with the HTTP client
+Here's an example of how to use Spring WebClient with the HTTP clientService
 abstraction layer:
 
 1. **Create a `SpringWebClientService` class:** This class implements
@@ -141,7 +159,7 @@ abstraction layer:
    ```
 
 2. **Create a `HttpClientService` instance:** Use the `HttpClientServiceFactory`
-   to create a `HttpClientService` instance for your custom client.
+   to create a `HttpClientService` instance for your custom clientService.
 
    ```java
    HttpClientService httpClientService = HttpClientServiceFactory.create(
@@ -164,30 +182,32 @@ abstraction layer:
 
 **7. Creating Custom Clients**
 
-To create a custom client, you need to:
+To create a custom clientService, you need to:
 
 * **Implement the `HttpClientService` interface:**  Create a new class that
-  implements the `HttpClientService` interface using your desired HTTP client
+  implements the `HttpClientService` interface using your desired HTTP
+  clientService
   library.
 * **Implement the `HttpResponseWrapper` interface:** Create a new class that
   implements the `HttpResponseWrapper` interface to handle responses from your
-  custom client.
+  custom clientService.
 
 **8. Integrating Custom Clients**
 
-Once you've implemented your custom client, you need to integrate it with the
-HTTP client abstraction layer:
+Once you've implemented your custom clientService, you need to integrate it with
+the
+HTTP clientService abstraction layer:
 
 * **Update the `HttpClientServiceFactory`:**  Add a new case to
   the `HttpClientServiceFactory`'s enum (`ClientType`) to represent your custom
-  client type.
+  clientService type.
 * **Create a `HttpClientService` instance using the factory:** Use
   the `HttpClientServiceFactory` to create a `HttpClientService` instance for
-  your custom client.
+  your custom clientService.
 
 **9. Example of Custom Client Integration**
 
-Let's imagine you have a custom HTTP client called `MyCustomHttpClient`.
+Let's imagine you have a custom HTTP clientService called `MyCustomHttpClient`.
 
 1. **Implement `HttpClientService`:**
 
@@ -222,7 +242,7 @@ Let's imagine you have a custom HTTP client called `MyCustomHttpClient`.
    }
    ```
 
-3. **Create a `HttpClientService` instance with your custom client:**
+3. **Create a `HttpClientService` instance with your custom clientService:**
 
    ```java
    // Assuming 'myCustomHttpClient' is an instance of MyCustomHttpClientService
@@ -236,8 +256,10 @@ Let's imagine you have a custom HTTP client called `MyCustomHttpClient`.
 
 **10. Conclusion**
 
-The HTTP client abstraction layer allows you to easily adapt to different HTTP
-client libraries, making your application robust and adaptable. This guide
+The HTTP clientService abstraction layer allows you to easily adapt to different
+HTTP
+clientService libraries, making your application robust and adaptable. This
+guide
 provided a comprehensive overview of using and customizing the layer, including
 examples of using Spring WebClient and integrating custom clients. With these
 tools, you can seamlessly integrate this abstraction into your projects,

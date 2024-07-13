@@ -1,56 +1,40 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.FinishReasonEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import com.enovka.gemini4j.domain.type.FinishReasonEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Defines the reason why the model stopped generating tokens.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
-@Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@Getter
 public class FinishReason {
 
-    /**
-     * Default value. This value is unused.
-     */
-    @JsonProperty("FINISH_REASON_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.types.FinishReasonEnum
-            finishReasonUnspecified;
+    private FinishReasonEnum value;
 
     /**
-     * Natural stop point of the model or provided a stop sequence.
+     * Creates a FinishReason from a string value.
+     *
+     * @param value The string representation of the finish reason.
+     * @return The corresponding FinishReasonEnum value.
      */
-    @JsonProperty("STOP")
-    private FinishReasonEnum stop;
+    @JsonCreator
+    public static FinishReason fromValue(String value) {
+        return new FinishReason(FinishReasonEnum.valueOf(value.toUpperCase()));
+    }
 
     /**
-     * The maximum number of tokens as specified in the request was reached.
+     * Returns the string representation of the finish reason.
+     *
+     * @return The string representation of the finish reason.
      */
-    @JsonProperty("MAX_TOKENS")
-    private com.enovka.gemini4j.domain.types.FinishReasonEnum maxTokens;
-
-    /**
-     * The candidate content was flagged for safety reasons.
-     */
-    @JsonProperty("SAFETY")
-    private com.enovka.gemini4j.domain.types.FinishReasonEnum safety;
-
-    /**
-     * The candidate content was flagged for recitation reasons.
-     */
-    @JsonProperty("RECITATION")
-    private com.enovka.gemini4j.domain.types.FinishReasonEnum recitation;
-
-    /**
-     * Unknown reason.
-     */
-    @JsonProperty("OTHER")
-    private com.enovka.gemini4j.domain.types.FinishReasonEnum other;
-
+    @JsonValue
+    public String getValue() {
+        return value.name();
+    }
 }

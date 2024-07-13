@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.BlockReasonEnum;
+import com.enovka.gemini4j.domain.type.BlockReasonEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -27,12 +27,12 @@ public class BlockReason {
      * understand which safety category blocked it.
      */
     @JsonProperty("SAFETY")
-    private com.enovka.gemini4j.domain.types.BlockReasonEnum safety;
+    private com.enovka.gemini4j.domain.type.BlockReasonEnum safety;
 
     /**
      * Input was blocked due to other reasons.
      */
     @JsonProperty("OTHER")
-    private com.enovka.gemini4j.domain.types.BlockReasonEnum other;
+    private com.enovka.gemini4j.domain.type.BlockReasonEnum other;
 
 }

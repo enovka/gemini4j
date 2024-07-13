@@ -1,10 +1,10 @@
 package com.enovka.gemini4j.domain;
 
-import com.enovka.gemini4j.domain.types.HarmProbabilityEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import com.enovka.gemini4j.domain.type.HarmProbabilityEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * The probability that a piece of content is harmful.
@@ -14,40 +14,31 @@ import lombok.experimental.Accessors;
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
-@Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@Getter
 public class HarmProbability {
 
-    /**
-     * The Probability is unspecified.
-     */
-    @JsonProperty("HARM_PROBABILITY_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum
-            harmProbabilityUnspecified;
+    private HarmProbabilityEnum value;
 
     /**
-     * Content has a negligible chance of being unsafe.
+     * Creates a HarmProbability from a string value.
+     *
+     * @param value The string representation of the harm probability.
+     * @return The corresponding HarmProbabilityEnum value.
      */
-    @JsonProperty("NEGLIGIBLE")
-    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum negligible;
+    @JsonCreator
+    public static HarmProbability fromValue(String value) {
+        return new HarmProbability(
+                HarmProbabilityEnum.valueOf(value.toUpperCase()));
+    }
 
     /**
-     * Content has a low chance of being unsafe.
+     * Returns the string representation of the harm probability.
+     *
+     * @return The string representation of the harm probability.
      */
-    @JsonProperty("LOW")
-    private HarmProbabilityEnum low;
-
-    /**
-     * Content has a medium chance of being unsafe.
-     */
-    @JsonProperty("MEDIUM")
-    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum medium;
-
-    /**
-     * Content has a high chance of being unsafe.
-     */
-    @JsonProperty("HIGH")
-    private com.enovka.gemini4j.domain.types.HarmProbabilityEnum high;
-
+    @JsonValue
+    public String getValue() {
+        return value.name();
+    }
 }

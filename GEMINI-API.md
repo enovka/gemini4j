@@ -346,7 +346,8 @@ of the model.
 
       The model or system does not execute the function. Instead the defined
       function may be returned as a [FunctionCall][content.part.function_call]
-      with arguments to the client side for execution. The model may decide to
+      with arguments to the clientService side for execution. The model may
+      decide to
       call a subset of these functions by
       populating [FunctionCall][content.part.function_call] in the response. The
       next conversation turn may contain
@@ -358,7 +359,7 @@ of the model.
 Structured representation of a function declaration as defined by the OpenAPI
 3.03 specification. Included in this declaration are the function name and
 parameters. This FunctionDeclaration is a representation of a block of code that
-can be used as a Tool by the model and executed by the client.
+can be used as a Tool by the model and executed by the clientService.
 
 #### JSON representation
 

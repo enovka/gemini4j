@@ -2,9 +2,12 @@ package com.enovka.gemini4j.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +18,8 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Candidate {
 
     /**
@@ -38,7 +43,7 @@ public class Candidate {
      * There is at most one rating per category.
      */
     @JsonProperty("safetyRatings")
-    private List<SafetyRating> safetyRatings;
+    private List<SafetyRating> safetyRatings = new ArrayList<>();
 
     /**
      * Output only. Citation information for a model-generated candidate.
@@ -63,7 +68,8 @@ public class Candidate {
      * This field is populated for GenerateAnswer calls.
      */
     @JsonProperty("groundingAttributions")
-    private List<GroundingAttribution> groundingAttributions;
+    private List<GroundingAttribution> groundingAttributions
+            = new ArrayList<>();
 
     /**
      * Output only. Index of the candidate in the list of candidates.
