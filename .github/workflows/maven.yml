@@ -24,10 +24,10 @@ jobs:
           cache: maven
       - name: Await WireMock
         run: |
-          for i in {1..10}; do
-            nc -z localhost 8089 && echo "WireMock is ready!" && break
+          for i in {1..30}; do
+            docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" wiremock | grep -q healthy && echo "WireMock is ready!" && break
             echo "Waiting for WireMock... (attempt $i)"
-            sleep 5
+            sleep 2
           done
       - name: Build with Maven
         run: mvn -B package --file ${{ github.workspace }}/pom.xml
