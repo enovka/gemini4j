@@ -5,7 +5,6 @@ import com.enovka.gemini4j.http.exception.HttpException;
 import com.enovka.gemini4j.http.impl.DefaultHttpClient;
 import com.enovka.gemini4j.http.spec.HttpResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,11 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * HTTP responses and verifies the client's ability to handle GET and POST
  * requests, headers, and response parsing.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 public class DefaultHttpClientTest extends BaseClass {
 
+    private static final String WIREMOCK_HOST = "localhost";
     private static final int WIREMOCK_PORT = 8089;
     private static final String TEST_URL = "/test";
     private static final String TEST_RESPONSE_BODY = "{\"message\": \"Hello, World!\"}";
@@ -45,8 +45,6 @@ public class DefaultHttpClientTest extends BaseClass {
                         .port(WIREMOCK_PORT)
                         .bindAddress("0.0.0.0")); // Bind to all interfaces
         wireMockServer.start();
-        // Configure WireMock to use the dynamic port assigned by GitHub Actions
-        WireMock.configureFor("localhost", wireMockServer.port());
     }
 
     /**
@@ -86,7 +84,7 @@ public class DefaultHttpClientTest extends BaseClass {
 
         // Execute the GET request using the dynamic WireMock port
         HttpResponse response = httpClient.get(
-                "http://localhost:" + wireMockServer.port() + TEST_URL, headers);
+                "http://" + WIREMOCK_HOST + ":" + wireMockServer.port() + TEST_URL, headers);
 
         // Assertions
         assertEquals(200, response.getStatusCode());
@@ -114,7 +112,7 @@ public class DefaultHttpClientTest extends BaseClass {
 
         // Execute the POST request using the dynamic WireMock port
         HttpResponse response = httpClient.post(
-                "http://localhost:" + wireMockServer.port() + TEST_URL,
+                "http://" + WIREMOCK_HOST + ":" + wireMockServer.port() + TEST_URL,
                 TEST_RESPONSE_BODY,
                 headers);
 
@@ -135,7 +133,7 @@ public class DefaultHttpClientTest extends BaseClass {
 
         // Execute the GET request using the dynamic WireMock port and assert that it throws an HttpException
         assertThrows(HttpException.class, () -> httpClient.get(
-                "http://localhost:" + wireMockServer.port() + TEST_URL,
+                "http://" + WIREMOCK_HOST + ":" + wireMockServer.port() + TEST_URL,
                 new HashMap<>()));
         logDebug("HttpClientError test successful.");
     }
@@ -151,7 +149,7 @@ public class DefaultHttpClientTest extends BaseClass {
 
         // Execute the GET request using the dynamic WireMock port and assert that it throws an HttpException
         assertThrows(HttpException.class, () -> httpClient.get(
-                "http://localhost:" + wireMockServer.port() + TEST_URL,
+                "http://" + WIREMOCK_HOST + ":" + wireMockServer.port() + TEST_URL,
                 new HashMap<>()));
         logDebug("HttpServerError test successful.");
     }

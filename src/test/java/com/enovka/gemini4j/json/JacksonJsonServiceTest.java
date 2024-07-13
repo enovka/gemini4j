@@ -52,8 +52,8 @@ public class JacksonJsonServiceTest extends BaseClass {
                 .setTopP(0.8)
                 .setTopK(40);
 
-        String expectedJson
-                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
+        logDebug("Model object before serialization: " + model);
+        String expectedJson = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
         String actualJson = jsonService.serialize(model);
 
         assertEquals(expectedJson, actualJson);
@@ -67,8 +67,7 @@ public class JacksonJsonServiceTest extends BaseClass {
      */
     @Test
     public void testDeserialize() throws JsonException {
-        String json
-                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
+        String json = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
 
         Model expectedModel = new Model().setName("models/test-model")
                 .setBaseModelId("test-model")
