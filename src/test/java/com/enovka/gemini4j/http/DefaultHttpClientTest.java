@@ -6,10 +6,7 @@ import com.enovka.gemini4j.http.impl.DefaultHttpClient;
 import com.enovka.gemini4j.http.spec.HttpResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * HTTP responses and verifies the client's ability to handle GET and POST
  * requests, headers, and response parsing.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public class DefaultHttpClientTest extends BaseClass {
@@ -33,34 +30,27 @@ public class DefaultHttpClientTest extends BaseClass {
     private static final String TEST_URL = "/test";
     private static final String TEST_RESPONSE_BODY = "{\"message\": \"Hello, World!\"}";
     private static WireMockServer wireMockServer;
-    private DefaultHttpClient httpClient;
+    private static DefaultHttpClient httpClient;
 
     /**
-     * Sets up the WireMock server before all tests.
+     * Initializes the {@link DefaultHttpClient} and WireMock server before each test.
      */
     @BeforeAll
-    public static void setUpClass() {
-        wireMockServer = new WireMockServer(
-                WireMockConfiguration.options()
-                        .port(WIREMOCK_PORT)
-                        .bindAddress("0.0.0.0")); // Bind to all interfaces
+    public static void setUp() {
+        if (wireMockServer != null) {
+            wireMockServer.stop();
+        }
+        wireMockServer = new WireMockServer(WireMockConfiguration.options().port(WIREMOCK_PORT));
         wireMockServer.start();
+        httpClient = new DefaultHttpClient();
     }
 
     /**
-     * Stops the WireMock server after all tests.
+     * Stops the WireMock server after each test.
      */
     @AfterAll
-    public static void tearDownClass() {
+    public static void tearDown() {
         wireMockServer.stop();
-    }
-
-    /**
-     * Initializes the {@link DefaultHttpClient} before each test.
-     */
-    @BeforeEach
-    public void setUp() {
-        httpClient = new DefaultHttpClient();
     }
 
     /**

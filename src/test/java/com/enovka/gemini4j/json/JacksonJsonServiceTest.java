@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * ability to serialize and deserialize JSON data correctly, handling various
  * data types and potential error scenarios.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public class JacksonJsonServiceTest extends BaseClass {
