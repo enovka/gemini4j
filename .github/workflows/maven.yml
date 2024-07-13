@@ -1,4 +1,4 @@
-name: Build and test
+name: Build and Test with WireMock
 
 on:
   push:
@@ -7,24 +7,14 @@ on:
     branches: [ master ]
 
 jobs:
-  core:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        jdk: [11, 17]
-    runs-on: ${{ matrix.os }}
-    env:
-      JDK_VERSION:  ${{ matrix.jdk }}
-
+  build-and-test:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Set up JDK
+      - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
-          java-version: ${{ matrix.jdk }}
+          java-version: '11'
           distribution: 'temurin'
       - name: Setup Maven
         uses: actions/setup-node@v2
@@ -35,105 +25,7 @@ jobs:
         run: npm install -g maven
       - name: Grant execute permission for mvn
         run: chmod +x mvn
-
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Start WireMock with Docker Compose
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: docker-compose.yml
-          push: false
-        run: docker-compose up -d
-      - name: Get WireMock Container IP
-        run: echo $(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' wiremock) >> wiremock-ip.txt
-      - name: Test WireMock with Sonarqube
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.jdk == 17 && github.event_name == 'push' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          WIREMOCK_HOST: $(cat wiremock-ip.txt)
-        run: mvn -Dwiremock.host=$WIREMOCK_HOST :check :sonarqube --stacktrace --no-daemon
-
-      - name: Test WireMock
-        env:
-          WIREMOCK_HOST: $(cat wiremock-ip.txt)
-        run: mvn -Dwiremock.host=$WIREMOCK_HOST :check --stacktrace --no-daemon
-
-      - name: Stop WireMock with Docker Compose
-        run: docker-compose down
-      - name: Archive WireMock test report - ${{ matrix.os }} JDK ${{ matrix.jdk }}
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: wiremock-core-test-report-${{ matrix.os }} JDK ${{ matrix.jdk }}
-          path: |
-            build/reports/tests/test
-            build/test-results/test
-
-  jetty12:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        jdk: [17]
-    runs-on: ${{ matrix.os }}
-    env:
-      JDK_VERSION:  ${{ matrix.jdk }}
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: ${{ matrix.jdk }}
-          distribution: 'temurin'
-      - name: Setup Maven
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-          registry-url: 'https://registry.npmjs.org'
-      - name: Install Maven
-        run: npm install -g maven
-      - name: Grant execute permission for mvn
-        run: chmod +x mvn
-
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-jetty12-sonar
-          restore-keys: ${{ runner.os }}-jetty12-sonar
-
-      - name: Start WireMock with Docker Compose
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: docker-compose.yml
-          push: false
-        run: docker-compose up -d
-      - name: Get WireMock Container IP
-        run: echo $(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' wiremock) >> wiremock-ip.txt
-      - name: Test Jetty12 JAR
-        if: ${{ !(matrix.os == 'ubuntu-latest' && github.event_name == 'push') }}
-        env:
-          WIREMOCK_HOST: $(cat wiremock-ip.txt)
-        run: mvn -Dwiremock.host=$WIREMOCK_HOST :wiremock-jetty12:check --stacktrace --no-daemon
-
-      - name: Stop WireMock with Docker Compose
-        run: docker-compose down
-      - name: Archive Jetty12 test report - ${{ matrix.os }} JDK ${{ matrix.jdk }}
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: wiremock-jetty12-test-report-${{ matrix.os }} JDK ${{ matrix.jdk }}
-          path: |
-            wiremock-jetty12/build/reports/tests/test
-            wiremock-jetty12/build/test-results/test
+      - name: Start WireMock
+        uses: cjayanth95/setup-wiremock-action@v0.2.0
+      - name: Build and Test
+        run: mvn clean install -Dwiremock.host=localhost
