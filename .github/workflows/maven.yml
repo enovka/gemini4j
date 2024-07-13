@@ -1,10 +1,10 @@
-name: Build and Test with WireMock
+name: Build and Test with WireMock 3.8.0
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -26,6 +26,12 @@ jobs:
       - name: Grant execute permission for mvn
         run: chmod +x mvn
       - name: Start WireMock
-        uses: cjayanth95/setup-wiremock-action@v0.2.0
+        run: |
+          docker run -d -p 8080:8080 wiremock/wiremock:3.8.0
+          sleep 10 # Aguardar o WireMock iniciar
       - name: Build and Test
         run: mvn clean install -Dwiremock.host=localhost
+      - name: Stop WireMock
+        run: docker stop $(docker ps -aqf "name=wiremock")
+      - name: Remove WireMock Container
+        run: docker rm $(docker ps -aqf "name=wiremock")
