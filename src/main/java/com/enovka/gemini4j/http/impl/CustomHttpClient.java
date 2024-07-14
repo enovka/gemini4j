@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Custom HTTP client implementation that wraps a user-provided HttpClient.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 public class CustomHttpClient extends BaseClass implements HttpClient {

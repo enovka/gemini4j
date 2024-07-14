@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * Specifies what was the reason why input was blocked.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @AllArgsConstructor
 @Getter

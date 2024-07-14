@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Default implementation of the {@link JsonService} interface using Jackson.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 public class JacksonJsonService extends AbstractJsonService {

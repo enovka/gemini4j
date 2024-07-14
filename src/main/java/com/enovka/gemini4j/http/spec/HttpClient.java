@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Interface defining the contract for HTTP client implementations.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 public interface HttpClient {

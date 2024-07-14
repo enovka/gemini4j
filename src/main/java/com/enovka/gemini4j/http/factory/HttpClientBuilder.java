@@ -8,7 +8,7 @@ import lombok.Data;
 /**
  * Builder for creating {@link HttpClient} instances.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 @Data

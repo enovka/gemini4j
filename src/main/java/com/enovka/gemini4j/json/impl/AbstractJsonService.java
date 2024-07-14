@@ -8,7 +8,7 @@ import com.enovka.gemini4j.json.spec.JsonService;
  * Abstract base class for JSON serialization and deserialization
  * implementations.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 public abstract class AbstractJsonService extends BaseClass

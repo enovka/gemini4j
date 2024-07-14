@@ -8,7 +8,7 @@ import com.enovka.gemini4j.json.spec.JsonService;
 /**
  * Implementation of the {@link GeminiClient} interface.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 public class GeminiClientImp extends AbstractGeminiClient {
