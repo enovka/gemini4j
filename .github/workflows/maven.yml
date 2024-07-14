@@ -27,4 +27,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: javadoc
           target-folder: .
-          javadoc-source-folder: target/apidocs
+          javadoc-source-folder: target/site/apidocs
