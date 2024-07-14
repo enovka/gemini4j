@@ -17,7 +17,7 @@ import java.util.Map;
  * Abstract base class for Gemini client implementations, providing shared
  * functionality.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 @Getter

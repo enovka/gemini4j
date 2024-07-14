@@ -3,6 +3,7 @@ package com.enovka.gemini4j.domain;
 import com.enovka.gemini4j.domain.type.TaskTypeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,6 +15,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with")
 public class TaskType {
 
     /**

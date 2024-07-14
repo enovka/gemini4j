@@ -1,38 +1,40 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.BlockReasonEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Specifies what was the reason why input was blocked.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  */
-@Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@Getter
 public class BlockReason {
 
-    /**
-     * Default value. This value is unused.
-     */
-    @JsonProperty("BLOCK_REASON_UNSPECIFIED")
-    private BlockReasonEnum blockReasonUnspecified;
+    private BlockReasonEnum value;
 
     /**
-     * Input was blocked due to safety reasons. You can inspect safetyRatings to
-     * understand which safety category blocked it.
+     * Creates a BlockReason from a string value.
+     *
+     * @param value The string representation of the block reason.
+     * @return The corresponding BlockReasonEnum value.
      */
-    @JsonProperty("SAFETY")
-    private com.enovka.gemini4j.domain.type.BlockReasonEnum safety;
+    @JsonCreator
+    public static BlockReason fromValue(String value) {
+        return new BlockReason(BlockReasonEnum.valueOf(value.toUpperCase()));
+    }
 
     /**
-     * Input was blocked due to other reasons.
+     * Returns the string representation of the block reason.
+     *
+     * @return The string representation of the block reason.
      */
-    @JsonProperty("OTHER")
-    private com.enovka.gemini4j.domain.type.BlockReasonEnum other;
-
+    @JsonValue
+    public String getValue() {
+        return value.name();
+    }
 }

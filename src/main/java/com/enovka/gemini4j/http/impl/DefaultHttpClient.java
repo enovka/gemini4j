@@ -35,6 +35,14 @@ public class DefaultHttpClient extends AbstractHttpClient {
         this.apacheHttpClient = HttpClientBuilder.create().build();
     }
 
+    /**
+     * Constructs a new DefaultHttpClient with custom connection and response
+     * timeouts.
+     *
+     * @param responseTimeout The response timeout in milliseconds.
+     * @param connectionTimeout The connection timeout in milliseconds.
+     * @since 0.0.2
+     */
     public DefaultHttpClient(Integer responseTimeout,
                              Integer connectionTimeout) {
         this.responseTimeout = responseTimeout;

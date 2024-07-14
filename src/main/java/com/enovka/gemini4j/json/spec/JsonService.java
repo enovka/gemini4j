@@ -5,7 +5,7 @@ import com.enovka.gemini4j.json.exception.JsonException;
 /**
  * Interface defining the contract for JSON serialization and deserialization.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public interface JsonService {

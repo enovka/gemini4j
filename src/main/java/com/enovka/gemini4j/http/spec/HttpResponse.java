@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Represents an HTTP response.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public class HttpResponse {

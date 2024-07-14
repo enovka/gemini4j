@@ -8,7 +8,7 @@ import lombok.Data;
 /**
  * Builder for creating {@link JsonService} instances.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 @Data
@@ -25,6 +25,7 @@ public class JsonServiceBuilder {
      * configuration.
      *
      * @return A new {@link JsonService} instance.
+     * @since 0.0.2
      */
     public JsonService build() {
         switch (jsonServiceType) {

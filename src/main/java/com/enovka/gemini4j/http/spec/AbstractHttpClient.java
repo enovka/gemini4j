@@ -9,7 +9,7 @@ import java.util.Map;
  * Abstract base class for HTTP client implementations, providing common
  * functionality.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public abstract class AbstractHttpClient extends BaseClass

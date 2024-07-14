@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Interface defining the contract for HTTP client implementations.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public interface HttpClient {
@@ -40,6 +40,7 @@ public interface HttpClient {
      * Sets the connection timeout in milliseconds.
      *
      * @param connectionTimeout The connection timeout in milliseconds.
+     * @since 0.0.2
      */
     void setConnectionTimeout(int connectionTimeout);
 
@@ -47,6 +48,7 @@ public interface HttpClient {
      * Sets the response timeout in milliseconds.
      *
      * @param responseTimeout The response timeout in milliseconds.
+     * @since 0.0.2
      */
     void setResponseTimeout(int responseTimeout);
 }

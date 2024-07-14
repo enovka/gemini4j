@@ -4,7 +4,7 @@ package com.enovka.gemini4j.json.exception;
  * Exception class representing an error during JSON serialization or
  * deserialization.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public class JsonException extends Exception {

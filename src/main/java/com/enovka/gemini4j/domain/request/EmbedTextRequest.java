@@ -2,6 +2,7 @@ package com.enovka.gemini4j.domain.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,6 +14,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with")
 public class EmbedTextRequest {
 
     /**

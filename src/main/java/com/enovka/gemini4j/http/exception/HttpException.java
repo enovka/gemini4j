@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * Exception class representing an error during a Gemini API request.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @see <a href="https://ai.google.dev/api/rest/v1beta/models">Gemini API
  * Documentation</a>
  * @since 0.0.1-beta
