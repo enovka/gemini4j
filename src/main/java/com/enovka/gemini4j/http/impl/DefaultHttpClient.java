@@ -63,6 +63,7 @@ public class DefaultHttpClient extends AbstractHttpClient {
     public HttpResponse get(String url, Map<String, String> headers)
             throws HttpException {
         HttpGet request;
+
         try {
             request = new HttpGet(url);
             addHeadersToRequest(request, headers);
@@ -102,6 +103,8 @@ public class DefaultHttpClient extends AbstractHttpClient {
         HttpPost request;
         try {
             request = new HttpPost(url);
+            request.setHeader("Accept", "application/json");
+            request.setHeader("Content-type", "application/json");
             addHeadersToRequest(request, headers);
         } catch (Exception e) {
             throw new HttpException(

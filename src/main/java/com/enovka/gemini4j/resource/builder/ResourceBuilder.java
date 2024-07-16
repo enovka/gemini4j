@@ -11,7 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * Builder for creating resource instances.
+ * Builder for creating resource instances for interacting with the Gemini API.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
@@ -20,38 +20,17 @@ import lombok.Data;
 @Builder(setterPrefix = "with")
 public class ResourceBuilder {
 
-    private GeminiClient geminiClient;
+    private final GeminiClient geminiClient; // Now final
     @Builder.Default
-    private JsonService jsonService = JsonServiceBuilder.builder().build()
-            .build();
-
-    /**
-     * Sets the {@link GeminiClient} to use for the resources.
-     *
-     * @param geminiClient The GeminiClient instance.
-     * @return The builder instance for method chaining.
-     */
-    public ResourceBuilder withGeminiClient(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
-        return this;
-    }
-
-    /**
-     * Sets the {@link JsonService} to use for the resources.
-     *
-     * @param jsonService The JsonService instance.
-     * @return The builder instance for method chaining.
-     */
-    public ResourceBuilder withJsonService(JsonService jsonService) {
-        this.jsonService = jsonService;
-        return this;
-    }
+    private final JsonService jsonService = JsonServiceBuilder.builder().build()
+            .build(); // Now final
 
     /**
      * Creates a new {@link GenerationResource} instance based on the builder
      * configuration.
      *
      * @return A new {@link GenerationResource} instance.
+     * @throws IllegalArgumentException If the GeminiClient is not set.
      */
     public GenerationResource buildGenerationResource() {
         if (geminiClient == null) {
@@ -66,6 +45,7 @@ public class ResourceBuilder {
      * configuration.
      *
      * @return A new {@link ModelResource} instance.
+     * @throws IllegalArgumentException If the GeminiClient is not set.
      */
     public ModelResource buildModelResource() {
         if (geminiClient == null) {

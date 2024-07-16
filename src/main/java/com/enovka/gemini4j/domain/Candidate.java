@@ -3,6 +3,7 @@ package com.enovka.gemini4j.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -17,9 +18,9 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(setterPrefix = "with")
 public class Candidate {
 
     /**
@@ -43,6 +44,7 @@ public class Candidate {
      * There is at most one rating per category.
      */
     @JsonProperty("safetyRatings")
+    @Builder.Default
     private List<SafetyRating> safetyRatings = new ArrayList<>();
 
     /**
@@ -68,6 +70,7 @@ public class Candidate {
      * This field is populated for GenerateAnswer calls.
      */
     @JsonProperty("groundingAttributions")
+    @Builder.Default
     private List<GroundingAttribution> groundingAttributions
             = new ArrayList<>();
 

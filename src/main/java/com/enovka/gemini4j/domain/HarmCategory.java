@@ -37,7 +37,7 @@ public class HarmCategory {
      * @return The string representation of the harm category.
      */
     @JsonValue
-    public String getValue() {
+    public String getNameValue() {
         return value.name();
     }
 }

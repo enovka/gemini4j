@@ -3,6 +3,7 @@ package com.enovka.gemini4j.json.impl;
 import com.enovka.gemini4j.json.exception.JsonException;
 import com.enovka.gemini4j.json.spec.AbstractJsonService;
 import com.enovka.gemini4j.json.spec.JsonService;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -20,6 +21,7 @@ public class JacksonJsonService extends AbstractJsonService {
      */
     @Override
     public <T> String serialize(T object) throws JsonException {
+        objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.ALWAYS);
         try {
             if (object == null) {
                 throw new JsonException(

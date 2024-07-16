@@ -2,6 +2,7 @@ package com.enovka.gemini4j.resource.spec;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.common.BaseClass;
+import com.enovka.gemini4j.common.ModelTool;
 import com.enovka.gemini4j.http.exception.HttpException;
 import com.enovka.gemini4j.http.spec.HttpResponse;
 
@@ -17,6 +18,8 @@ import java.util.Map;
 public abstract class AbstractResource extends BaseClass {
 
     protected final GeminiClient geminiClient;
+    protected final ModelTool modelTool = ModelTool.getInstance();
+
 
     /**
      * Constructs a new AbstractResource with the required GeminiClient.
@@ -66,4 +69,10 @@ public abstract class AbstractResource extends BaseClass {
         }
         return response;
     }
+
+    protected ModelTool getModelTool() {
+        return modelTool;
+    }
 }
+
+

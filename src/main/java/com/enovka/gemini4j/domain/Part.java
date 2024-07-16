@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder(setterPrefix = "with")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Part {

@@ -14,7 +14,6 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder(setterPrefix = "with")
 public class AnswerStyle {
 

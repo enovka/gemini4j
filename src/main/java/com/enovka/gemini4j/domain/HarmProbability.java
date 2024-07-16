@@ -4,6 +4,7 @@ import com.enovka.gemini4j.domain.type.HarmProbabilityEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 /**
@@ -16,6 +17,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
+@Builder(setterPrefix = "with")
 public class HarmProbability {
 
     private HarmProbabilityEnum value;
@@ -38,7 +40,7 @@ public class HarmProbability {
      * @return The string representation of the harm probability.
      */
     @JsonValue
-    public String getValue() {
+    public String getValueName() {
         return value.name();
     }
 }

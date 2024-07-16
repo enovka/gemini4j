@@ -34,7 +34,7 @@ public class FinishReason {
      * @return The string representation of the finish reason.
      */
     @JsonValue
-    public String getValue() {
+    public String getNameValue() {
         return value.name();
     }
 }

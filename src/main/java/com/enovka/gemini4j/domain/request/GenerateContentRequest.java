@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Data
 @Builder(setterPrefix = "with")
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GenerateContentRequest {
 
@@ -46,12 +48,14 @@ public class GenerateContentRequest {
      * Function.
      */
     @JsonProperty("tools")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Tool> tools;
 
     /**
      * Optional. Tool configuration for any Tool specified in the request.
      */
     @JsonProperty("toolConfig")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private ToolConfig toolConfig;
 
     /**
@@ -70,18 +74,21 @@ public class GenerateContentRequest {
      * HARM_CATEGORY_HARASSMENT are supported.
      */
     @JsonProperty("safetySettings")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<SafetySetting> safetySettings;
 
     /**
      * Optional. Developer set system instruction. Currently, text only.
      */
     @JsonProperty("systemInstruction")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Content systemInstruction;
 
     /**
      * Optional. Configuration options for model generation and outputs.
      */
     @JsonProperty("generationConfig")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private GenerationConfig generationConfig;
 
     /**
@@ -91,6 +98,7 @@ public class GenerateContentRequest {
      * cost savings. Format: `cachedContents/{cachedContent}`
      */
     @JsonProperty("cachedContent")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String cachedContent;
 
 }

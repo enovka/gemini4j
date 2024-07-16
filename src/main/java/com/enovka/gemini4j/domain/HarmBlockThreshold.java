@@ -35,7 +35,7 @@ public class HarmBlockThreshold {
      * @return The string representation of the harm block threshold.
      */
     @JsonValue
-    public String getValue() {
+    public String getNameValue() {
         return value.name();
     }
 }
