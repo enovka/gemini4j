@@ -5,7 +5,6 @@ import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.common.PropertiesLoader;
 import com.enovka.gemini4j.domain.*;
-import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GenerateContentResponse;
 import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
 import com.enovka.gemini4j.http.exception.HttpException;
@@ -14,7 +13,6 @@ import com.enovka.gemini4j.resource.builder.ResourceBuilder;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 
-
 import java.util.List;
 import java.util.Properties;
 
@@ -22,7 +20,7 @@ import java.util.Properties;
  * Example class demonstrating the usage of the Gemini4J library for interacting
  * with the Google Gemini API.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.2
  */
 public class Gemini4JExample {
@@ -44,54 +42,37 @@ public class Gemini4JExample {
         // Set the desired model for text generation
         client.setModel("gemini-1.5-flash-001");
 
-        // Generate text based on user input
+        // Example 1: Basic Text Generation
         generateAndPrintText("Hello, Gemini! How are you today?", generationResource);
 
-        // Generate text with system instructions
+        // Example 2: Text Generation with System Instructions
         generateAndPrintText("What is the capital of France?",
                 "You are a helpful AI assistant. Answer the question in a concise way.",
                 generationResource);
 
-        // Generate content with custom configuration
-        generateAndPrintTextWithCustomConfig(client, generationResource);
+        // Example 3: Text Generation with Safety Settings
+        generateAndPrintTextWithSafetySettings(generationResource);
 
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig2(generationResource);
+        // Example 4: Text Generation with Temperature
+        generateAndPrintTextWithTemperature(generationResource);
 
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig3(generationResource);
+        // Example 5: Text Generation with Candidate Count
+        generateAndPrintTextWithCandidateCount(generationResource);
 
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig4(generationResource);
+        // Example 6: Text Generation with Max Output Tokens
+        generateAndPrintTextWithMaxOutputTokens(generationResource);
 
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig5(generationResource);
+        // Example 7: Text Generation with TopP
+        generateAndPrintTextWithTopP(generationResource);
 
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig6(generationResource);
+        // Example 8: Text Generation with TopK
+        generateAndPrintTextWithTopK(generationResource);
 
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig7(generationResource);
+        // Example 9: Text Generation with Stop Sequences
+        generateAndPrintTextWithStopSequences(generationResource);
 
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig8(generationResource);
-
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig9(generationResource);
-
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig12(generationResource);
-
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig13(generationResource);
-
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig16(generationResource);
-
-        // Generate text with custom configuration
-        generateAndPrintTextWithCustomConfig17(generationResource);
-
-
+        // Example 10: Text Generation with Custom Configuration
+        generateAndPrintTextWithCustomConfig(generationResource);
     }
 
     /**
@@ -210,49 +191,9 @@ public class Gemini4JExample {
     /**
      * Generates text with custom configuration and prints the response.
      *
-     * @param client              The {@link GeminiClient} instance.
      * @param generationResource The {@link GenerationResource} instance.
      */
     private static void generateAndPrintTextWithCustomConfig(
-            GeminiClient client, GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentRequest request = GenerateContentRequest.builder()
-                    .withModel(client.getModel())
-                    .withContents(List.of(
-                            Content.builder()
-                                    .withRole("user")
-                                    .withParts(List.of(
-                                            Part.builder()
-                                                    .withText(
-                                                            "Write a short story about a cat who loves to travel.")
-                                                    .build()
-                                    ))
-                                    .build()
-                    ))
-                    .withGenerationConfig(
-                            GenerationConfig.builder()
-                                    .withTemperature(0.7)
-                                    .withTopP(0.9)
-                                    .withTopK(50)
-                                    .build())
-                    .build();
-            GenerateContentResponse response = generationResource
-                    .generateContent(request);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig2(
             GenerationResource generationResource) {
         System.out.println("Generating content with custom configuration:");
         try {
@@ -264,151 +205,11 @@ public class Gemini4JExample {
                                                     HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
                                             .build()
                             ),
-                            List.of("The End"),
                             0.7,
                             3,
                             100,
                             0.9,
-                            50);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig3(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            List.of("The End"),
-                            0.7,
-                            3,
-                            100,
-                            0.9);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig4(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            List.of("The End"),
-                            0.7,
-                            3,
-                            100);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig5(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            List.of("The End"),
-                            0.7,
-                            3);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig6(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            List.of("The End"),
-                            0.7);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig7(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
+                            50,
                             List.of("The End"));
             printGenerateContentResponse(response);
         } catch (GeminiApiException | JsonException | HttpException e) {
@@ -419,156 +220,16 @@ public class Gemini4JExample {
     }
 
     /**
-     * Generates text with custom configuration and prints the response.
+     * Generates text with safety settings and prints the response.
      *
      * @param generationResource The {@link GenerationResource} instance.
      */
-    private static void generateAndPrintTextWithCustomConfig8(
+    private static void generateAndPrintTextWithSafetySettings(
             GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
+        System.out.println("Generating text with safety settings:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            0.7,
-                            3,
-                            100,
-                            0.9,
-                            50);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig9(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            0.7,
-                            3,
-                            100,
-                            0.9);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-/*    private static void generateAndPrintTextWithCustomConfig10(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            0.7,
-                            3,
-                            100);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-/*    private static void generateAndPrintTextWithCustomConfig11(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            0.7,
-                            3);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig12(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of(
-                                    SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
-                                            .build()
-                            ),
-                            0.7);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig13(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
+                    .generateText("Write a story about a robot who falls in love with a human.",
                             List.of(
                                     SafetySetting.builder()
                                             .withCategory(HarmCategory.fromValue(
@@ -584,69 +245,18 @@ public class Gemini4JExample {
     }
 
     /**
-     * Generates text with custom configuration and prints the response.
+     * Generates text with temperature and prints the response.
      *
      * @param generationResource The {@link GenerationResource} instance.
      */
-/*    private static void generateAndPrintTextWithCustomConfig14(
+    private static void generateAndPrintTextWithTemperature(
             GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
+        System.out.println("Generating text with temperature:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of("The End"),
-                            0.7,
-                            3,
-                            100,
-                            0.9,
-                            50);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-/*    private static void generateAndPrintTextWithCustomConfig15(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of("The End"),
-                            0.7,
-                            3,
-                            100,
-                            0.9);
-            printGenerateContentResponse(response);
-        } catch (GeminiApiException | JsonException | HttpException e) {
-            System.err.println(
-                    "Error generating text: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
-
-    /**
-     * Generates text with custom configuration and prints the response.
-     *
-     * @param generationResource The {@link GenerationResource} instance.
-     */
-    private static void generateAndPrintTextWithCustomConfig16(
-            GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
-        try {
-            GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of("The End"),
-                            0.7,
-                            3,
-                            100);
+                    .generateText("Write a poem about the beauty of nature.",
+                            null, // No safety settings
+                            0.9); // Temperature
             printGenerateContentResponse(response);
         } catch (GeminiApiException | JsonException | HttpException e) {
             System.err.println(
@@ -656,19 +266,19 @@ public class Gemini4JExample {
     }
 
     /**
-     * Generates text with custom configuration and prints the response.
+     * Generates text with candidate count and prints the response.
      *
      * @param generationResource The {@link GenerationResource} instance.
      */
-    private static void generateAndPrintTextWithCustomConfig17(
+    private static void generateAndPrintTextWithCandidateCount(
             GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
+        System.out.println("Generating text with candidate count:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of("The End"),
-                            0.7,
-                            3);
+                    .generateText("Write a list of five interesting facts about the moon.",
+                            null, // No safety settings
+                            0.5, // Temperature
+                            5); // Candidate count
             printGenerateContentResponse(response);
         } catch (GeminiApiException | JsonException | HttpException e) {
             System.err.println(
@@ -678,69 +288,102 @@ public class Gemini4JExample {
     }
 
     /**
-     * Generates text with custom configuration and prints the response.
+     * Generates text with max output tokens and prints the response.
      *
      * @param generationResource The {@link GenerationResource} instance.
      */
-/*    private static void generateAndPrintTextWithCustomConfig18(
+    private static void generateAndPrintTextWithMaxOutputTokens(
             GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
+        System.out.println("Generating text with max output tokens:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of("The End"),
-                            0.7);
+                    .generateText("Write a short story about a dog who loves to play fetch.",
+                            null, // No safety settings
+                            0.5, // Temperature
+                            1, // Candidate count
+                            10); // Max output tokens
             printGenerateContentResponse(response);
         } catch (GeminiApiException | JsonException | HttpException e) {
             System.err.println(
                     "Error generating text: " + e.getMessage());
             e.printStackTrace();
         }
-    }*/
+    }
 
     /**
-     * Generates text with custom configuration and prints the response.
+     * Generates text with topP and prints the response.
      *
      * @param generationResource The {@link GenerationResource} instance.
      */
-/*    private static void generateAndPrintTextWithCustomConfig19(
+    private static void generateAndPrintTextWithTopP(
             GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
+        System.out.println("Generating text with topP:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            List.of("The End"));
+                    .generateText("Write a funny joke about a cat.",
+                            null, // No safety settings
+                            0.5, // Temperature
+                            1, // Candidate count
+                            100, // Max output tokens
+                            0.9); // TopP
             printGenerateContentResponse(response);
         } catch (GeminiApiException | JsonException | HttpException e) {
             System.err.println(
                     "Error generating text: " + e.getMessage());
             e.printStackTrace();
         }
-    }*/
+    }
 
     /**
-     * Generates text with custom configuration and prints the response.
+     * Generates text with topK and prints the response.
      *
      * @param generationResource The {@link GenerationResource} instance.
      */
-/*    private static void generateAndPrintTextWithCustomConfig20(
+    private static void generateAndPrintTextWithTopK(
             GenerationResource generationResource) {
-        System.out.println("Generating content with custom configuration:");
+        System.out.println("Generating text with topK:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
-                            0.7,
-                            3,
-                            100,
-                            0.9,
-                            50);
+                    .generateText("Write a haiku about a sunset.",
+                            null, // No safety settings
+                            0.5, // Temperature
+                            1, // Candidate count
+                            50, // Max output tokens
+                            0.9, // TopP
+                            40); // TopK
             printGenerateContentResponse(response);
         } catch (GeminiApiException | JsonException | HttpException e) {
             System.err.println(
                     "Error generating text: " + e.getMessage());
             e.printStackTrace();
         }
-    }*/
+    }
+
+    /**
+     * Generates text with stop sequences and prints the response.
+     *
+     * @param generationResource The {@link GenerationResource} instance.
+     */
+    private static void generateAndPrintTextWithStopSequences(
+            GenerationResource generationResource) {
+        System.out.println("Generating text with stop sequences:");
+        try {
+            GenerateContentResponse response = generationResource
+                    .generateText("Write a short story about a magical creature.",
+                            null, // No safety settings
+                            0.5, // Temperature
+                            1, // Candidate count
+                            100, // Max output tokens
+                            0.9, // TopP
+                            40, // TopK
+                            List.of("happily ever after", "the end")); // Stop sequences
+            printGenerateContentResponse(response);
+        } catch (GeminiApiException | JsonException | HttpException e) {
+            System.err.println(
+                    "Error generating text: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Prints the list of available models.

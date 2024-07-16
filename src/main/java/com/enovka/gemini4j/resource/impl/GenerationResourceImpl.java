@@ -18,7 +18,7 @@ import java.util.*;
  * Implementation of the {@link GenerationResource} interface for interacting
  * with the Generation resource of the Gemini API.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.1
  */
 public class GenerationResourceImpl extends AbstractResource
@@ -49,8 +49,7 @@ public class GenerationResourceImpl extends AbstractResource
     public GenerateContentResponse generateContent(
             GenerateContentRequest request)
             throws GeminiApiException, JsonException, HttpException {
-        if (!modelTool.isGenerationMethodSupported(geminiClient.getModel(), "generateContent"))
-            throw new GeminiApiException(450, "Generation method not supported");
+        validateGenerationMethodSupport("generateContent");
         logDebug("Generating content from endpoint: "
                 + GENERATE_CONTENT_ENDPOINT);
         String requestBody = jsonService.serialize(request);
@@ -71,230 +70,297 @@ public class GenerationResourceImpl extends AbstractResource
     public GenerateContentResponse generateContent(String userInput)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating content for user input: " + userInput);
-        GenerateContentRequest request = buildDefaultRequest(userInput);
-        return generateContent(request);
+        return generateContent(buildDefaultRequest(userInput));
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @since 0.0.2
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                                   GenerationConfig generationConfig,
-                                                   String systemInstructions,
-                                                   List<Tool> tools,
-                                                   List<SafetySetting> safetySettings,
-                                                   String cachedContent)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        GenerateContentRequest request = buildCustomRequest(userInput,
-                generationConfig, systemInstructions, tools, safetySettings,
-                cachedContent);
-        return generateContent(request);
+                                            String systemInstructions)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating content with system instructions: " + systemInstructions);
+        return generateContent(buildRequestWithSystemInstructions(userInput, systemInstructions));
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @since 0.0.2
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                                   GenerationConfig generationConfig,
-                                                   String systemInstructions,
-                                                   List<Tool> tools,
-                                                   List<SafetySetting> safetySettings)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, generationConfig, systemInstructions,
-                tools, safetySettings, null);
+                                            String systemInstructions,
+                                            double temperature)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating content with temperature: " + temperature);
+        return generateContent(buildRequestWithTemperature(userInput, systemInstructions, temperature));
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @since 0.0.2
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                                   GenerationConfig generationConfig,
-                                                   String systemInstructions,
-                                                   List<Tool> tools)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, generationConfig, systemInstructions,
-                tools, null, null);
+                                            String systemInstructions,
+                                            double temperature,
+                                            boolean outputJson)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating content with outputJson: " + outputJson);
+        return generateContent(buildRequestWithOutputJson(userInput, systemInstructions, temperature, outputJson));
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @since 0.0.2
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                                   GenerationConfig generationConfig,
-                                                   String systemInstructions)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, generationConfig, systemInstructions,
-                null, null, null);
+                                            String systemInstructions,
+                                            double temperature,
+                                            boolean outputJson,
+                                            double topP)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating content with topP: " + topP);
+        return generateContent(buildRequestWithTopP(userInput, systemInstructions, temperature, outputJson, topP));
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @since 0.0.2
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                                   GenerationConfig generationConfig)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, generationConfig, null, null, null,
-                null);
+                                            String systemInstructions,
+                                            double temperature,
+                                            boolean outputJson,
+                                            double topP,
+                                            List<SafetySetting> safetySettings)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating content with safety settings.");
+        return generateContent(buildRequestWithSafetySettings(userInput, systemInstructions, temperature, outputJson, topP, safetySettings));
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @since 0.0.2
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                                   String systemInstructions,
-                                                   List<Tool> tools,
-                                                   List<SafetySetting> safetySettings,
-                                                   String cachedContent)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, systemInstructions, tools,
-                safetySettings, cachedContent);
+                                            String systemInstructions,
+                                            double temperature,
+                                            boolean outputJson,
+                                            double topP,
+                                            List<SafetySetting> safetySettings,
+                                            List<Tool> tools)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating content with tools.");
+        return generateContent(buildRequestWithTools(userInput, systemInstructions, temperature, outputJson, topP, safetySettings, tools));
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @since 0.0.2
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                                   String systemInstructions,
-                                                   List<Tool> tools,
-                                                   List<SafetySetting> safetySettings)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, systemInstructions, tools,
-                safetySettings, null);
+                                            String systemInstructions,
+                                            double temperature,
+                                            boolean outputJson,
+                                            double topP,
+                                            List<SafetySetting> safetySettings,
+                                            List<Tool> tools,
+                                            GenerationConfig generationConfig)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating content with generation config.");
+        return generateContent(buildRequestWithGenerationConfig(userInput, systemInstructions, temperature, outputJson, topP, safetySettings, tools, generationConfig));
     }
 
     /**
-     * {@inheritDoc}
+     * Generates text from the model given an input text prompt.
      *
-     * @since 0.0.2
+     * @param textPrompt The text prompt to use for generation.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
      */
     @Override
-    public GenerateContentResponse generateContent(String userInput,
-                                                   String systemInstructions,
-                                                   List<Tool> tools)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, systemInstructions, tools, null,
-                null);
+    public GenerateContentResponse generateText(String textPrompt)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text for prompt: " + textPrompt);
+        return generateText(textPrompt, null, 0.0, 0, 0, 0.0, 0, null);
     }
 
     /**
-     * {@inheritDoc}
+     * Generates text from the model given an input text prompt and safety
+     * settings.
      *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateContent(String userInput,
-                                                   List<Tool> tools,
-                                                   List<SafetySetting> safetySettings,
-                                                   String cachedContent)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, null, tools, safetySettings,
-                cachedContent);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateContent(String userInput,
-                                                   List<Tool> tools,
-                                                   List<SafetySetting> safetySettings)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, null, tools, safetySettings,
-                null);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateContent(String userInput,
-                                                   List<SafetySetting> safetySettings,
-                                                   String cachedContent)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, null, null, safetySettings,
-                cachedContent);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateContent(String userInput,
-                                                   List<SafetySetting> safetySettings)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, null, null, safetySettings,
-                null);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateContent(String userInput,
-                                                   String cachedContent)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating content with custom configuration.");
-        return generateContent(userInput, null, null, null, null,
-                cachedContent);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
+     * @param textPrompt The text prompt to use for generation.
+     * @param safetySettings The safety settings to apply.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                List<String> stopSequences,
-                                                double temperature,
-                                                int candidateCount,
-                                                int maxOutputTokens,
-                                                double topP,
-                                                int topK)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
+                                         List<SafetySetting> safetySettings)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text with safety settings.");
+        return generateText(textPrompt, safetySettings, 0.0, 0, 0, 0.0, 0, null);
+    }
+
+    /**
+     * Generates text from the model given an input text prompt, safety
+     * settings, and temperature.
+     *
+     * @param textPrompt The text prompt to use for generation.
+     * @param safetySettings The safety settings to apply.
+     * @param temperature The temperature to use for generation.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
+     */
+    @Override
+    public GenerateContentResponse generateText(String textPrompt,
+                                         List<SafetySetting> safetySettings,
+                                         double temperature)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text with temperature: " + temperature);
+        return generateText(textPrompt, safetySettings, temperature, 0, 0, 0.0, 0, null);
+    }
+
+    /**
+     * Generates text from the model given an input text prompt, safety
+     * settings, temperature, and candidate count.
+     *
+     * @param textPrompt The text prompt to use for generation.
+     * @param safetySettings The safety settings to apply.
+     * @param temperature The temperature to use for generation.
+     * @param candidateCount The number of candidate responses to return.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
+     */
+    @Override
+    public GenerateContentResponse generateText(String textPrompt,
+                                         List<SafetySetting> safetySettings,
+                                         double temperature,
+                                         int candidateCount)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text with candidate count: " + candidateCount);
+        return generateText(textPrompt, safetySettings, temperature, candidateCount, 0, 0.0, 0, null);
+    }
+
+    /**
+     * Generates text from the model given an input text prompt, safety
+     * settings, temperature, candidate count, and max output tokens.
+     *
+     * @param textPrompt The text prompt to use for generation.
+     * @param safetySettings The safety settings to apply.
+     * @param temperature The temperature to use for generation.
+     * @param candidateCount The number of candidate responses to return.
+     * @param maxOutputTokens The maximum number of tokens to include in a
+     * candidate.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
+     */
+    @Override
+    public GenerateContentResponse generateText(String textPrompt,
+                                         List<SafetySetting> safetySettings,
+                                         double temperature,
+                                         int candidateCount,
+                                         int maxOutputTokens)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text with max output tokens: " + maxOutputTokens);
+        return generateText(textPrompt, safetySettings, temperature, candidateCount, maxOutputTokens, 0.0, 0, null);
+    }
+
+    /**
+     * Generates text from the model given an input text prompt, safety
+     * settings, temperature, candidate count, max output tokens, and topP
+     * value.
+     *
+     * @param textPrompt The text prompt to use for generation.
+     * @param safetySettings The safety settings to apply.
+     * @param temperature The temperature to use for generation.
+     * @param candidateCount The number of candidate responses to return.
+     * @param maxOutputTokens The maximum number of tokens to include in a
+     * candidate.
+     * @param topP The maximum cumulative probability of tokens to consider
+     * when sampling.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
+     */
+    @Override
+    public GenerateContentResponse generateText(String textPrompt,
+                                         List<SafetySetting> safetySettings,
+                                         double temperature,
+                                         int candidateCount,
+                                         int maxOutputTokens,
+                                         double topP)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text with topP: " + topP);
+        return generateText(textPrompt, safetySettings, temperature, candidateCount, maxOutputTokens, topP, 0, null);
+    }
+
+    /**
+     * Generates text from the model given an input text prompt, safety
+     * settings, temperature, candidate count, max output tokens, topP value,
+     * and topK value.
+     *
+     * @param textPrompt The text prompt to use for generation.
+     * @param safetySettings The safety settings to apply.
+     * @param temperature The temperature to use for generation.
+     * @param candidateCount The number of candidate responses to return.
+     * @param maxOutputTokens The maximum number of tokens to include in a
+     * candidate.
+     * @param topP The maximum cumulative probability of tokens to consider
+     * when sampling.
+     * @param topK The maximum number of tokens to consider when sampling.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
+     */
+    @Override
+    public GenerateContentResponse generateText(String textPrompt,
+                                         List<SafetySetting> safetySettings,
+                                         double temperature,
+                                         int candidateCount,
+                                         int maxOutputTokens,
+                                         double topP,
+                                         int topK)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text with topK: " + topK);
+        return generateText(textPrompt, safetySettings, temperature, candidateCount, maxOutputTokens, topP, topK, null);
+    }
+
+    /**
+     * Generates text from the model given an input text prompt, safety
+     * settings, temperature, candidate count, max output tokens, topP value,
+     * topK value, and stop sequences.
+     *
+     * @param textPrompt The text prompt to use for generation.
+     * @param safetySettings The safety settings to apply.
+     * @param temperature The temperature to use for generation.
+     * @param candidateCount The number of candidate responses to return.
+     * @param maxOutputTokens The maximum number of tokens to include in a
+     * candidate.
+     * @param topP The maximum cumulative probability of tokens to consider
+     * when sampling.
+     * @param topK The maximum number of tokens to consider when sampling.
+     * @param stopSequences The stop sequences to use for generation.
+     * @return A {@link GenerateContentResponse} containing the generated
+     * content.
+     * @throws GeminiApiException If an error occurs during content generation.
+     */
+    @Override
+    public GenerateContentResponse generateText(String textPrompt,
+                                         List<SafetySetting> safetySettings,
+                                         double temperature,
+                                         int candidateCount,
+                                         int maxOutputTokens,
+                                         double topP,
+                                         int topK,
+                                         List<String> stopSequences)
+            throws GeminiApiException, HttpException, JsonException {
+        logDebug("Generating text with stop sequences.");
         GenerationConfig generationConfig = GenerationConfig.builder()
                 .withTemperature(temperature)
                 .withTopP(topP)
@@ -303,193 +369,7 @@ public class GenerationResourceImpl extends AbstractResource
                 .withMaxOutputTokens(maxOutputTokens)
                 .withStopSequences(stopSequences)
                 .build();
-        GenerateContentRequest request = buildCustomRequest(textPrompt,
-                generationConfig, null, null, safetySettings, null);
-        return generateContent(request);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                List<String> stopSequences,
-                                                double temperature,
-                                                int candidateCount,
-                                                int maxOutputTokens,
-                                                double topP)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, stopSequences,
-                temperature, candidateCount, maxOutputTokens, topP, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                List<String> stopSequences,
-                                                double temperature,
-                                                int candidateCount,
-                                                int maxOutputTokens)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, stopSequences,
-                temperature, candidateCount, maxOutputTokens, 0.0, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                List<String> stopSequences,
-                                                double temperature,
-                                                int candidateCount)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, stopSequences,
-                temperature, candidateCount, 0, 0.0, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                List<String> stopSequences,
-                                                double temperature)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, stopSequences,
-                temperature, 0, 0, 0.0, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                List<String> stopSequences)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, stopSequences, 0.0, 0,
-                0, 0.0, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                double temperature,
-                                                int candidateCount,
-                                                int maxOutputTokens,
-                                                double topP,
-                                                int topK)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, null, temperature,
-                candidateCount, maxOutputTokens, topP, topK);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                double temperature,
-                                                int candidateCount,
-                                                int maxOutputTokens,
-                                                double topP)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, null, temperature,
-                candidateCount, maxOutputTokens, topP, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<String> stopSequences,
-                                                double temperature,
-                                                int candidateCount)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, null, stopSequences, temperature,
-                candidateCount, 0, 0.0, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings,
-                                                double temperature)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, null, temperature, 0,
-                0, 0.0, 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<SafetySetting> safetySettings)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, safetySettings, null, 0.0, 0, 0, 0.0,
-                0);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 0.0.2
-     */
-    @Override
-    public GenerateContentResponse generateText(String textPrompt,
-                                                List<String> stopSequences,
-                                                double temperature,
-                                                int candidateCount,
-                                                int maxOutputTokens)
-            throws GeminiApiException, JsonException, HttpException {
-        logDebug("Generating text with custom configuration.");
-        return generateText(textPrompt, null, stopSequences, temperature,
-                candidateCount, maxOutputTokens, 0.0, 0);
+        return generateContent(buildCustomRequest(textPrompt, generationConfig, null, null, safetySettings, null));
     }
 
     /**
@@ -512,6 +392,182 @@ public class GenerationResourceImpl extends AbstractResource
     }
 
     /**
+     * Builds a {@link GenerateContentRequest} with user input and system
+     * instructions.
+     *
+     * @param userInput The user's input text.
+     * @param systemInstructions The system instructions to guide the model's
+     * response.
+     * @return A {@link GenerateContentRequest} with system instructions.
+     */
+    private GenerateContentRequest buildRequestWithSystemInstructions(String userInput,
+                                                                    String systemInstructions) {
+        logDebug("Building GenerateContentRequest with system instructions.");
+        return buildCustomRequest(userInput, null, systemInstructions, null, null, null);
+    }
+
+    /**
+     * Builds a {@link GenerateContentRequest} with user input, system
+     * instructions, and temperature.
+     *
+     * @param userInput The user's input text.
+     * @param systemInstructions The system instructions to guide the model's
+     * response.
+     * @param temperature The temperature to use for generation.
+     * @return A {@link GenerateContentRequest} with temperature.
+     */
+    private GenerateContentRequest buildRequestWithTemperature(String userInput,
+                                                                String systemInstructions,
+                                                                double temperature) {
+        logDebug("Building GenerateContentRequest with temperature.");
+        GenerationConfig generationConfig = GenerationConfig.builder()
+                .withTemperature(temperature)
+                .build();
+        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, null, null);
+    }
+
+    /**
+     * Builds a {@link GenerateContentRequest} with user input, system
+     * instructions, temperature, and outputJson flag.
+     *
+     * @param userInput The user's input text.
+     * @param systemInstructions The system instructions to guide the model's
+     * response.
+     * @param temperature The temperature to use for generation.
+     * @param outputJson Whether the output should be in JSON format.
+     * @return A {@link GenerateContentRequest} with outputJson flag.
+     */
+    private GenerateContentRequest buildRequestWithOutputJson(String userInput,
+                                                                String systemInstructions,
+                                                                double temperature,
+                                                                boolean outputJson) {
+        logDebug("Building GenerateContentRequest with outputJson.");
+        GenerationConfig generationConfig = GenerationConfig.builder()
+                .withTemperature(temperature)
+                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .build();
+        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, null, null);
+    }
+
+    /**
+     * Builds a {@link GenerateContentRequest} with user input, system
+     * instructions, temperature, outputJson flag, and topP value.
+     *
+     * @param userInput The user's input text.
+     * @param systemInstructions The system instructions to guide the model's
+     * response.
+     * @param temperature The temperature to use for generation.
+     * @param outputJson Whether the output should be in JSON format.
+     * @param topP The maximum cumulative probability of tokens to consider
+     * when sampling.
+     * @return A {@link GenerateContentRequest} with topP value.
+     */
+    private GenerateContentRequest buildRequestWithTopP(String userInput,
+                                                                String systemInstructions,
+                                                                double temperature,
+                                                                boolean outputJson,
+                                                                double topP) {
+        logDebug("Building GenerateContentRequest with topP.");
+        GenerationConfig generationConfig = GenerationConfig.builder()
+                .withTemperature(temperature)
+                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .withTopP(topP)
+                .build();
+        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, null, null);
+    }
+
+    /**
+     * Builds a {@link GenerateContentRequest} with user input, system
+     * instructions, temperature, outputJson flag, topP value, and safety
+     * settings.
+     *
+     * @param userInput The user's input text.
+     * @param systemInstructions The system instructions to guide the model's
+     * response.
+     * @param temperature The temperature to use for generation.
+     * @param outputJson Whether the output should be in JSON format.
+     * @param topP The maximum cumulative probability of tokens to consider
+     * when sampling.
+     * @param safetySettings The safety settings to apply.
+     * @return A {@link GenerateContentRequest} with safety settings.
+     */
+    private GenerateContentRequest buildRequestWithSafetySettings(String userInput,
+                                                                    String systemInstructions,
+                                                                    double temperature,
+                                                                    boolean outputJson,
+                                                                    double topP,
+                                                                    List<SafetySetting> safetySettings) {
+        logDebug("Building GenerateContentRequest with safety settings.");
+        GenerationConfig generationConfig = GenerationConfig.builder()
+                .withTemperature(temperature)
+                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .withTopP(topP)
+                .build();
+        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, safetySettings, null);
+    }
+
+    /**
+     * Builds a {@link GenerateContentRequest} with user input, system
+     * instructions, temperature, outputJson flag, topP value, safety
+     * settings, and tools.
+     *
+     * @param userInput The user's input text.
+     * @param systemInstructions The system instructions to guide the model's
+     * response.
+     * @param temperature The temperature to use for generation.
+     * @param outputJson Whether the output should be in JSON format.
+     * @param topP The maximum cumulative probability of tokens to consider
+     * when sampling.
+     * @param safetySettings The safety settings to apply.
+     * @param tools The tools to use for generation.
+     * @return A {@link GenerateContentRequest} with tools.
+     */
+    private GenerateContentRequest buildRequestWithTools(String userInput,
+                                                                    String systemInstructions,
+                                                                    double temperature,
+                                                                    boolean outputJson,
+                                                                    double topP,
+                                                                    List<SafetySetting> safetySettings,
+                                                                    List<Tool> tools) {
+        logDebug("Building GenerateContentRequest with tools.");
+        GenerationConfig generationConfig = GenerationConfig.builder()
+                .withTemperature(temperature)
+                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .withTopP(topP)
+                .build();
+        return buildCustomRequest(userInput, generationConfig, systemInstructions, tools, safetySettings, null);
+    }
+
+    /**
+     * Builds a {@link GenerateContentRequest} with user input, system
+     * instructions, temperature, outputJson flag, topP value, safety
+     * settings, tools, and generation config.
+     *
+     * @param userInput The user's input text.
+     * @param systemInstructions The system instructions to guide the model's
+     * response.
+     * @param temperature The temperature to use for generation.
+     * @param outputJson Whether the output should be in JSON format.
+     * @param topP The maximum cumulative probability of tokens to consider
+     * when sampling.
+     * @param safetySettings The safety settings to apply.
+     * @param tools The tools to use for generation.
+     * @param generationConfig The generation configuration.
+     * @return A {@link GenerateContentRequest} with generation config.
+     */
+    private GenerateContentRequest buildRequestWithGenerationConfig(String userInput,
+                                                                    String systemInstructions,
+                                                                    double temperature,
+                                                                    boolean outputJson,
+                                                                    double topP,
+                                                                    List<SafetySetting> safetySettings,
+                                                                    List<Tool> tools,
+                                                                    GenerationConfig generationConfig) {
+        logDebug("Building GenerateContentRequest with generation config.");
+        return buildCustomRequest(userInput, generationConfig, systemInstructions, tools, safetySettings, null);
+    }
+
+    /**
      * Builds a custom {@link GenerateContentRequest} with provided
      * parameters.
      *
@@ -523,7 +579,6 @@ public class GenerationResourceImpl extends AbstractResource
      * @param safetySettings The safety settings to apply.
      * @param cachedContent The cached content to use as context.
      * @return A custom {@link GenerateContentRequest}.
-     * @since 0.0.2
      */
     private GenerateContentRequest buildCustomRequest(String userInput,
                                                       GenerationConfig generationConfig,
@@ -555,5 +610,18 @@ public class GenerationResourceImpl extends AbstractResource
                 .withSafetySettings(safetySettings)
                 .withCachedContent(cachedContent)
                 .build();
+    }
+
+    /**
+     * Validates if the generation method is supported by the current model.
+     *
+     * @param generationMethod The generation method to validate.
+     * @throws GeminiApiException If the generation method is not supported.
+     */
+    private void validateGenerationMethodSupport(String generationMethod)
+            throws GeminiApiException {
+        if (!modelTool.isGenerationMethodSupported(geminiClient.getModel(), generationMethod)) {
+            throw new GeminiApiException(450, "Generation method '" + generationMethod + "' is not supported by the model.");
+        }
     }
 }
