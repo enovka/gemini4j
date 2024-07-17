@@ -1,75 +1,31 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.OperatorEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
 /**
- * Defines the valid operators that can be applied to a key-value pair.
+ * Represents a comparison operator used in metadata filters for the Gemini API.
+ * This class provides a structured way to specify the operator used to compare
+ * a metadata key with a given value, enabling flexible filtering of content
+ * based on metadata attributes.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  */
 @Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Operator {
 
     /**
-     * The default value. This value is unused.
+     * The specific comparison operator from the {@link OperatorEnum}. For
+     * example, setting this to {@link OperatorEnum#EQUAL} indicates an equality
+     * comparison.
      */
-    @JsonProperty("OPERATOR_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.type.OperatorEnum operatorUnspecified;
-
-    /**
-     * Supported by numeric.
-     */
-    @JsonProperty("LESS")
-    private com.enovka.gemini4j.domain.type.OperatorEnum less;
-
-    /**
-     * Supported by numeric.
-     */
-    @JsonProperty("LESS_EQUAL")
-    private com.enovka.gemini4j.domain.type.OperatorEnum lessEqual;
-
-    /**
-     * Supported by numeric and string.
-     */
-    @JsonProperty("EQUAL")
-    private com.enovka.gemini4j.domain.type.OperatorEnum equal;
-
-    /**
-     * Supported by numeric.
-     */
-    @JsonProperty("GREATER_EQUAL")
-    private com.enovka.gemini4j.domain.type.OperatorEnum greaterEqual;
-
-    /**
-     * Supported by numeric.
-     */
-    @JsonProperty("GREATER")
-    private OperatorEnum greater;
-
-    /**
-     * Supported by numeric and string.
-     */
-    @JsonProperty("NOT_EQUAL")
-    private com.enovka.gemini4j.domain.type.OperatorEnum notEqual;
-
-    /**
-     * Supported by string only when CustomMetadata value type for the given key
-     * has a stringListValue.
-     */
-    @JsonProperty("INCLUDES")
-    private com.enovka.gemini4j.domain.type.OperatorEnum includes;
-
-    /**
-     * Supported by string only when CustomMetadata value type for the given key
-     * has a stringListValue.
-     */
-    @JsonProperty("EXCLUDES")
-    private com.enovka.gemini4j.domain.type.OperatorEnum excludes;
-
+    @JsonProperty("operator")
+    private OperatorEnum operator;
 }

@@ -22,7 +22,8 @@ public class ModelResourceImpl extends AbstractResource
         implements ModelResource {
 
     private static final String LIST_MODELS_ENDPOINT = "/models";
-    private static final String GET_MODEL_ENDPOINT = "/models/%s"; // Corrected format string
+    private static final String GET_MODEL_ENDPOINT = "/models/%s";
+            // Corrected format string
     private final JsonService jsonService;
 
     /**
@@ -45,7 +46,8 @@ public class ModelResourceImpl extends AbstractResource
      */
     @Override
     public ListModel listModels() throws HttpException, JsonException {
-        logDebug("Listing Gemini models from endpoint: " + LIST_MODELS_ENDPOINT);
+        logDebug(
+                "Listing Gemini models from endpoint: " + LIST_MODELS_ENDPOINT);
         HttpResponse response = get(LIST_MODELS_ENDPOINT,
                 geminiClient.buildAuthHeaders());
         return jsonService.deserialize(response.getBody(), ListModel.class);

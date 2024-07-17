@@ -1,7 +1,6 @@
 package com.enovka.gemini4j.domain.request;
 
 import com.enovka.gemini4j.domain.*;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,6 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder(setterPrefix = "with")
 public class GenerateAnswerRequest {
 

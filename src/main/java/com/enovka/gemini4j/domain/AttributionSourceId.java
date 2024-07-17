@@ -1,8 +1,8 @@
 package com.enovka.gemini4j.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with")
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttributionSourceId {

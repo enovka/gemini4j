@@ -1,6 +1,5 @@
 package com.enovka.gemini4j.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +16,6 @@ import java.util.List;
  */
 @Data
 @Builder(setterPrefix = "with")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenerationConfig {

@@ -2,9 +2,9 @@ name: Java CI with Maven, WireMock, Javadoc and Website Deployment
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 env:
   POM_FILE: pom.xml

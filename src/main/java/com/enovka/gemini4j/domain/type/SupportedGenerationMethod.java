@@ -1,72 +1,94 @@
 package com.enovka.gemini4j.domain.type;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 /**
- * Enum representing the supported generation methods for Gemini models.
+ * Represents the supported generation methods for Gemini models, providing a
+ * standardized way to identify the different capabilities of each model. These
+ * methods correspond to specific actions or operations that a Gemini model can
+ * perform, such as generating text, embedding content, or counting tokens.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  * @since 0.0.2
  */
 public enum SupportedGenerationMethod {
 
     /**
-     * Generates content from the model.
+     * **Generate Content:** Generates a response from the model based on the
+     * provided input and context. This is a core functionality of most Gemini
+     * models.
      */
     GENERATE_CONTENT("generateContent"),
 
     /**
-     * Counts the number of tokens in the input content.
+     * **Count Tokens:** Counts the number of tokens in a given text or content,
+     * providing insights into the length and complexity of the input.
      */
     COUNT_TOKENS("countTokens"),
 
     /**
-     * Generates a message from the model.
+     * **Generate Message:** Generates a message in a conversational context,
+     * suitable for chatbot applications and dialogue systems.
      */
     GENERATE_MESSAGE("generateMessage"),
 
     /**
-     * Counts the number of tokens in the input message.
+     * **Count Message Tokens:** Counts the number of tokens in a given message,
+     * specifically designed for analyzing conversational text.
      */
     COUNT_MESSAGE_TOKENS("countMessageTokens"),
 
     /**
-     * Generates text from the model.
+     * **Generate Text:** Generates text based on a given prompt or context,
+     * typically used for creative writing, summarization, or translation
+     * tasks.
      */
     GENERATE_TEXT("generateText"),
 
     /**
-     * Counts the number of tokens in the input text.
+     * **Count Text Tokens:** Counts the number of tokens in a given text,
+     * commonly used for text processing and analysis.
      */
     COUNT_TEXT_TOKENS("countTextTokens"),
 
     /**
-     * Creates a tuned text model.
+     * **Create Tuned Text Model:** Creates a custom-tuned text model based on a
+     * specific dataset and task, allowing for more specialized and accurate
+     * text generation.
      */
     CREATE_TUNED_TEXT_MODEL("createTunedTextModel"),
 
     /**
-     * Embeds text into a vector representation.
+     * **Embed Text:** Embeds text into a vector representation, capturing its
+     * semantic meaning and enabling similarity comparisons and other
+     * vector-based operations.
      */
     EMBED_TEXT("embedText"),
 
     /**
-     * Creates a tuned model.
+     * **Create Tuned Model:** Creates a custom-tuned model for a specific task,
+     * going beyond text generation to encompass various model capabilities.
      */
     CREATE_TUNED_MODEL("createTunedModel"),
 
     /**
-     * Creates cached content for the model.
+     * **Create Cached Content:** Creates and stores cached content for a model,
+     * optimizing performance and reducing latency for frequently used inputs or
+     * responses.
      */
     CREATE_CACHED_CONTENT("createCachedContent"),
 
     /**
-     * Embeds content into a vector representation.
+     * **Embed Content:**  Embeds content, which may include text, images, or
+     * other modalities, into a vector representation, facilitating multimodal
+     * understanding and processing.
      */
     EMBED_CONTENT("embedContent"),
 
     /**
-     * Generates an answer to a question.
+     * **Generate Answer:** Generates a grounded answer to a question,
+     * leveraging external knowledge sources or provided context to provide more
+     * informative and accurate responses.
      */
     GENERATE_ANSWER("generateAnswer");
 
@@ -77,36 +99,26 @@ public enum SupportedGenerationMethod {
     }
 
     /**
+     * Returns the `SupportedGenerationMethod` enum value corresponding to the
+     * given string representation.
+     *
+     * @param value The string representation of the generation method.
+     * @return The corresponding `SupportedGenerationMethod` enum value, or
+     * `null` if no matching value is found.
+     */
+    public static SupportedGenerationMethod fromValue(String value) {
+        return Arrays.stream(SupportedGenerationMethod.values())
+                .filter(method -> method.value.equals(value))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
      * Returns the string representation of the generation method.
      *
      * @return The string representation of the generation method.
      */
     public String getValue() {
         return value;
-    }
-
-    /**
-     * Returns the SupportedGenerationMethod enum value for the given string.
-     *
-     * @param value The string representation of the generation method.
-     * @return The SupportedGenerationMethod enum value, or null if the string
-     * is not a valid generation method.
-     */
-    public static SupportedGenerationMethod fromValue(String value) {
-        for (SupportedGenerationMethod method : SupportedGenerationMethod.values()) {
-            Objects.compare(method.getValue(), value, (o1, o2) -> {
-                if (o1 == null) {
-                    return -1;
-                } else if (o2 == null) {
-                    return 1;
-                } else {
-                    return o1.compareTo(o2);
-                }
-            });
-            if (method.value.equals(value)) {
-                return method;
-            }
-        }
-        return null;
     }
 }

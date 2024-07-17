@@ -1,7 +1,6 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.response.FunctionResponse;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

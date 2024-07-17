@@ -1,40 +1,31 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.BlockReasonEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * Specifies what was the reason why input was blocked.
+ * Represents the reason why a user input or prompt was blocked by the Gemini
+ * API. This class provides a structured representation of the block reason,
+ * making it easy to understand why a request was not processed.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  */
+@Data
+@Builder(setterPrefix = "with")
+@NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class BlockReason {
 
-    private BlockReasonEnum value;
-
     /**
-     * Creates a BlockReason from a string value.
-     *
-     * @param value The string representation of the block reason.
-     * @return The corresponding BlockReasonEnum value.
+     * The specific reason for blocking the input, as indicated by the
+     * {@link BlockReasonEnum}. For example, a value of
+     * {@link BlockReasonEnum#SAFETY} indicates that the input was blocked due
+     * to safety concerns.
      */
-    @JsonCreator
-    public static BlockReason fromValue(String value) {
-        return new BlockReason(BlockReasonEnum.valueOf(value.toUpperCase()));
-    }
-
-    /**
-     * Returns the string representation of the block reason.
-     *
-     * @return The string representation of the block reason.
-     */
-    @JsonValue
-    public String getValue() {
-        return value.name();
-    }
+    @JsonProperty("blockReason")
+    private BlockReasonEnum blockReason;
 }

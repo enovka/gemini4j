@@ -34,7 +34,8 @@ public class Gemini4JExample {
 
         // Create instances of ModelResource and GenerationResource
         ModelResource modelResource = createModelResource(client);
-        GenerationResource generationResource = createGenerationResource(client);
+        GenerationResource generationResource = createGenerationResource(
+                client);
 
         // List available models
         printAvailableModels(modelResource);
@@ -43,7 +44,8 @@ public class Gemini4JExample {
         client.setModel("gemini-1.5-flash-001");
 
         // Example 1: Basic Text Generation
-        generateAndPrintText("Hello, Gemini! How are you today?", generationResource);
+        generateAndPrintText("Hello, Gemini! How are you today?",
+                generationResource);
 
         // Example 2: Text Generation with System Instructions
         generateAndPrintText("What is the capital of France?",
@@ -84,7 +86,8 @@ public class Gemini4JExample {
         System.out.println("Creating GeminiClient instance...");
         String apiKey = getApiKey();
         if (apiKey == null) {
-            throw new RuntimeException("API key not found. Define the GEMINI_API_KEY environment variable.");
+            throw new RuntimeException(
+                    "API key not found. Define the GEMINI_API_KEY environment variable.");
         }
         return GeminiClientBuilder.builder()
                 .withApiKey(apiKey)
@@ -144,17 +147,17 @@ public class Gemini4JExample {
     }
 
     /**
-     * Generates text using the provided user input and system instructions
-     * and prints the response.
+     * Generates text using the provided user input and system instructions and
+     * prints the response.
      *
-     * @param userInput           The user's input text.
+     * @param userInput The user's input text.
      * @param systemInstructions The system instructions to guide the model's
-     *                           response.
+     * response.
      * @param generationResource The {@link GenerationResource} instance.
      */
     private static void generateAndPrintText(String userInput,
-                                            String systemInstructions,
-                                            GenerationResource generationResource) {
+                                             String systemInstructions,
+                                             GenerationResource generationResource) {
         System.out.println(
                 "Generating text with user input and system instructions:");
         try {
@@ -171,11 +174,11 @@ public class Gemini4JExample {
     /**
      * Generates text using the provided user input and prints the response.
      *
-     * @param userInput           The user's input text.
+     * @param userInput The user's input text.
      * @param generationResource The {@link GenerationResource} instance.
      */
     private static void generateAndPrintText(String userInput,
-                                            GenerationResource generationResource) {
+                                             GenerationResource generationResource) {
         System.out.println("Generating text with user input:");
         try {
             GenerateContentResponse response = generationResource
@@ -198,11 +201,13 @@ public class Gemini4JExample {
         System.out.println("Generating content with custom configuration:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a cat who loves to travel.",
+                    .generateText(
+                            "Write a short story about a cat who loves to travel.",
                             List.of(
                                     SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
+                                            .withCategory(
+                                                    HarmCategory.fromValue(
+                                                            HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
                                             .build()
                             ),
                             0.7,
@@ -229,11 +234,13 @@ public class Gemini4JExample {
         System.out.println("Generating text with safety settings:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a story about a robot who falls in love with a human.",
+                    .generateText(
+                            "Write a story about a robot who falls in love with a human.",
                             List.of(
                                     SafetySetting.builder()
-                                            .withCategory(HarmCategory.fromValue(
-                                                    HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
+                                            .withCategory(
+                                                    HarmCategory.fromValue(
+                                                            HarmCategoryEnum.HARM_CATEGORY_HARASSMENT.name()))
                                             .build()
                             ));
             printGenerateContentResponse(response);
@@ -275,7 +282,8 @@ public class Gemini4JExample {
         System.out.println("Generating text with candidate count:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a list of five interesting facts about the moon.",
+                    .generateText(
+                            "Write a list of five interesting facts about the moon.",
                             null, // No safety settings
                             0.5, // Temperature
                             5); // Candidate count
@@ -297,7 +305,8 @@ public class Gemini4JExample {
         System.out.println("Generating text with max output tokens:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a dog who loves to play fetch.",
+                    .generateText(
+                            "Write a short story about a dog who loves to play fetch.",
                             null, // No safety settings
                             0.5, // Temperature
                             1, // Candidate count
@@ -369,14 +378,16 @@ public class Gemini4JExample {
         System.out.println("Generating text with stop sequences:");
         try {
             GenerateContentResponse response = generationResource
-                    .generateText("Write a short story about a magical creature.",
+                    .generateText(
+                            "Write a short story about a magical creature.",
                             null, // No safety settings
                             0.5, // Temperature
                             1, // Candidate count
                             100, // Max output tokens
                             0.9, // TopP
                             40, // TopK
-                            List.of("happily ever after", "the end")); // Stop sequences
+                            List.of("happily ever after",
+                                    "the end")); // Stop sequences
             printGenerateContentResponse(response);
         } catch (GeminiApiException | JsonException | HttpException e) {
             System.err.println(
@@ -395,14 +406,21 @@ public class Gemini4JExample {
         if (models != null && models.getModels() != null) {
             for (Model model : models.getModels()) {
                 System.out.println("    - Name: " + model.getName());
-                System.out.println("      - BaseModelId: " + model.getBaseModelId());
+                System.out.println(
+                        "      - BaseModelId: " + model.getBaseModelId());
                 System.out.println("      - Version: " + model.getVersion());
-                System.out.println("      - DisplayName: " + model.getDisplayName());
-                System.out.println("      - Description: " + model.getDescription());
-                System.out.println("      - InputTokenLimit: " + model.getInputTokenLimit());
-                System.out.println("      - OutputTokenLimit: " + model.getOutputTokenLimit());
-                System.out.println("      - SupportedGenerationMethods: " + model.getSupportedGenerationMethods());
-                System.out.println("      - Temperature: " + model.getTemperature());
+                System.out.println(
+                        "      - DisplayName: " + model.getDisplayName());
+                System.out.println(
+                        "      - Description: " + model.getDescription());
+                System.out.println("      - InputTokenLimit: "
+                        + model.getInputTokenLimit());
+                System.out.println("      - OutputTokenLimit: "
+                        + model.getOutputTokenLimit());
+                System.out.println("      - SupportedGenerationMethods: "
+                        + model.getSupportedGenerationMethods());
+                System.out.println(
+                        "      - Temperature: " + model.getTemperature());
                 System.out.println("      - TopP: " + model.getTopP());
                 System.out.println("      - TopK: " + model.getTopK());
             }
@@ -423,18 +441,26 @@ public class Gemini4JExample {
             for (Candidate candidate : response.getCandidates()) {
                 System.out.println("    - Content:");
                 printContent(candidate.getContent());
-                System.out.println("      - FinishReason: " + candidate.getFinishReason().getNameValue());
+                System.out.println(
+                        "      - FinishReason: " + candidate.getFinishReason()
+                                .getNameValue());
                 System.out.println("      - SafetyRatings:");
                 if (candidate.getSafetyRatings() != null) {
                     for (SafetyRating rating : candidate.getSafetyRatings()) {
-                        System.out.println("        - Category: " + rating.getCategory().getNameValue());
-                        System.out.println("          - Probability: " + rating.getProbability().getValueName());
-                        System.out.println("          - Blocked: " + rating.getBlocked());
+                        System.out.println(
+                                "        - Category: " + rating.getCategory()
+                                        .getNameValue());
+                        System.out.println("          - Probability: "
+                                + rating.getProbability().getValueName());
+                        System.out.println(
+                                "          - Blocked: " + rating.getBlocked());
                     }
                 } else {
-                    System.out.println("        - No safety ratings available.");
+                    System.out.println(
+                            "        - No safety ratings available.");
                 }
-                System.out.println("      - TokenCount: " + candidate.getTokenCount());
+                System.out.println(
+                        "      - TokenCount: " + candidate.getTokenCount());
             }
         } else {
             System.out.println("    - No candidates found.");
@@ -456,9 +482,12 @@ public class Gemini4JExample {
             for (Part part : content.getParts()) {
                 System.out.println("      - Role: " + content.getRole());
                 System.out.println("      - Text: " + part.getText());
-                System.out.println("      - InlineData: " + part.getInlineData());
-                System.out.println("      - FunctionCall: " + part.getFunctionCall());
-                System.out.println("      - FunctionResponse: " + part.getFunctionResponse());
+                System.out.println(
+                        "      - InlineData: " + part.getInlineData());
+                System.out.println(
+                        "      - FunctionCall: " + part.getFunctionCall());
+                System.out.println("      - FunctionResponse: "
+                        + part.getFunctionResponse());
                 System.out.println("      - FileData: " + part.getFileData());
             }
         } else {
@@ -474,13 +503,20 @@ public class Gemini4JExample {
      */
     private static void printPromptFeedback(PromptFeedback promptFeedback) {
         if (promptFeedback != null) {
-            System.out.println("    - BlockReason: " + promptFeedback.getBlockReason().getValue());
+            System.out.println(
+                    "    - BlockReason: " + promptFeedback.getBlockReason()
+                            .getValue());
             System.out.println("    - SafetyRatings:");
             if (promptFeedback.getSafetyRatings() != null) {
                 for (SafetyRating rating : promptFeedback.getSafetyRatings()) {
-                    System.out.println("      - Category: " + rating.getCategory().getNameValue());
-                    System.out.println("        - Probability: " + rating.getProbability().getValueName());
-                    System.out.println("        - Blocked: " + rating.getBlocked());
+                    System.out.println(
+                            "      - Category: " + rating.getCategory()
+                                    .getNameValue());
+                    System.out.println(
+                            "        - Probability: " + rating.getProbability()
+                                    .getValueName());
+                    System.out.println(
+                            "        - Blocked: " + rating.getBlocked());
                 }
             } else {
                 System.out.println("      - No safety ratings available.");
@@ -497,10 +533,14 @@ public class Gemini4JExample {
      */
     private static void printUsageMetadata(UsageMetadata usageMetadata) {
         if (usageMetadata != null) {
-            System.out.println("    - TotalTokenCount: " + usageMetadata.getTotalTokenCount());
-            System.out.println("    - PromptTokenCount: " + usageMetadata.getPromptTokenCount());
-            System.out.println("    - CachedContentTokenCount: " + usageMetadata.getCachedContentTokenCount());
-            System.out.println("    - CandidatesTokenCount: " + usageMetadata.getCandidatesTokenCount());
+            System.out.println("    - TotalTokenCount: "
+                    + usageMetadata.getTotalTokenCount());
+            System.out.println("    - PromptTokenCount: "
+                    + usageMetadata.getPromptTokenCount());
+            System.out.println("    - CachedContentTokenCount: "
+                    + usageMetadata.getCachedContentTokenCount());
+            System.out.println("    - CandidatesTokenCount: "
+                    + usageMetadata.getCandidatesTokenCount());
         } else {
             System.out.println("    - No usage metadata available.");
         }

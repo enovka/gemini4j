@@ -1,58 +1,71 @@
 package com.enovka.gemini4j.domain.type;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 /**
- * Enumerates the supported OpenAPI data types, as defined by
- * <a href="https://spec.openapis.org/oas/v3.0.3#data-types">OpenAPI
- * Specification v3.0.3</a>.
+ * Defines the supported OpenAPI data types used for specifying parameters and
+ * schemas in the Gemini API. This enum aligns with the OpenAPI 3.0.3
+ * specification, providing a standardized way to represent the type of data
+ * used in API requests and responses.
+ * <p>
+ * For a comprehensive understanding of each data type and its usage in OpenAPI,
+ * refer to the official documentation:
+ * <a
+ * href="https://spec.openapis.org/oas/v3.0.3#data-types">https://spec.openapis.org/oas/v3.0.3#data-types</a>
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  */
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public enum TypeEnum {
 
     /**
-     * The data type is unspecified. This value should not be used.
+     * **Unspecified Data Type:** This value indicates that the data type is not
+     * explicitly defined. It should not be used in API requests or definitions.
+     * Always choose a specific data type from the other options to ensure
+     * proper data validation and processing.
      */
     @JsonProperty("TYPE_UNSPECIFIED")
     TYPE_UNSPECIFIED,
 
     /**
-     * A string data type.
+     * **String Data Type:** Represents textual data, such as names,
+     * descriptions, or any sequence of characters.
      */
     @JsonProperty("STRING")
     STRING,
 
     /**
-     * A numeric data type.
+     * **Number Data Type:**  Represents numerical data, including both integer
+     * and floating-point numbers.
      */
     @JsonProperty("NUMBER")
     NUMBER,
 
     /**
-     * An integer data type.
+     * **Integer Data Type:** Represents whole numbers without fractional
+     * parts.
      */
     @JsonProperty("INTEGER")
     INTEGER,
 
     /**
-     * A boolean data type.
+     * **Boolean Data Type:** Represents truth values, either `true` or
+     * `false`.
      */
     @JsonProperty("BOOLEAN")
     BOOLEAN,
 
     /**
-     * An array data type.
+     * **Array Data Type:** Represents an ordered collection of elements, where
+     * each element can be of any data type, including other arrays.
      */
     @JsonProperty("ARRAY")
     ARRAY,
 
     /**
-     * An object data type.
+     * **Object Data Type:** Represents a complex data structure with named
+     * properties, where each property has a specific data type.
      */
     @JsonProperty("OBJECT")
     OBJECT

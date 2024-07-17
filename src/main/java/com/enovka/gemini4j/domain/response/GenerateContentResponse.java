@@ -4,8 +4,6 @@ import com.enovka.gemini4j.domain.Candidate;
 import com.enovka.gemini4j.domain.ErrorResponse;
 import com.enovka.gemini4j.domain.PromptFeedback;
 import com.enovka.gemini4j.domain.UsageMetadata;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,8 +38,7 @@ public class GenerateContentResponse {
      * Candidate responses from the model.
      */
     @JsonProperty("candidates")
-    @Builder.Default
-    private List<Candidate> candidates = new ArrayList<>();
+    private List<Candidate> candidates;
 
     /**
      * Returns the prompt's feedback related to the content filters.

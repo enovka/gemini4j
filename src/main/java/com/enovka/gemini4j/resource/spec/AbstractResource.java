@@ -20,7 +20,6 @@ public abstract class AbstractResource extends BaseClass {
     protected final GeminiClient geminiClient;
     protected final ModelTool modelTool = ModelTool.getInstance();
 
-
     /**
      * Constructs a new AbstractResource with the required GeminiClient.
      *

@@ -14,8 +14,8 @@ import com.enovka.gemini4j.json.spec.JsonService;
 public class GeminiClientImp extends AbstractGeminiClient {
 
     /**
-     * Constructs a new AbstractGeminiClient with the required API key, model, HTTP
-     * client, base URL, and JSON service.
+     * Constructs a new AbstractGeminiClient with the required API key, model,
+     * HTTP client, base URL, and JSON service.
      *
      * @param apiKey The API key for authentication with the Gemini API.
      * @param model The default model to use for requests.

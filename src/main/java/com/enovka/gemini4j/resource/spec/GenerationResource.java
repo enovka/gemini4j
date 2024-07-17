@@ -1,13 +1,13 @@
 package com.enovka.gemini4j.resource.spec;
 
 import com.enovka.gemini4j.client.exception.GeminiApiException;
+import com.enovka.gemini4j.domain.GenerationConfig;
+import com.enovka.gemini4j.domain.SafetySetting;
+import com.enovka.gemini4j.domain.Tool;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GenerateContentResponse;
 import com.enovka.gemini4j.http.exception.HttpException;
 import com.enovka.gemini4j.json.exception.JsonException;
-import com.enovka.gemini4j.domain.GenerationConfig;
-import com.enovka.gemini4j.domain.SafetySetting;
-import com.enovka.gemini4j.domain.Tool;
 
 import java.util.List;
 
@@ -44,7 +44,8 @@ public interface GenerationResource {
             throws GeminiApiException, HttpException, JsonException;
 
     /**
-     * Generates content using the specified user input and system instructions.
+     * Generates content using the specified user input and system
+     * instructions.
      *
      * @param userInput The user's input text.
      * @param systemInstructions The system instructions to guide the model's
@@ -102,8 +103,8 @@ public interface GenerationResource {
      * response.
      * @param temperature The temperature to use for generation.
      * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @return A {@link GenerateContentResponse} containing the generated
      * content.
      * @throws GeminiApiException If an error occurs during content generation.
@@ -124,8 +125,8 @@ public interface GenerationResource {
      * response.
      * @param temperature The temperature to use for generation.
      * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param safetySettings The safety settings to apply.
      * @return A {@link GenerateContentResponse} containing the generated
      * content.
@@ -148,8 +149,8 @@ public interface GenerationResource {
      * response.
      * @param temperature The temperature to use for generation.
      * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param safetySettings The safety settings to apply.
      * @param tools The tools to use for generation.
      * @return A {@link GenerateContentResponse} containing the generated
@@ -175,8 +176,8 @@ public interface GenerationResource {
      * response.
      * @param temperature The temperature to use for generation.
      * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param safetySettings The safety settings to apply.
      * @param tools The tools to use for generation.
      * @param generationConfig The generation configuration.
@@ -285,8 +286,8 @@ public interface GenerationResource {
      * @param candidateCount The number of candidate responses to return.
      * @param maxOutputTokens The maximum number of tokens to include in a
      * candidate.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @return A {@link GenerateContentResponse} containing the generated
      * content.
      * @throws GeminiApiException If an error occurs during content generation.
@@ -310,8 +311,8 @@ public interface GenerationResource {
      * @param candidateCount The number of candidate responses to return.
      * @param maxOutputTokens The maximum number of tokens to include in a
      * candidate.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param topK The maximum number of tokens to consider when sampling.
      * @return A {@link GenerateContentResponse} containing the generated
      * content.
@@ -337,8 +338,8 @@ public interface GenerationResource {
      * @param candidateCount The number of candidate responses to return.
      * @param maxOutputTokens The maximum number of tokens to include in a
      * candidate.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param topK The maximum number of tokens to consider when sampling.
      * @param stopSequences The stop sequences to use for generation.
      * @return A {@link GenerateContentResponse} containing the generated

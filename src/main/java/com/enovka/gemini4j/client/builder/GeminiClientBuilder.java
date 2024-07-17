@@ -37,24 +37,26 @@ public class GeminiClientBuilder {
      * @return A new {@link GeminiClient} instance with default settings.
      */
     public GeminiClient build() {
-        return new GeminiClientImp(apiKey, model, httpClient, baseUrl, jsonService);
+        return new GeminiClientImp(apiKey, model, httpClient, baseUrl,
+                jsonService);
     }
 
     /**
      * Creates a new {@link GeminiClient} instance with custom settings.
      *
-     * @param apiKey       The API key for authentication.
-     * @param model        The model to use for requests.
-     * @param httpClient   The HTTP client to use for communication.
-     * @param baseUrl      The base URL for the Gemini API.
+     * @param apiKey The API key for authentication.
+     * @param model The model to use for requests.
+     * @param httpClient The HTTP client to use for communication.
+     * @param baseUrl The base URL for the Gemini API.
      * @param jsonService The JSON service to use for serialization and
-     *                    deserialization.
+     * deserialization.
      * @return A new {@link GeminiClient} instance with custom settings.
      * @since 0.0.2
      */
     public GeminiClient buildCustom(String apiKey, String model,
                                     HttpClient httpClient, String baseUrl,
                                     JsonService jsonService) {
-        return new GeminiClientImp(apiKey, model, httpClient, baseUrl, jsonService);
+        return new GeminiClientImp(apiKey, model, httpClient, baseUrl,
+                jsonService);
     }
 }

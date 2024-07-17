@@ -19,9 +19,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Singleton class that manages a list of available Gemini models. It loads
- * the models from a JSON file and provides methods for updating the list
- * and searching for models based on their supported generation methods.
+ * Singleton class that manages a list of available Gemini models. It loads the
+ * models from a JSON file and provides methods for updating the list and
+ * searching for models based on their supported generation methods.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
@@ -56,14 +56,16 @@ public class ModelTool extends BaseClass {
     private List<Model> loadModelsFromResource() {
         logDebug("Loading models from resource file: " + MODELS_JSON_FILE);
         try (InputStream inputStream =
-                     ListModel.class.getClassLoader().getResourceAsStream(MODELS_JSON_FILE)) {
+                     ListModel.class.getClassLoader()
+                             .getResourceAsStream(MODELS_JSON_FILE)) {
             ObjectMapper objectMapper = new ObjectMapper();
             ListModel loadedModels = objectMapper.readValue(inputStream,
                     new TypeReference<>() {
                     });
             // Convert strings to SupportedGenerationMethod enum
             for (Model model : loadedModels.getModels()) {
-                List<String> supportedMethods = model.getSupportedGenerationMethods().stream()
+                List<String> supportedMethods
+                        = model.getSupportedGenerationMethods().stream()
                         .map(SupportedGenerationMethod::fromValue)
                         .filter(Objects::nonNull)
                         .map(SupportedGenerationMethod::getValue)
@@ -116,8 +118,8 @@ public class ModelTool extends BaseClass {
      * Finds all supported generation methods for the specified model.
      *
      * @param modelName The name of the model to search for.
-     * @return A list of supported generation methods for the model, or an
-     * empty list if the model is not found.
+     * @return A list of supported generation methods for the model, or an empty
+     * list if the model is not found.
      */
     public List<String> findSupportedGenerationMethods(
             String modelName) {
@@ -150,7 +152,8 @@ public class ModelTool extends BaseClass {
                 .filter(m -> m.getName().startsWith("models/" + modelName))
                 .findFirst();
         if (model.isPresent()) {
-            List<String> supportedMethods = model.get().getSupportedGenerationMethods();
+            List<String> supportedMethods = model.get()
+                    .getSupportedGenerationMethods();
             for (String method : supportedMethods) {
                 if (method.equals(generationMethod)) {
                     return true;

@@ -1,41 +1,34 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * Block at and beyond a specified harm probability.
+ * Represents the threshold for blocking content based on the probability of
+ * harm, as assessed by the Gemini API's safety system. This class allows you to
+ * define the level of sensitivity for blocking content, determining at which
+ * probability level the content should be blocked. By configuring the
+ * `HarmBlockThreshold`, developers can control the strictness of the content
+ * filtering applied to the generated responses.
  *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @author Everson Novka <enovka@gmail.com>
  */
+@Data
+@Builder(setterPrefix = "with")
+@NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class HarmBlockThreshold {
 
-    private HarmBlockThresholdEnum value;
-
     /**
-     * Creates a HarmBlockThreshold from a string value.
-     *
-     * @param value The string representation of the harm block threshold.
-     * @return The corresponding HarmBlockThresholdEnum value.
+     * The specific harm block threshold, represented by the
+     * {@link HarmBlockThresholdEnum}. For example, setting this to
+     * {@link HarmBlockThresholdEnum#BLOCK_MEDIUM_AND_ABOVE} will block content
+     * with medium or high probability of harm.
      */
-    @JsonCreator
-    public static HarmBlockThreshold fromValue(String value) {
-        return new HarmBlockThreshold(
-                HarmBlockThresholdEnum.valueOf(value.toUpperCase()));
-    }
-
-    /**
-     * Returns the string representation of the harm block threshold.
-     *
-     * @return The string representation of the harm block threshold.
-     */
-    @JsonValue
-    public String getNameValue() {
-        return value.name();
-    }
+    @JsonProperty("harmBlockThreshold")
+    private HarmBlockThresholdEnum harmBlockThreshold;
 }

@@ -24,7 +24,8 @@ import java.util.*;
 public class GenerationResourceImpl extends AbstractResource
         implements GenerationResource {
 
-    private static final String GENERATE_CONTENT_ENDPOINT = "/models/%s:generateContent";
+    private static final String GENERATE_CONTENT_ENDPOINT
+            = "/models/%s:generateContent";
     private final JsonService jsonService;
 
     /**
@@ -54,8 +55,10 @@ public class GenerationResourceImpl extends AbstractResource
                 + GENERATE_CONTENT_ENDPOINT);
         String requestBody = jsonService.serialize(request);
         logDebug("Request Body: " + requestBody);
-        String endpoint = String.format(GENERATE_CONTENT_ENDPOINT, geminiClient.getModel());
-        Map<String, String> headers = new HashMap<>(geminiClient.buildAuthHeaders());
+        String endpoint = String.format(GENERATE_CONTENT_ENDPOINT,
+                geminiClient.getModel());
+        Map<String, String> headers = new HashMap<>(
+                geminiClient.buildAuthHeaders());
         HttpResponse response = post(endpoint, requestBody,
                 headers);
         logDebug("Response Body: " + response.getBody());
@@ -78,10 +81,12 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions)
+                                                   String systemInstructions)
             throws GeminiApiException, HttpException, JsonException {
-        logDebug("Generating content with system instructions: " + systemInstructions);
-        return generateContent(buildRequestWithSystemInstructions(userInput, systemInstructions));
+        logDebug("Generating content with system instructions: "
+                + systemInstructions);
+        return generateContent(buildRequestWithSystemInstructions(userInput,
+                systemInstructions));
     }
 
     /**
@@ -89,11 +94,13 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions,
-                                            double temperature)
+                                                   String systemInstructions,
+                                                   double temperature)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating content with temperature: " + temperature);
-        return generateContent(buildRequestWithTemperature(userInput, systemInstructions, temperature));
+        return generateContent(
+                buildRequestWithTemperature(userInput, systemInstructions,
+                        temperature));
     }
 
     /**
@@ -101,12 +108,14 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions,
-                                            double temperature,
-                                            boolean outputJson)
+                                                   String systemInstructions,
+                                                   double temperature,
+                                                   boolean outputJson)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating content with outputJson: " + outputJson);
-        return generateContent(buildRequestWithOutputJson(userInput, systemInstructions, temperature, outputJson));
+        return generateContent(
+                buildRequestWithOutputJson(userInput, systemInstructions,
+                        temperature, outputJson));
     }
 
     /**
@@ -114,13 +123,15 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions,
-                                            double temperature,
-                                            boolean outputJson,
-                                            double topP)
+                                                   String systemInstructions,
+                                                   double temperature,
+                                                   boolean outputJson,
+                                                   double topP)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating content with topP: " + topP);
-        return generateContent(buildRequestWithTopP(userInput, systemInstructions, temperature, outputJson, topP));
+        return generateContent(
+                buildRequestWithTopP(userInput, systemInstructions, temperature,
+                        outputJson, topP));
     }
 
     /**
@@ -128,14 +139,16 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions,
-                                            double temperature,
-                                            boolean outputJson,
-                                            double topP,
-                                            List<SafetySetting> safetySettings)
+                                                   String systemInstructions,
+                                                   double temperature,
+                                                   boolean outputJson,
+                                                   double topP,
+                                                   List<SafetySetting> safetySettings)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating content with safety settings.");
-        return generateContent(buildRequestWithSafetySettings(userInput, systemInstructions, temperature, outputJson, topP, safetySettings));
+        return generateContent(
+                buildRequestWithSafetySettings(userInput, systemInstructions,
+                        temperature, outputJson, topP, safetySettings));
     }
 
     /**
@@ -143,15 +156,17 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions,
-                                            double temperature,
-                                            boolean outputJson,
-                                            double topP,
-                                            List<SafetySetting> safetySettings,
-                                            List<Tool> tools)
+                                                   String systemInstructions,
+                                                   double temperature,
+                                                   boolean outputJson,
+                                                   double topP,
+                                                   List<SafetySetting> safetySettings,
+                                                   List<Tool> tools)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating content with tools.");
-        return generateContent(buildRequestWithTools(userInput, systemInstructions, temperature, outputJson, topP, safetySettings, tools));
+        return generateContent(
+                buildRequestWithTools(userInput, systemInstructions,
+                        temperature, outputJson, topP, safetySettings, tools));
     }
 
     /**
@@ -159,16 +174,18 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions,
-                                            double temperature,
-                                            boolean outputJson,
-                                            double topP,
-                                            List<SafetySetting> safetySettings,
-                                            List<Tool> tools,
-                                            GenerationConfig generationConfig)
+                                                   String systemInstructions,
+                                                   double temperature,
+                                                   boolean outputJson,
+                                                   double topP,
+                                                   List<SafetySetting> safetySettings,
+                                                   List<Tool> tools,
+                                                   GenerationConfig generationConfig)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating content with generation config.");
-        return generateContent(buildRequestWithGenerationConfig(userInput, systemInstructions, temperature, outputJson, topP, safetySettings, tools, generationConfig));
+        return generateContent(
+                buildRequestWithGenerationConfig(userInput, systemInstructions,
+                        safetySettings, tools, generationConfig));
     }
 
     /**
@@ -198,10 +215,11 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                         List<SafetySetting> safetySettings)
+                                                List<SafetySetting> safetySettings)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating text with safety settings.");
-        return generateText(textPrompt, safetySettings, 0.0, 0, 0, 0.0, 0, null);
+        return generateText(textPrompt, safetySettings, 0.0, 0, 0, 0.0, 0,
+                null);
     }
 
     /**
@@ -217,11 +235,12 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                         List<SafetySetting> safetySettings,
-                                         double temperature)
+                                                List<SafetySetting> safetySettings,
+                                                double temperature)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating text with temperature: " + temperature);
-        return generateText(textPrompt, safetySettings, temperature, 0, 0, 0.0, 0, null);
+        return generateText(textPrompt, safetySettings, temperature, 0, 0, 0.0,
+                0, null);
     }
 
     /**
@@ -238,12 +257,13 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                         List<SafetySetting> safetySettings,
-                                         double temperature,
-                                         int candidateCount)
+                                                List<SafetySetting> safetySettings,
+                                                double temperature,
+                                                int candidateCount)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating text with candidate count: " + candidateCount);
-        return generateText(textPrompt, safetySettings, temperature, candidateCount, 0, 0.0, 0, null);
+        return generateText(textPrompt, safetySettings, temperature,
+                candidateCount, 0, 0.0, 0, null);
     }
 
     /**
@@ -262,13 +282,14 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                         List<SafetySetting> safetySettings,
-                                         double temperature,
-                                         int candidateCount,
-                                         int maxOutputTokens)
+                                                List<SafetySetting> safetySettings,
+                                                double temperature,
+                                                int candidateCount,
+                                                int maxOutputTokens)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating text with max output tokens: " + maxOutputTokens);
-        return generateText(textPrompt, safetySettings, temperature, candidateCount, maxOutputTokens, 0.0, 0, null);
+        return generateText(textPrompt, safetySettings, temperature,
+                candidateCount, maxOutputTokens, 0.0, 0, null);
     }
 
     /**
@@ -282,22 +303,23 @@ public class GenerationResourceImpl extends AbstractResource
      * @param candidateCount The number of candidate responses to return.
      * @param maxOutputTokens The maximum number of tokens to include in a
      * candidate.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @return A {@link GenerateContentResponse} containing the generated
      * content.
      * @throws GeminiApiException If an error occurs during content generation.
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                         List<SafetySetting> safetySettings,
-                                         double temperature,
-                                         int candidateCount,
-                                         int maxOutputTokens,
-                                         double topP)
+                                                List<SafetySetting> safetySettings,
+                                                double temperature,
+                                                int candidateCount,
+                                                int maxOutputTokens,
+                                                double topP)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating text with topP: " + topP);
-        return generateText(textPrompt, safetySettings, temperature, candidateCount, maxOutputTokens, topP, 0, null);
+        return generateText(textPrompt, safetySettings, temperature,
+                candidateCount, maxOutputTokens, topP, 0, null);
     }
 
     /**
@@ -311,8 +333,8 @@ public class GenerationResourceImpl extends AbstractResource
      * @param candidateCount The number of candidate responses to return.
      * @param maxOutputTokens The maximum number of tokens to include in a
      * candidate.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param topK The maximum number of tokens to consider when sampling.
      * @return A {@link GenerateContentResponse} containing the generated
      * content.
@@ -320,15 +342,16 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                         List<SafetySetting> safetySettings,
-                                         double temperature,
-                                         int candidateCount,
-                                         int maxOutputTokens,
-                                         double topP,
-                                         int topK)
+                                                List<SafetySetting> safetySettings,
+                                                double temperature,
+                                                int candidateCount,
+                                                int maxOutputTokens,
+                                                double topP,
+                                                int topK)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating text with topK: " + topK);
-        return generateText(textPrompt, safetySettings, temperature, candidateCount, maxOutputTokens, topP, topK, null);
+        return generateText(textPrompt, safetySettings, temperature,
+                candidateCount, maxOutputTokens, topP, topK, null);
     }
 
     /**
@@ -342,8 +365,8 @@ public class GenerationResourceImpl extends AbstractResource
      * @param candidateCount The number of candidate responses to return.
      * @param maxOutputTokens The maximum number of tokens to include in a
      * candidate.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param topK The maximum number of tokens to consider when sampling.
      * @param stopSequences The stop sequences to use for generation.
      * @return A {@link GenerateContentResponse} containing the generated
@@ -352,13 +375,13 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GenerateContentResponse generateText(String textPrompt,
-                                         List<SafetySetting> safetySettings,
-                                         double temperature,
-                                         int candidateCount,
-                                         int maxOutputTokens,
-                                         double topP,
-                                         int topK,
-                                         List<String> stopSequences)
+                                                List<SafetySetting> safetySettings,
+                                                double temperature,
+                                                int candidateCount,
+                                                int maxOutputTokens,
+                                                double topP,
+                                                int topK,
+                                                List<String> stopSequences)
             throws GeminiApiException, HttpException, JsonException {
         logDebug("Generating text with stop sequences.");
         GenerationConfig generationConfig = GenerationConfig.builder()
@@ -369,7 +392,9 @@ public class GenerationResourceImpl extends AbstractResource
                 .withMaxOutputTokens(maxOutputTokens)
                 .withStopSequences(stopSequences)
                 .build();
-        return generateContent(buildCustomRequest(textPrompt, generationConfig, null, null, safetySettings, null));
+        return generateContent(
+                buildCustomRequest(textPrompt, generationConfig, null, null,
+                        safetySettings));
     }
 
     /**
@@ -400,10 +425,12 @@ public class GenerationResourceImpl extends AbstractResource
      * response.
      * @return A {@link GenerateContentRequest} with system instructions.
      */
-    private GenerateContentRequest buildRequestWithSystemInstructions(String userInput,
-                                                                    String systemInstructions) {
+    private GenerateContentRequest buildRequestWithSystemInstructions(
+            String userInput,
+            String systemInstructions) {
         logDebug("Building GenerateContentRequest with system instructions.");
-        return buildCustomRequest(userInput, null, systemInstructions, null, null, null);
+        return buildCustomRequest(userInput, null, systemInstructions, null,
+                null);
     }
 
     /**
@@ -417,13 +444,14 @@ public class GenerationResourceImpl extends AbstractResource
      * @return A {@link GenerateContentRequest} with temperature.
      */
     private GenerateContentRequest buildRequestWithTemperature(String userInput,
-                                                                String systemInstructions,
-                                                                double temperature) {
+                                                               String systemInstructions,
+                                                               double temperature) {
         logDebug("Building GenerateContentRequest with temperature.");
         GenerationConfig generationConfig = GenerationConfig.builder()
                 .withTemperature(temperature)
                 .build();
-        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, null, null);
+        return buildCustomRequest(userInput, generationConfig,
+                systemInstructions, null, null);
     }
 
     /**
@@ -438,15 +466,17 @@ public class GenerationResourceImpl extends AbstractResource
      * @return A {@link GenerateContentRequest} with outputJson flag.
      */
     private GenerateContentRequest buildRequestWithOutputJson(String userInput,
-                                                                String systemInstructions,
-                                                                double temperature,
-                                                                boolean outputJson) {
+                                                              String systemInstructions,
+                                                              double temperature,
+                                                              boolean outputJson) {
         logDebug("Building GenerateContentRequest with outputJson.");
         GenerationConfig generationConfig = GenerationConfig.builder()
                 .withTemperature(temperature)
-                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .withResponseMimeType(
+                        outputJson ? "application/json" : "text/plain")
                 .build();
-        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, null, null);
+        return buildCustomRequest(userInput, generationConfig,
+                systemInstructions, null, null);
     }
 
     /**
@@ -458,22 +488,24 @@ public class GenerationResourceImpl extends AbstractResource
      * response.
      * @param temperature The temperature to use for generation.
      * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @return A {@link GenerateContentRequest} with topP value.
      */
     private GenerateContentRequest buildRequestWithTopP(String userInput,
-                                                                String systemInstructions,
-                                                                double temperature,
-                                                                boolean outputJson,
-                                                                double topP) {
+                                                        String systemInstructions,
+                                                        double temperature,
+                                                        boolean outputJson,
+                                                        double topP) {
         logDebug("Building GenerateContentRequest with topP.");
         GenerationConfig generationConfig = GenerationConfig.builder()
                 .withTemperature(temperature)
-                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .withResponseMimeType(
+                        outputJson ? "application/json" : "text/plain")
                 .withTopP(topP)
                 .build();
-        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, null, null);
+        return buildCustomRequest(userInput, generationConfig,
+                systemInstructions, null, null);
     }
 
     /**
@@ -486,90 +518,89 @@ public class GenerationResourceImpl extends AbstractResource
      * response.
      * @param temperature The temperature to use for generation.
      * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param safetySettings The safety settings to apply.
      * @return A {@link GenerateContentRequest} with safety settings.
      */
-    private GenerateContentRequest buildRequestWithSafetySettings(String userInput,
-                                                                    String systemInstructions,
-                                                                    double temperature,
-                                                                    boolean outputJson,
-                                                                    double topP,
-                                                                    List<SafetySetting> safetySettings) {
+    private GenerateContentRequest buildRequestWithSafetySettings(
+            String userInput,
+            String systemInstructions,
+            double temperature,
+            boolean outputJson,
+            double topP,
+            List<SafetySetting> safetySettings) {
         logDebug("Building GenerateContentRequest with safety settings.");
         GenerationConfig generationConfig = GenerationConfig.builder()
                 .withTemperature(temperature)
-                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .withResponseMimeType(
+                        outputJson ? "application/json" : "text/plain")
                 .withTopP(topP)
                 .build();
-        return buildCustomRequest(userInput, generationConfig, systemInstructions, null, safetySettings, null);
+        return buildCustomRequest(userInput, generationConfig,
+                systemInstructions, null, safetySettings);
     }
 
     /**
      * Builds a {@link GenerateContentRequest} with user input, system
-     * instructions, temperature, outputJson flag, topP value, safety
-     * settings, and tools.
+     * instructions, temperature, outputJson flag, topP value, safety settings,
+     * and tools.
      *
      * @param userInput The user's input text.
      * @param systemInstructions The system instructions to guide the model's
      * response.
      * @param temperature The temperature to use for generation.
      * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
+     * @param topP The maximum cumulative probability of tokens to consider when
+     * sampling.
      * @param safetySettings The safety settings to apply.
      * @param tools The tools to use for generation.
      * @return A {@link GenerateContentRequest} with tools.
      */
     private GenerateContentRequest buildRequestWithTools(String userInput,
-                                                                    String systemInstructions,
-                                                                    double temperature,
-                                                                    boolean outputJson,
-                                                                    double topP,
-                                                                    List<SafetySetting> safetySettings,
-                                                                    List<Tool> tools) {
+                                                         String systemInstructions,
+                                                         double temperature,
+                                                         boolean outputJson,
+                                                         double topP,
+                                                         List<SafetySetting> safetySettings,
+                                                         List<Tool> tools) {
         logDebug("Building GenerateContentRequest with tools.");
         GenerationConfig generationConfig = GenerationConfig.builder()
                 .withTemperature(temperature)
-                .withResponseMimeType(outputJson ? "application/json" : "text/plain")
+                .withResponseMimeType(
+                        outputJson ? "application/json" : "text/plain")
                 .withTopP(topP)
                 .build();
-        return buildCustomRequest(userInput, generationConfig, systemInstructions, tools, safetySettings, null);
+        return buildCustomRequest(userInput, generationConfig,
+                systemInstructions, tools, safetySettings);
     }
 
     /**
      * Builds a {@link GenerateContentRequest} with user input, system
-     * instructions, temperature, outputJson flag, topP value, safety
-     * settings, tools, and generation config.
+     * instructions, temperature, outputJson flag, topP value, safety settings,
+     * tools, and generation config.
      *
      * @param userInput The user's input text.
      * @param systemInstructions The system instructions to guide the model's
      * response.
-     * @param temperature The temperature to use for generation.
-     * @param outputJson Whether the output should be in JSON format.
-     * @param topP The maximum cumulative probability of tokens to consider
-     * when sampling.
      * @param safetySettings The safety settings to apply.
      * @param tools The tools to use for generation.
      * @param generationConfig The generation configuration.
      * @return A {@link GenerateContentRequest} with generation config.
      */
-    private GenerateContentRequest buildRequestWithGenerationConfig(String userInput,
-                                                                    String systemInstructions,
-                                                                    double temperature,
-                                                                    boolean outputJson,
-                                                                    double topP,
-                                                                    List<SafetySetting> safetySettings,
-                                                                    List<Tool> tools,
-                                                                    GenerationConfig generationConfig) {
+    private GenerateContentRequest buildRequestWithGenerationConfig(
+            String userInput,
+            String systemInstructions,
+            List<SafetySetting> safetySettings,
+            List<Tool> tools,
+            GenerationConfig generationConfig) {
         logDebug("Building GenerateContentRequest with generation config.");
-        return buildCustomRequest(userInput, generationConfig, systemInstructions, tools, safetySettings, null);
+        return buildCustomRequest(userInput, generationConfig,
+                systemInstructions, tools, safetySettings);
     }
 
     /**
-     * Builds a custom {@link GenerateContentRequest} with provided
-     * parameters.
+     * Builds a custom {@link GenerateContentRequest} with provided parameters.
      *
      * @param userInput The user's input text.
      * @param generationConfig The generation configuration.
@@ -577,22 +608,21 @@ public class GenerationResourceImpl extends AbstractResource
      * response.
      * @param tools The tools to use for generation.
      * @param safetySettings The safety settings to apply.
-     * @param cachedContent The cached content to use as context.
      * @return A custom {@link GenerateContentRequest}.
      */
     private GenerateContentRequest buildCustomRequest(String userInput,
                                                       GenerationConfig generationConfig,
                                                       String systemInstructions,
                                                       List<Tool> tools,
-                                                      List<SafetySetting> safetySettings,
-                                                      String cachedContent) {
+                                                      List<SafetySetting> safetySettings) {
         logDebug("Building custom GenerateContentRequest.");
         List<Content> contents = new ArrayList<>();
         Content systemInstructionsContent = null;
         if (systemInstructions != null) {
             systemInstructionsContent = Content.builder()
                     .withParts(Collections.singletonList(
-                            Part.builder().withText(systemInstructions).build()))
+                            Part.builder().withText(systemInstructions)
+                                    .build()))
                     .withRole("system")
                     .build();
         }
@@ -608,7 +638,7 @@ public class GenerationResourceImpl extends AbstractResource
                 .withSystemInstruction(systemInstructionsContent)
                 .withTools(tools)
                 .withSafetySettings(safetySettings)
-                .withCachedContent(cachedContent)
+                .withCachedContent(null)
                 .build();
     }
 
@@ -620,8 +650,11 @@ public class GenerationResourceImpl extends AbstractResource
      */
     private void validateGenerationMethodSupport(String generationMethod)
             throws GeminiApiException {
-        if (!modelTool.isGenerationMethodSupported(geminiClient.getModel(), generationMethod)) {
-            throw new GeminiApiException(450, "Generation method '" + generationMethod + "' is not supported by the model.");
+        if (!modelTool.isGenerationMethodSupported(geminiClient.getModel(),
+                generationMethod)) {
+            throw new GeminiApiException(450,
+                    "Generation method '" + generationMethod
+                            + "' is not supported by the model.");
         }
     }
 }
