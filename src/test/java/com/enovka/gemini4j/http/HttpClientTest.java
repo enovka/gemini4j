@@ -1,20 +1,20 @@
 package com.enovka.gemini4j.http;
 
-import com.enovka.gemini4j.http.exception.HttpException;
-import com.enovka.gemini4j.http.factory.HttpClientBuilder;
-import com.enovka.gemini4j.http.spec.HttpClient;
-import com.enovka.gemini4j.http.spec.HttpResponse;
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -28,29 +28,30 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class HttpClientTest {
 
-    @RegisterExtension
-    static WireMockExtension wireMockExtension = WireMockExtension.newInstance()
-            .options(wireMockConfig().port(8080))
-            .build();
-    private final WireMockRuntimeInfo wireMockRuntimeInfo
-            = wireMockExtension.getRuntimeInfo();
+    private WireMockServer wireMockServer;
     private HttpClient httpClient;
 
     @BeforeEach
     public void init() {
-
         System.out.println("Initializing HttpClientTest...");
-        System.out.println("WireMock instance: " + wireMockExtension);
+
+        // Configure and start WireMock server
+        wireMockServer = new WireMockServer(
+                WireMockConfiguration.wireMockConfig().dynamicPort());
+        wireMockServer.start();
+        WireMock.configureFor("localhost", wireMockServer.port());
+
         System.out.println(
-                "WireMock base URL: " + wireMockRuntimeInfo.getHttpBaseUrl());
-        System.out.println(
-                "WireMock HTTP port: " + wireMockRuntimeInfo.getHttpPort());
+                "WireMock server started on port: " + wireMockServer.port());
 
         httpClient = HttpClientBuilder.builder().build().getCustomClient();
         System.out.println("HttpClient instance: " + httpClient);
+    }
 
-        System.out.println(
-                "Test base URL: " + wireMockRuntimeInfo.getHttpBaseUrl());
+    @AfterEach
+    public void tearDown() {
+        System.out.println("Stopping WireMock server...");
+        wireMockServer.stop();
     }
 
     /**
@@ -64,8 +65,9 @@ public class HttpClientTest {
         System.out.println("Starting testGetRequestWithHeaders...");
 
         // Stub a GET request with specific headers
-        System.out.println("Stubbing GET request on URL: "
-                + wireMockRuntimeInfo.getHttpBaseUrl() + "/test");
+        System.out.println(
+                "Stubbing GET request on URL: " + wireMockServer.baseUrl()
+                        + "/test");
         stubFor(get(urlEqualTo("/test"))
                 .withHeader("Accept", equalTo("application/json"))
                 .withHeader("Custom-Header", equalTo("test-value"))
@@ -81,7 +83,7 @@ public class HttpClientTest {
         // Execute the GET request
         System.out.println("Executing GET request...");
         HttpResponse response = httpClient.get(
-                wireMockRuntimeInfo.getHttpBaseUrl() + "/test", headers);
+                wireMockServer.baseUrl() + "/test", headers);
         System.out.println("GET request executed.");
 
         // Assertions
@@ -104,14 +106,15 @@ public class HttpClientTest {
         System.out.println("Starting testPostRequestWithHeadersAndBody...");
 
         // Stub a POST request with specific headers and body
-        System.out.println("Stubbing POST request on URL: "
-                + wireMockRuntimeInfo.getHttpBaseUrl() + "/test");
+        System.out.println(
+                "Stubbing POST request on URL: " + wireMockServer.baseUrl()
+                        + "/test");
         stubFor(post(urlEqualTo("/test"))
                 .withHeader("Content-Type", equalTo("application/json"))
                 .withRequestBody(
                         equalToJson("{\"message\": \"Hello, World!\"}"))
-                .willReturn(aResponse().withStatus(201).withBody(
-                        "{\"id\": \"123\"}")));
+                .willReturn(aResponse().withStatus(201)
+                        .withBody("{\"id\": \"123\"}")));
 
         // Prepare headers and body for the request
         Map<String, String> headers = new HashMap<>();
@@ -123,8 +126,7 @@ public class HttpClientTest {
         // Execute the POST request
         System.out.println("Executing POST request...");
         HttpResponse response = httpClient.post(
-                wireMockRuntimeInfo.getHttpBaseUrl() + "/test", requestBody,
-                headers);
+                wireMockServer.baseUrl() + "/test", requestBody, headers);
         System.out.println("POST request executed.");
 
         // Assertions
@@ -146,17 +148,17 @@ public class HttpClientTest {
         System.out.println("Starting testHttpClientError...");
 
         // Stub a GET request that returns a 404 Not Found error
-        System.out.println("Stubbing GET request on URL: "
-                + wireMockRuntimeInfo.getHttpBaseUrl() + "/test");
-        stubFor(get(urlEqualTo("/test"))
-                .willReturn(aResponse().withStatus(404)));
+        System.out.println(
+                "Stubbing GET request on URL: " + wireMockServer.baseUrl()
+                        + "/test");
+        stubFor(get(urlEqualTo("/test")).willReturn(
+                aResponse().withStatus(404)));
 
         // Execute the GET request and assert that an HttpException is thrown
         System.out.println("Executing GET request expecting HttpException...");
-        HttpException exception = assertThrows(HttpException.class, () -> {
-            httpClient.get(wireMockRuntimeInfo.getHttpBaseUrl() + "/test",
-                    new HashMap<>());
-        });
+        HttpException exception = assertThrows(HttpException.class,
+                () -> httpClient.get(wireMockServer.baseUrl() + "/test",
+                        new HashMap<>()));
         System.out.println("HttpException caught.");
 
         // Assertions about the exception
@@ -176,20 +178,21 @@ public class HttpClientTest {
     @Test
     public void testHttpServerError() {
         System.out.println("Starting testHttpServerError...");
-        System.out.println("WireMock isHttpEnabled()? : "
-                + wireMockRuntimeInfo.isHttpEnabled());
+        System.out.println(
+                "WireMock isHttpEnabled()? : " + wireMockServer.isRunning());
+
         // Stub a GET request that returns a 500 Internal Server Error
-        System.out.println("Stubbing GET request on URL: "
-                + wireMockRuntimeInfo.getHttpBaseUrl() + "/test");
-        stubFor(get(urlEqualTo("/test"))
-                .willReturn(aResponse().withStatus(500)));
+        System.out.println(
+                "Stubbing GET request on URL: " + wireMockServer.baseUrl()
+                        + "/test");
+        stubFor(get(urlEqualTo("/test")).willReturn(
+                aResponse().withStatus(500)));
 
         // Execute the GET request and assert that an HttpException is thrown
         System.out.println("Executing GET request expecting HttpException...");
-        HttpException exception = assertThrows(HttpException.class, () -> {
-            httpClient.get(wireMockRuntimeInfo.getHttpBaseUrl() + "/test",
-                    new HashMap<>());
-        });
+        HttpException exception = assertThrows(HttpException.class,
+                () -> httpClient.get(wireMockServer.baseUrl() + "/test",
+                        new HashMap<>()));
         System.out.println("HttpException caught.");
 
         // Assertions about the exception

@@ -1,8 +1,10 @@
 package com.enovka.gemini4j.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
+import com.enovka.gemini4j.domain.type.HarmProbabilityEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -19,7 +21,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class SafetyRating {
@@ -28,13 +30,13 @@ public class SafetyRating {
      * Required. The category for this rating.
      */
     @JsonProperty("category")
-    private HarmCategory category;
+    private HarmCategoryEnum category;
 
     /**
      * Required. The probability of harm for this content.
      */
     @JsonProperty("probability")
-    private HarmProbability probability;
+    private HarmProbabilityEnum probability;
 
     /**
      * Was this content blocked because of this rating?

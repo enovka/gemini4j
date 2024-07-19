@@ -1,66 +1,33 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.TypeEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
- * Type contains the list of OpenAPI data types as defined by
- * <a href="https://spec.openapis.org/oas/v3.0.3#data-types">...</a>
+ * Represents an OpenAPI data type used for defining parameters and schemas in
+ * the Gemini API. This class aligns with the OpenAPI 3.0.3 specification for
+ * data types, providing a standardized way to specify the type of data used in
+ * requests and responses. You can refer to the full OpenAPI data type
+ * documentation here: <a
+ * href="https://spec.openapis.org/oas/v3.0.3#data-types">https://spec.openapis.org/oas/v3.0.3#data-types</a>
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Type {
 
     /**
-     * Not specified, should not be used.
+     * The specific OpenAPI data type, as defined by the {@link TypeEnum}. For
+     * example, setting this to {@link TypeEnum#STRING} indicates a string data
+     * type.
      */
-    @JsonProperty("TYPE_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.type.TypeEnum typeUnspecified;
-
-    /**
-     * String type.
-     */
-    @JsonProperty("STRING")
-    private TypeEnum string;
-
-    /**
-     * Number type.
-     */
-    @JsonProperty("NUMBER")
-    private com.enovka.gemini4j.domain.type.TypeEnum number;
-
-    /**
-     * Integer type.
-     */
-    @JsonProperty("INTEGER")
-    private com.enovka.gemini4j.domain.type.TypeEnum integer;
-
-    /**
-     * Boolean type.
-     */
-    @JsonProperty("BOOLEAN")
-    private com.enovka.gemini4j.domain.type.TypeEnum booleanValue;
-
-    /**
-     * Array type.
-     */
-    @JsonProperty("ARRAY")
-    private com.enovka.gemini4j.domain.type.TypeEnum array;
-
-    /**
-     * Object type.
-     */
-    @JsonProperty("OBJECT")
-    private com.enovka.gemini4j.domain.type.TypeEnum object;
-
+    @JsonProperty("type")
+    private TypeEnum type;
 }

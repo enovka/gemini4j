@@ -1,8 +1,8 @@
 package com.enovka.gemini4j.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -14,9 +14,9 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(setterPrefix = "with", toBuilder = true)
 public class UsageMetadata {
 
     /**
@@ -24,8 +24,11 @@ public class UsageMetadata {
      */
     @JsonProperty("totalTokenCount")
     private Integer totalTokenCount;
+    @JsonProperty("promptTokenCount")
     private Integer promptTokenCount;
+    @JsonProperty("cachedContentTokenCount")
     private Integer cachedContentTokenCount;
+    @JsonProperty("candidatesTokenCount")
     private Integer candidatesTokenCount;
 
 }

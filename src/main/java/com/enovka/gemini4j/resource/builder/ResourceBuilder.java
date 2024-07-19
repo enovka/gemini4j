@@ -1,43 +1,61 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.json.builder.JsonServiceBuilder;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.resource.impl.EmbedResourceImpl;
 import com.enovka.gemini4j.resource.impl.GenerationResourceImpl;
 import com.enovka.gemini4j.resource.impl.ModelResourceImpl;
+import com.enovka.gemini4j.resource.spec.EmbedResource;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
 import com.enovka.gemini4j.resource.spec.ModelResource;
-import lombok.Builder;
-import lombok.Data;
 
 /**
- * Builder for creating resource instances.
+ * Builder for creating resource instances for interacting with the Gemini API.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-@Data
-@Builder(setterPrefix = "with")
 public class ResourceBuilder {
 
-    private GeminiClient geminiClient;
-    @Builder.Default
-    private JsonService jsonService = JsonServiceBuilder.builder().build()
-            .build();
+    private final GeminiClient geminiClient;
+    private JsonService jsonService;
 
     /**
-     * Sets the {@link GeminiClient} to use for the resources.
-     *
-     * @param geminiClient The GeminiClient instance.
-     * @return The builder instance for method chaining.
+     * Private constructor to enforce builder pattern.
      */
-    public ResourceBuilder withGeminiClient(GeminiClient geminiClient) {
+    private ResourceBuilder(GeminiClient geminiClient) {
+        if (geminiClient == null) {
+            throw new IllegalArgumentException("GeminiClient is required.");
+        }
         this.geminiClient = geminiClient;
-        return this;
+        this.jsonService = JsonServiceBuilder.builder().build().build();
     }
 
     /**
-     * Sets the {@link JsonService} to use for the resources.
+     * Creates a new instance of the ResourceBuilder.
+     *
+     * @param geminiClient The GeminiClient instance to use for API
+     * communication.
+     * @return A new ResourceBuilder instance.
+     */
+    public static ResourceBuilder builder(GeminiClient geminiClient) {
+        return new ResourceBuilder(geminiClient);
+    }
+
+    /**
+     * Creates a new {@link EmbedResource} instance based on the builder
+     * configuration.
+     *
+     * @return A new {@link EmbedResource} instance.
+     * @since 0.0.2
+     */
+    public EmbedResource buildEmbedResource() {
+        return new EmbedResourceImpl(geminiClient, jsonService);
+    }
+
+    /**
+     * Sets the JsonService to use for JSON serialization/deserialization.
      *
      * @param jsonService The JsonService instance.
      * @return The builder instance for method chaining.
@@ -54,10 +72,6 @@ public class ResourceBuilder {
      * @return A new {@link GenerationResource} instance.
      */
     public GenerationResource buildGenerationResource() {
-        if (geminiClient == null) {
-            throw new IllegalArgumentException(
-                    "GeminiClient is required to build a GenerationResource.");
-        }
         return new GenerationResourceImpl(geminiClient, jsonService);
     }
 
@@ -68,10 +82,6 @@ public class ResourceBuilder {
      * @return A new {@link ModelResource} instance.
      */
     public ModelResource buildModelResource() {
-        if (geminiClient == null) {
-            throw new IllegalArgumentException(
-                    "GeminiClient is required to build a ModelResource.");
-        }
         return new ModelResourceImpl(geminiClient, jsonService);
     }
 }

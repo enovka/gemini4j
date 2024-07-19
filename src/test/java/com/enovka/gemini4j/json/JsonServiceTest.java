@@ -1,10 +1,10 @@
 package com.enovka.gemini4j.json;
 
-import com.enovka.gemini4j.common.BaseClass;
 import com.enovka.gemini4j.domain.Model;
-import com.enovka.gemini4j.json.builder.JsonServiceBuilder;
-import com.enovka.gemini4j.json.exception.JsonException;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
+import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.tool.BaseClass;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * service's ability to serialize and deserialize JSON data correctly, handling
  * various data types and potential error scenarios.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
 public class JsonServiceTest extends BaseClass {
@@ -58,8 +58,7 @@ public class JsonServiceTest extends BaseClass {
         System.out.println("Model object: " + model);
 
         String expectedJson
-                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
-
+                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"maxTemperature\":null,\"topP\":0.8,\"topK\":40}";
         String actualJson = jsonService.serialize(model);
         System.out.println("Serialized JSON: " + actualJson);
 

@@ -2,20 +2,20 @@ package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.domain.Content;
-import com.enovka.gemini4j.domain.Part;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
+import com.enovka.gemini4j.domain.response.GeminiResult;
 import com.enovka.gemini4j.domain.response.GenerateContentResponse;
-import com.enovka.gemini4j.http.exception.HttpException;
-import com.enovka.gemini4j.http.spec.HttpResponse;
-import com.enovka.gemini4j.json.exception.JsonException;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
+import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
+import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
 import com.enovka.gemini4j.resource.spec.AbstractResource;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implementation of the {@link GenerationResource} interface for interacting
@@ -28,8 +28,7 @@ public class GenerationResourceImpl extends AbstractResource
         implements GenerationResource {
 
     private static final String GENERATE_CONTENT_ENDPOINT
-            = "/{model}:generateContent";
-
+            = "/models/%s:generateContent";
     private final JsonService jsonService;
 
     /**
@@ -49,65 +48,81 @@ public class GenerationResourceImpl extends AbstractResource
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.0.2
      */
     @Override
-    public GenerateContentResponse generateContent(
-            GenerateContentRequest request) throws JsonException,
-            HttpException {
-        String model = request.getModel();
-        if (model == null || model.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Model is required in the GenerateContentRequest.");
-        }
+    public GeminiClient getGeminiClient() {
+        return geminiClient;
+    }
 
-        String endpoint = GENERATE_CONTENT_ENDPOINT.replace("{model}", model);
-        logDebug("Generating content from endpoint: " + endpoint);
+    /**
+     * {@inheritDoc}
+     *
+     * @since 0.0.2
+     */
+    @Override
+    public GeminiResult generateContent(GenerateContentRequest request)
+            throws GeminiApiException, JsonException, HttpException {
+        validateGenerationMethodSupport("generateContent");
+        logDebug("Generating content from endpoint: "
+                + GENERATE_CONTENT_ENDPOINT);
 
         String requestBody = jsonService.serialize(request);
-        HttpResponse response = post(endpoint, requestBody,
+        logDebug("Request Body: " + requestBody);
+
+        String endpoint = String.format(GENERATE_CONTENT_ENDPOINT,
+                geminiClient.getModel());
+        Map<String, String> headers = new HashMap<>(
                 geminiClient.buildAuthHeaders());
-        return jsonService.deserialize(response.getBody(),
-                GenerateContentResponse.class);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public GenerateContentResponse generateContent(String userInput)
-            throws GeminiApiException, HttpException, JsonException {
-        return generateContent(userInput, null);
-    }
+        HttpResponse response = post(endpoint, requestBody, headers);
+        logDebug("Response Body: " + response.getBody());
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public GenerateContentResponse generateContent(String userInput,
-                                                   String systemInstructions)
-            throws GeminiApiException, JsonException, HttpException {
-        Content systemContent = null;
-        Content content = Content.builder()
-                .withRole("user")
-                .withParts(Collections.singletonList(
-                        Part.builder().withText(userInput).build()))
+        GenerateContentResponse contentResponse = jsonService.deserialize(
+                response.getBody(), GenerateContentResponse.class);
+        return GeminiResult.builder()
+                .withGenerateContentResponse(contentResponse)
                 .build();
+    }
 
-        if (systemInstructions != null) {
-            systemContent = Content.builder()
-                    .withRole("system")
-                    .withParts(Collections.singletonList(
-                            Part.builder().withText(systemInstructions)
-                                    .build()))
-                    .build();
+    /**
+     * {@inheritDoc}
+     *
+     * @since 0.0.2
+     */
+    @Override
+    public GenerateContentRequestBuilder generateContentBuilder(
+            String userInput) {
+        return GenerateContentRequestBuilder.builder(geminiClient)
+                .withUserInput(userInput);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 0.0.2
+     */
+    @Override
+    public GenerateTextRequestBuilder generateTextBuilder(String userInput) {
+        return new GenerateTextRequestBuilder(this)
+                .withUserInput(userInput);
+    }
+
+    /**
+     * Validates if the generation method is supported by the current model.
+     *
+     * @param generationMethod The generation method to validate.
+     * @throws GeminiApiException If the generation method is not supported.
+     * @since 0.0.2
+     */
+    private void validateGenerationMethodSupport(String generationMethod)
+            throws GeminiApiException {
+        if (!getModelTool().isGenerationMethodSupported(geminiClient.getModel(),
+                generationMethod)) {
+            throw new GeminiApiException(450,
+                    "Generation method '" + generationMethod
+                            + "' is not supported by the model.");
         }
-
-        GenerateContentRequest request = GenerateContentRequest.builder()
-                .withModel(geminiClient.getModel())
-                .withContents(new ArrayList<>(List.of(content)))
-                .withSystemInstruction(systemContent)
-                .build();
-
-        return generateContent(request);
     }
 }

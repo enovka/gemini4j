@@ -1,10 +1,13 @@
 package com.enovka.gemini4j.resource.spec;
 
 import com.enovka.gemini4j.client.exception.GeminiApiException;
+import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
-import com.enovka.gemini4j.domain.response.GenerateContentResponse;
-import com.enovka.gemini4j.http.exception.HttpException;
-import com.enovka.gemini4j.json.exception.JsonException;
+import com.enovka.gemini4j.domain.response.GeminiResult;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
+import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
+import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
 
 /**
  * Interface defining the contract for interacting with the Generation resource
@@ -16,40 +19,42 @@ import com.enovka.gemini4j.json.exception.JsonException;
 public interface GenerationResource {
 
     /**
+     * Returns the associated {@link GeminiClient}.
+     *
+     * @return The {@link GeminiClient} instance.
+     * @since 0.0.2
+     */
+    GeminiClient getGeminiClient();
+
+    /**
      * Generates content using the provided request.
      *
      * @param request The {@link GenerateContentRequest} containing the
      * generation parameters.
-     * @return A {@link GenerateContentResponse} containing the generated
-     * content.
+     * @return A {@link GeminiResult} containing the generated content and
+     * shortcuts.
      * @throws GeminiApiException If an error occurs during content generation.
+     * @since 0.0.2
      */
-    GenerateContentResponse generateContent(GenerateContentRequest request)
+    GeminiResult generateContent(GenerateContentRequest request)
             throws GeminiApiException, JsonException, HttpException;
 
     /**
-     * Generates content using the specified user input.
+     * Creates a new {@link GenerateTextRequestBuilder} instance to build a
+     * {@link GenerateContentRequest} for generating text.
      *
-     * @param userInput The user's input text.
-     * @return A {@link GenerateContentResponse} containing the generated
-     * content.
-     * @throws GeminiApiException If an error occurs during content generation.
+     * @return A new {@link GenerateTextRequestBuilder} instance.
+     * @since 0.0.2
      */
-    GenerateContentResponse generateContent(String userInput)
-            throws GeminiApiException, HttpException, JsonException;
+    GenerateTextRequestBuilder generateTextBuilder(String userInput);
 
     /**
-     * Generates content using the specified user input and system
-     * instructions.
+     * Creates a new {@link GenerateContentRequestBuilder} instance to build a
+     * {@link GenerateContentRequest} for generating content.
      *
-     * @param userInput The user's input text.
-     * @param systemInstructions The system instructions to guide the model's
-     * response.
-     * @return A {@link GenerateContentResponse} containing the generated
-     * content.
-     * @throws GeminiApiException If an error occurs during content generation.
+     * @param userInput The required user input for the generation request.
+     * @return A new {@link GenerateContentRequestBuilder} instance.
+     * @since 0.0.2
      */
-    GenerateContentResponse generateContent(String userInput,
-                                            String systemInstructions)
-            throws GeminiApiException, JsonException, HttpException;
+    GenerateContentRequestBuilder generateContentBuilder(String userInput);
 }

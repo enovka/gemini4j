@@ -2,39 +2,35 @@ package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.FinishReasonEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Data;
 
 /**
- * Defines the reason why the model stopped generating tokens.
+ * Represents the reason why the Gemini API model stopped generating tokens for
+ * a particular candidate response. This class provides a structured way to
+ * access the finish reason information.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
-@AllArgsConstructor
-@Getter
+@Data
+@Builder(setterPrefix = "with", toBuilder = true)
 public class FinishReason {
 
-    private FinishReasonEnum value;
-
     /**
-     * Creates a FinishReason from a string value.
-     *
-     * @param value The string representation of the finish reason.
-     * @return The corresponding FinishReasonEnum value.
+     * The specific finish reason from the {@link FinishReasonEnum}. For
+     * example, a value of {@link FinishReasonEnum#MAX_TOKENS} indicates that
+     * the model reached the maximum token limit.
      */
+    @JsonProperty("finishReason")
+    private FinishReasonEnum finishReason;
+
     @JsonCreator
-    public static FinishReason fromValue(String value) {
-        return new FinishReason(FinishReasonEnum.valueOf(value.toUpperCase()));
+    public FinishReason(@JsonProperty("finishReason") String finishReason) {
+        this.finishReason = FinishReasonEnum.fromString(finishReason);
     }
 
-    /**
-     * Returns the string representation of the finish reason.
-     *
-     * @return The string representation of the finish reason.
-     */
-    @JsonValue
-    public String getValue() {
-        return value.name();
+    public FinishReason(FinishReasonEnum finishReason) {
+        this.finishReason = finishReason;
     }
 }

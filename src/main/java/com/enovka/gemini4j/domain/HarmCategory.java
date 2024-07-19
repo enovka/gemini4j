@@ -1,43 +1,32 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * The category of a rating.
- * <p>
- * These categories cover various kinds of harms that developers may wish to
- * adjust.
+ * Represents a category of potential harm that the Gemini API can assess in
+ * generated content. These categories cover various types of content that
+ * developers may wish to moderate or block based on their application's safety
+ * requirements.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
+@Data
+@Builder(setterPrefix = "with", toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class HarmCategory {
 
-    private HarmCategoryEnum value;
-
     /**
-     * Creates a HarmCategory from a string value.
-     *
-     * @param value The string representation of the harm category.
-     * @return The corresponding HarmCategoryEnum value.
+     * The specific harm category from the {@link HarmCategoryEnum}. For
+     * example, setting this to
+     * {@link HarmCategoryEnum#HARM_CATEGORY_HATE_SPEECH} indicates the category
+     * of hate speech.
      */
-    @JsonCreator
-    public static HarmCategory fromValue(String value) {
-        return new HarmCategory(HarmCategoryEnum.valueOf(value.toUpperCase()));
-    }
-
-    /**
-     * Returns the string representation of the harm category.
-     *
-     * @return The string representation of the harm category.
-     */
-    @JsonValue
-    public String getValue() {
-        return value.name();
-    }
+    @JsonProperty("harmCategory")
+    private HarmCategoryEnum harmCategory;
 }

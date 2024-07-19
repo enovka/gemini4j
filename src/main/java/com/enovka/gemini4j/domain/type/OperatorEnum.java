@@ -1,71 +1,86 @@
 package com.enovka.gemini4j.domain.type;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 /**
- * Defines the operators that can be applied to key-value pairs when filtering
- * content based on metadata.
+ * Defines the comparison operators that can be applied to key-value pairs when
+ * filtering content based on metadata in the Gemini API. These operators allow
+ * you to create precise filtering conditions for retrieving content that
+ * matches specific metadata criteria.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public enum OperatorEnum {
     /**
-     * The operator is unspecified. This is the default value and should not be
-     * used.
+     * **Unspecified Operator:**  The operator is unspecified. This is the
+     * default value and should not be used. Always explicitly choose a valid
+     * operator from the other options.
      */
     @JsonProperty("OPERATOR_UNSPECIFIED")
     OPERATOR_UNSPECIFIED,
 
     /**
-     * Less than. Only supported for numeric values.
+     * **Less Than (`&lt;`):**  Compares a numeric metadata value to determine
+     * if it is strictly less than the specified value. &lt;br&gt; **Supported
+     * Data Types:** Numeric values only.
      */
     @JsonProperty("LESS")
     LESS,
 
     /**
-     * Less than or equal to. Only supported for numeric values.
+     * **Less Than or Equal To (`&lt;=`):** Compares a numeric metadata value to
+     * determine if it is less than or equal to the specified value. &lt;br&gt;
+     * **Supported Data Types:** Numeric values only.
      */
     @JsonProperty("LESS_EQUAL")
     LESS_EQUAL,
 
     /**
-     * Equal to. Supported for both numeric and string values.
+     * **Equal To (`=`):** Compares a metadata value to determine if it is equal
+     * to the specified value. &lt;br&gt; **Supported Data Types:**  Numeric and
+     * string values.
      */
     @JsonProperty("EQUAL")
     EQUAL,
 
     /**
-     * Greater than or equal to. Only supported for numeric values.
+     * **Greater Than or Equal To (`&gt;=`):**  Compares a numeric metadata
+     * value to determine if it is greater than or equal to the specified value.
+     * &lt;br&gt; **Supported Data Types:** Numeric values only.
      */
     @JsonProperty("GREATER_EQUAL")
     GREATER_EQUAL,
 
     /**
-     * Greater than. Only supported for numeric values.
+     * **Greater Than (`&gt;`):** Compares a numeric metadata value to determine
+     * if it is strictly greater than the specified value. &lt;br&gt;
+     * **Supported Data Types:** Numeric values only.
      */
     @JsonProperty("GREATER")
     GREATER,
 
     /**
-     * Not equal to. Supported for both numeric and string values.
+     * **Not Equal To (`!=`):** Compares a metadata value to determine if it is
+     * not equal to the specified value. &lt;br&gt; **Supported Data Types:**
+     * Numeric and string values.
      */
     @JsonProperty("NOT_EQUAL")
     NOT_EQUAL,
 
     /**
-     * Includes. Only supported for string values when the CustomMetadata value
-     * for the given key has a StringList value.
+     * **Includes (Contains):**  Checks if a string metadata value with a
+     * `StringList` type contains the specified string value. &lt;br&gt;
+     * **Supported Data Types:**  String values with `StringList` type only.
      */
     @JsonProperty("INCLUDES")
     INCLUDES,
 
     /**
-     * Excludes. Only supported for string values when the CustomMetadata value
-     * for the given key has a StringList value.
+     * **Excludes (Does Not Contain):** Checks if a string metadata value with a
+     * `StringList` type does not contain the specified string value. &lt;br&gt;
+     * **Supported Data Types:** String values with `StringList` type only.
      */
     @JsonProperty("EXCLUDES")
     EXCLUDES

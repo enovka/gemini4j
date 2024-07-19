@@ -1,21 +1,25 @@
 package com.enovka.gemini4j.domain.response;
 
-import com.enovka.gemini4j.domain.ContentEmbedding;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.enovka.gemini4j.domain.Embedding;
+import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
 
 /**
- * The response to a BatchEmbedContentsRequest.
+ * The response to a {@link BatchEmbedContentsRequest}.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @since 0.0.2
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with", toBuilder = true)
+@NoArgsConstructor
 public class BatchEmbedContentsResponse {
 
     /**
@@ -23,6 +27,10 @@ public class BatchEmbedContentsResponse {
      * provided in the batch request.
      */
     @JsonProperty("embeddings")
-    private List<ContentEmbedding> embeddings;
+    private List<Embedding> embeddings;
 
+    public BatchEmbedContentsResponse(
+            @JsonProperty("embeddings") List<Embedding> embeddings) {
+        this.embeddings = embeddings;
+    }
 }

@@ -1,7 +1,7 @@
 package com.enovka.gemini4j.client.spec;
 
-import com.enovka.gemini4j.http.spec.HttpClient;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 
 import java.util.Map;
 
@@ -21,9 +21,17 @@ public interface GeminiClient {
     String getApiKey();
 
     /**
+     * Builds the headers for API authentication.
+     *
+     * @return A map containing the authentication headers.
+     */
+    Map<String, String> buildAuthHeaders();
+
+    /**
      * Returns the HTTP client used for communication with the Gemini API.
      *
      * @return The HTTP client instance.
+     * @since 0.0.2
      */
     HttpClient getHttpClient();
 
@@ -31,6 +39,7 @@ public interface GeminiClient {
      * Returns the model name to be used for requests.
      *
      * @return The model name.
+     * @since 0.0.2
      */
     String getModel();
 
@@ -38,6 +47,7 @@ public interface GeminiClient {
      * Sets the model name to be used for requests.
      *
      * @param model The model name.
+     * @since 0.0.2
      */
     void setModel(String model);
 
@@ -45,6 +55,7 @@ public interface GeminiClient {
      * Returns the base URL for the Gemini API.
      *
      * @return The base URL.
+     * @since 0.0.2
      */
     String getBaseUrl();
 
@@ -52,6 +63,7 @@ public interface GeminiClient {
      * Sets the base URL for the Gemini API.
      *
      * @param baseUrl The base URL.
+     * @since 0.0.2
      */
     void setBaseUrl(String baseUrl);
 
@@ -59,6 +71,7 @@ public interface GeminiClient {
      * Returns the JSON service used for serialization and deserialization.
      *
      * @return The JSON service instance.
+     * @since 0.0.2
      */
     JsonService getJsonService();
 
@@ -66,13 +79,7 @@ public interface GeminiClient {
      * Sets the JSON service used for serialization and deserialization.
      *
      * @param jsonService The JSON service instance.
+     * @since 0.0.2
      */
     void setJsonService(JsonService jsonService);
-
-    /**
-     * Builds the headers for API authentication.
-     *
-     * @return A map containing the authentication headers.
-     */
-    Map<String, String> buildAuthHeaders();
 }

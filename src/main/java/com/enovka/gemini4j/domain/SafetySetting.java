@@ -1,8 +1,10 @@
 package com.enovka.gemini4j.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
+import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -17,21 +19,21 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(setterPrefix = "with", toBuilder = true)
 public class SafetySetting {
 
     /**
      * Required. The category for this setting.
      */
     @JsonProperty("category")
-    private HarmCategory category;
+    private HarmCategoryEnum category;
 
     /**
      * Required. Controls the probability threshold at which harm is blocked.
      */
     @JsonProperty("threshold")
-    private HarmBlockThreshold threshold;
+    private HarmBlockThresholdEnum threshold;
 
 }

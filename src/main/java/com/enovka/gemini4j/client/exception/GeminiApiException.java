@@ -6,7 +6,7 @@ import lombok.Getter;
  * Base class for all exceptions thrown by the Gemini4J library.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 0.0.1-beta
+ * @since &lt;enovka@gmail.com&gt;1-beta
  */
 @Getter
 public class GeminiApiException extends Exception {

@@ -1,41 +1,32 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.PermissionStateEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
- * The permission's state.
+ * Represents the state of a permission within the Gemini API. This class
+ * provides a structured way to indicate whether a permission is currently
+ * active or inactive, allowing for granular control over access and
+ * authorization.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class PermissionState {
 
     /**
-     * Permission state is unspecified.
+     * The specific permission state, represented by the
+     * {@link PermissionStateEnum}. For example, setting this to
+     * {@link PermissionStateEnum#ACTIVE} indicates that the permission is
+     * currently active and grants access.
      */
-    @JsonProperty("PERMISSION_STATE_UNSPECIFIED")
-    private PermissionStateEnum permissionStateUnspecified;
-
-    /**
-     * Permission is active.
-     */
-    @JsonProperty("ACTIVE")
-    private com.enovka.gemini4j.domain.type.PermissionStateEnum active;
-
-    /**
-     * Permission is inactive.
-     */
-    @JsonProperty("INACTIVE")
-    private com.enovka.gemini4j.domain.type.PermissionStateEnum inactive;
-
+    @JsonProperty("permissionState")
+    private PermissionStateEnum permissionState;
 }

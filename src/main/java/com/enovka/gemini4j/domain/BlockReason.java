@@ -1,38 +1,31 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.BlockReasonEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
 /**
- * Specifies what was the reason why input was blocked.
+ * Represents the reason why a user input or prompt was blocked by the Gemini
+ * API. This class provides a structured representation of the block reason,
+ * making it easy to understand why a request was not processed.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with", toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class BlockReason {
 
     /**
-     * Default value. This value is unused.
+     * The specific reason for blocking the input, as indicated by the
+     * {@link BlockReasonEnum}. For example, a value of
+     * {@link BlockReasonEnum#SAFETY} indicates that the input was blocked due
+     * to safety concerns.
      */
-    @JsonProperty("BLOCK_REASON_UNSPECIFIED")
-    private BlockReasonEnum blockReasonUnspecified;
-
-    /**
-     * Input was blocked due to safety reasons. You can inspect safetyRatings to
-     * understand which safety category blocked it.
-     */
-    @JsonProperty("SAFETY")
-    private com.enovka.gemini4j.domain.type.BlockReasonEnum safety;
-
-    /**
-     * Input was blocked due to other reasons.
-     */
-    @JsonProperty("OTHER")
-    private com.enovka.gemini4j.domain.type.BlockReasonEnum other;
-
+    @JsonProperty("blockReason")
+    private BlockReasonEnum blockReason;
 }

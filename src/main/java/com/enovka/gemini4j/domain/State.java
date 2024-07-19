@@ -1,43 +1,32 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.StateEnum;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
 /**
- * States for the lifecycle of a Chunk.
+ * Represents the current processing state of a Chunk in the Gemini API. This
+ * class provides a structured way to track the Chunk's lifecycle, indicating
+ * whether it is pending processing, actively available, or has failed
+ * processing.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder(setterPrefix = "with", toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class State {
 
     /**
-     * The default value. This value is used if the state is omitted.
+     * The current processing state of the Chunk, represented by the
+     * {@link StateEnum}. For example, a value of {@link StateEnum#STATE_ACTIVE}
+     * indicates that the Chunk has been successfully processed and is ready for
+     * use.
      */
-    @JsonProperty("STATE_UNSPECIFIED")
-    private com.enovka.gemini4j.domain.type.StateEnum stateUnspecified;
-
-    /**
-     * Chunk is being processed (embedding and vector storage).
-     */
-    @JsonProperty("STATE_PENDING_PROCESSING")
-    private com.enovka.gemini4j.domain.type.StateEnum statePendingProcessing;
-
-    /**
-     * Chunk is processed and available for querying.
-     */
-    @JsonProperty("STATE_ACTIVE")
-    private com.enovka.gemini4j.domain.type.StateEnum stateActive;
-
-    /**
-     * Chunk failed processing.
-     */
-    @JsonProperty("STATE_FAILED")
-    private StateEnum stateFailed;
-
+    @JsonProperty("state")
+    private StateEnum state;
 }
