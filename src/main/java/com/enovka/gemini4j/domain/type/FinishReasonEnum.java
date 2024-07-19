@@ -9,7 +9,7 @@ import lombok.Getter;
  * the model's behavior and can be used to understand the completion status of a
  * generation request.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum FinishReasonEnum {
@@ -29,6 +29,13 @@ public enum FinishReasonEnum {
      */
     @JsonProperty("STOP")
     STOP,
+
+    /**
+     * **Unsupported Language:** The candidate content was flagged for using an
+     * unsupported language.
+     */
+    @JsonProperty("LANGUAGE")
+    LANGUAGE,
 
     /**
      * **Maximum Token Limit:** The model stopped generating tokens because it
@@ -60,5 +67,15 @@ public enum FinishReasonEnum {
      * is not explicitly categorized by the other enum values.
      */
     @JsonProperty("OTHER")
-    OTHER
+    OTHER;
+
+    /**
+     * Creates an instance of {@link FinishReasonEnum} from a string value.
+     *
+     * @param value The string value to convert to an enum value.
+     * @return The enum value corresponding to the string value.
+     */
+    public static FinishReasonEnum fromString(String value) {
+        return valueOf(value.toUpperCase());
+    }
 }

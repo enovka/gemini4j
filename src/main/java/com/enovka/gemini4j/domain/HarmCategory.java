@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
  * developers may wish to moderate or block based on their application's safety
  * requirements.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class HarmCategory {

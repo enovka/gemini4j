@@ -9,7 +9,7 @@ import lombok.Getter;
  * you to create precise filtering conditions for retrieving content that
  * matches specific metadata criteria.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum OperatorEnum {
@@ -22,67 +22,65 @@ public enum OperatorEnum {
     OPERATOR_UNSPECIFIED,
 
     /**
-     * **Less Than (`<`):**  Compares a numeric metadata value to determine if
-     * it is strictly less than the specified value.
-     * <br> **Supported Data Types:** Numeric values only.
+     * **Less Than (`&lt;`):**  Compares a numeric metadata value to determine
+     * if it is strictly less than the specified value. &lt;br&gt; **Supported
+     * Data Types:** Numeric values only.
      */
     @JsonProperty("LESS")
     LESS,
 
     /**
-     * **Less Than or Equal To (`<=`):** Compares a numeric metadata value to
-     * determine if it is less than or equal to the specified value.
-     * <br> **Supported Data Types:** Numeric values only.
+     * **Less Than or Equal To (`&lt;=`):** Compares a numeric metadata value to
+     * determine if it is less than or equal to the specified value. &lt;br&gt;
+     * **Supported Data Types:** Numeric values only.
      */
     @JsonProperty("LESS_EQUAL")
     LESS_EQUAL,
 
     /**
      * **Equal To (`=`):** Compares a metadata value to determine if it is equal
-     * to the specified value.
-     * <br> **Supported Data Types:**  Numeric and string values.
+     * to the specified value. &lt;br&gt; **Supported Data Types:**  Numeric and
+     * string values.
      */
     @JsonProperty("EQUAL")
     EQUAL,
 
     /**
-     * **Greater Than or Equal To (`>=`):**  Compares a numeric metadata value
-     * to determine if it is greater than or equal to the specified value.
-     * <br> **Supported Data Types:** Numeric values only.
+     * **Greater Than or Equal To (`&gt;=`):**  Compares a numeric metadata
+     * value to determine if it is greater than or equal to the specified value.
+     * &lt;br&gt; **Supported Data Types:** Numeric values only.
      */
     @JsonProperty("GREATER_EQUAL")
     GREATER_EQUAL,
 
     /**
-     * **Greater Than (`>`):** Compares a numeric metadata value to determine if
-     * it is strictly greater than the specified value.
-     * <br> **Supported Data Types:** Numeric values only.
+     * **Greater Than (`&gt;`):** Compares a numeric metadata value to determine
+     * if it is strictly greater than the specified value. &lt;br&gt;
+     * **Supported Data Types:** Numeric values only.
      */
     @JsonProperty("GREATER")
     GREATER,
 
     /**
      * **Not Equal To (`!=`):** Compares a metadata value to determine if it is
-     * not equal to the specified value.
-     * <br> **Supported Data Types:** Numeric and string values.
+     * not equal to the specified value. &lt;br&gt; **Supported Data Types:**
+     * Numeric and string values.
      */
     @JsonProperty("NOT_EQUAL")
     NOT_EQUAL,
 
     /**
      * **Includes (Contains):**  Checks if a string metadata value with a
-     * `StringList` type contains the specified string value.
-     * <br> **Supported Data Types:**  String values with `StringList` type
-     * only.
+     * `StringList` type contains the specified string value. &lt;br&gt;
+     * **Supported Data Types:**  String values with `StringList` type only.
      */
     @JsonProperty("INCLUDES")
     INCLUDES,
 
     /**
      * **Excludes (Does Not Contain):** Checks if a string metadata value with a
-     * `StringList` type does not contain the specified string value.
-     * <br> **Supported Data Types:** String values with `StringList` type
-     * only.
+     * `StringList` type does not contain the specified string value. &lt;br&gt;
+     * **Supported Data Types:** String values with `StringList` type only.
      */
     @JsonProperty("EXCLUDES")
     EXCLUDES

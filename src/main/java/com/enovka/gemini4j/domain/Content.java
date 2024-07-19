@@ -18,7 +18,7 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Content {

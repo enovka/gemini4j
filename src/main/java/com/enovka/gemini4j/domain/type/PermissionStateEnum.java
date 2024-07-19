@@ -10,7 +10,7 @@ import lombok.Getter;
  * permissions, enabling dynamic authorization management based on the
  * permission's state.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum PermissionStateEnum {

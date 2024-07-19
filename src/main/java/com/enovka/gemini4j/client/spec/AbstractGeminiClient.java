@@ -1,12 +1,12 @@
 package com.enovka.gemini4j.client.spec;
 
-import com.enovka.gemini4j.common.BaseClass;
-import com.enovka.gemini4j.http.factory.HttpClientBuilder;
-import com.enovka.gemini4j.http.factory.HttpClientType;
-import com.enovka.gemini4j.http.spec.HttpClient;
-import com.enovka.gemini4j.json.builder.JsonServiceBuilder;
-import com.enovka.gemini4j.json.builder.JsonServiceType;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
+import com.enovka.gemini4j.infrastructure.http.factory.HttpClientType;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
+import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
+import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceType;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.tool.BaseClass;
 import lombok.Getter;
 import lombok.Setter;
 

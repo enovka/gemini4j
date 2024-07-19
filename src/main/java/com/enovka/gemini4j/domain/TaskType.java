@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
  * used to provide context to the embedding model, potentially improving its
  * performance.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskType {

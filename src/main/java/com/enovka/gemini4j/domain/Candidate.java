@@ -1,5 +1,6 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.type.FinishReasonEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import java.util.List;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 public class Candidate {
 
     /**
@@ -35,7 +36,7 @@ public class Candidate {
      * If empty, the model has not stopped generating the tokens.
      */
     @JsonProperty("finishReason")
-    private FinishReason finishReason;
+    private FinishReasonEnum finishReason;
 
     /**
      * List of ratings for the safety of a response candidate.

@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
  * the block reason, making it easier to understand why content was flagged as
  * inappropriate.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlockedReason {

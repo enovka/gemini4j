@@ -10,7 +10,7 @@ import lombok.Getter;
  * processing, actively available, or has encountered an error during
  * processing.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum StateEnum {

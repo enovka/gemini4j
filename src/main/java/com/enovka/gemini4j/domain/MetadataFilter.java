@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class MetadataFilter {

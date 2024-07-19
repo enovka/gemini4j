@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Schema {
@@ -80,4 +80,13 @@ public class Schema {
     @JsonProperty("items")
     private Schema items;
 
+    public Schema(Type type, String format, String description,
+                  Boolean nullable, List<String> enumValues, Schema items) {
+        this.type = type;
+        this.format = format;
+        this.description = description;
+        this.nullable = nullable;
+        this.enumValues = enumValues;
+        this.items = items;
+    }
 }

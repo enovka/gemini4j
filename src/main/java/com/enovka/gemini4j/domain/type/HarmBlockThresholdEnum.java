@@ -12,7 +12,7 @@ import lombok.Getter;
  * fine-tune the balance between safety and permissiveness in their
  * applications.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum HarmBlockThresholdEnum {

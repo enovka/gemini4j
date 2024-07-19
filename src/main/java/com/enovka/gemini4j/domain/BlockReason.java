@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
  * API. This class provides a structured representation of the block reason,
  * making it easy to understand why a request was not processed.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlockReason {

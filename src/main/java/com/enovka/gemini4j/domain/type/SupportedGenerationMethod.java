@@ -8,7 +8,7 @@ import java.util.Arrays;
  * methods correspond to specific actions or operations that a Gemini model can
  * perform, such as generating text, embedding content, or counting tokens.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
 public enum SupportedGenerationMethod {

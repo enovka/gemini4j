@@ -15,7 +15,7 @@ import lombok.Getter;
  * For example, a high probability of a relatively minor harm category might be
  * less concerning than a low probability of a severe harm category.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum HarmProbabilityEnum {

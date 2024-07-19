@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
  * whether it is pending processing, actively available, or has failed
  * processing.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class State {

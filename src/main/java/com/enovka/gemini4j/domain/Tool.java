@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @AllArgsConstructor
 public class Tool {
 

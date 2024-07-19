@@ -11,10 +11,11 @@ import java.util.List;
  * A list of floats representing an embedding.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
+ * @since 0.0.2
  */
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 public class ContentEmbedding {
 
     /**
@@ -22,5 +23,4 @@ public class ContentEmbedding {
      */
     @JsonProperty("values")
     private List<Double> values;
-
 }

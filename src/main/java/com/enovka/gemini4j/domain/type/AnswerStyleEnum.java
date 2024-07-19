@@ -8,7 +8,7 @@ import lombok.Getter;
  * API. This enum allows you to control the level of detail, conciseness, and
  * formatting of the generated responses.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum AnswerStyleEnum {

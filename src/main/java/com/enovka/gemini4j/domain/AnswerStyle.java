@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
  * API. This allows you to control the level of detail and conciseness in the
  * responses.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerStyle {

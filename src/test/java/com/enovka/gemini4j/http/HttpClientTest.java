@@ -1,9 +1,9 @@
 package com.enovka.gemini4j.http;
 
-import com.enovka.gemini4j.http.exception.HttpException;
-import com.enovka.gemini4j.http.factory.HttpClientBuilder;
-import com.enovka.gemini4j.http.spec.HttpClient;
-import com.enovka.gemini4j.http.spec.HttpResponse;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;

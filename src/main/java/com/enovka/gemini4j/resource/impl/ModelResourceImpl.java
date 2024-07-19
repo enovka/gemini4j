@@ -4,10 +4,10 @@ import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
-import com.enovka.gemini4j.http.exception.HttpException;
-import com.enovka.gemini4j.http.spec.HttpResponse;
-import com.enovka.gemini4j.json.exception.JsonException;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
+import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.resource.spec.AbstractResource;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 
@@ -23,7 +23,7 @@ public class ModelResourceImpl extends AbstractResource
 
     private static final String LIST_MODELS_ENDPOINT = "/models";
     private static final String GET_MODEL_ENDPOINT = "/models/%s";
-            // Corrected format string
+    // Corrected format string
     private final JsonService jsonService;
 
     /**
@@ -45,7 +45,8 @@ public class ModelResourceImpl extends AbstractResource
      * {@inheritDoc}
      */
     @Override
-    public ListModel listModels() throws HttpException, JsonException {
+    public ListModel listModels()
+            throws HttpException, JsonException, GeminiApiException {
         logDebug(
                 "Listing Gemini models from endpoint: " + LIST_MODELS_ENDPOINT);
         HttpResponse response = get(LIST_MODELS_ENDPOINT,

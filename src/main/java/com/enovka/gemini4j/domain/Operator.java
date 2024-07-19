@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
  * a metadata key with a given value, enabling flexible filtering of content
  * based on metadata attributes.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Operator {

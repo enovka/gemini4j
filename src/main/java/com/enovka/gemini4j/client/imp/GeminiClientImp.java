@@ -2,8 +2,8 @@ package com.enovka.gemini4j.client.imp;
 
 import com.enovka.gemini4j.client.spec.AbstractGeminiClient;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.http.spec.HttpClient;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 
 /**
  * Implementation of the {@link GeminiClient} interface.

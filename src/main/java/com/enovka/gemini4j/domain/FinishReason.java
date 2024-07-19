@@ -1,23 +1,20 @@
 package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.type.FinishReasonEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Represents the reason why the Gemini API model stopped generating tokens for
  * a particular candidate response. This class provides a structured way to
  * access the finish reason information.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder(setterPrefix = "with", toBuilder = true)
 public class FinishReason {
 
     /**
@@ -27,4 +24,13 @@ public class FinishReason {
      */
     @JsonProperty("finishReason")
     private FinishReasonEnum finishReason;
+
+    @JsonCreator
+    public FinishReason(@JsonProperty("finishReason") String finishReason) {
+        this.finishReason = FinishReasonEnum.fromString(finishReason);
+    }
+
+    public FinishReason(FinishReasonEnum finishReason) {
+        this.finishReason = finishReason;
+    }
 }

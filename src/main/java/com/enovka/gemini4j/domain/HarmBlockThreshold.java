@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
  * `HarmBlockThreshold`, developers can control the strictness of the content
  * filtering applied to the generated responses.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class HarmBlockThreshold {

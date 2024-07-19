@@ -13,7 +13,7 @@ import lombok.Getter;
  * downstream application, whether it's search, classification, clustering, or
  * question answering.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum TaskTypeEnum {
@@ -77,8 +77,8 @@ public enum TaskTypeEnum {
      * similar texts are grouped together based on their semantic content.
      * Embeddings for clustering should capture the underlying semantic
      * structure of the text to enable effective grouping of related documents.
-     * <br> **Example:** Grouping customer reviews based on sentiment (positive,
-     * negative, neutral).
+     * <br> **Example:** Grouping customer reviews based on sentiment
+     * (positive, negative, neutral).
      */
     @JsonProperty("CLUSTERING")
     CLUSTERING,

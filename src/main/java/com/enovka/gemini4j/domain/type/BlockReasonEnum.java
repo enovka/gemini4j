@@ -9,7 +9,7 @@ import lombok.Getter;
  * and can help developers understand how to modify their inputs to comply with
  * the API's guidelines.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum BlockReasonEnum {

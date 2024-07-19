@@ -1,7 +1,7 @@
 package com.enovka.gemini4j.domain.request;
 
 import com.enovka.gemini4j.domain.Content;
-import com.enovka.gemini4j.domain.TaskType;
+import com.enovka.gemini4j.domain.type.TaskTypeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 public class EmbedContentRequest {
 
     /**
@@ -40,7 +40,7 @@ public class EmbedContentRequest {
      * only be set for models/embedding-001.
      */
     @JsonProperty("taskType")
-    private TaskType taskType;
+    private TaskTypeEnum taskType;
 
     /**
      * Optional. An optional title for the text. Only applicable when TaskType

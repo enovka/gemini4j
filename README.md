@@ -288,9 +288,9 @@ using OkHttp and integrate it with Gemini4J:
 **1. Create the OkHttp Adapter:**
 
 ```java
-import com.enovka.gemini4j.http.exception.HttpException;
-import com.enovka.gemini4j.http.spec.HttpClient;
-import com.enovka.gemini4j.http.spec.HttpResponse;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -362,8 +362,8 @@ public class OkHttpAdapter implements HttpClient {
 ```java
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.http.factory.HttpClientBuilder;
-import com.enovka.gemini4j.http.factory.HttpClientType;
+import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
+import com.enovka.gemini4j.infrastructure.http.factory.HttpClientType;
 import okhttp3.OkHttpClient;
 
 public class CustomHttpClientExample {
@@ -437,8 +437,8 @@ using Gson and integrating it with Gemini4J:
 **1. Create the Gson Adapter:**
 
 ```java
-import com.enovka.gemini4j.json.exception.JsonException;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -479,8 +479,8 @@ public class GsonAdapter implements JsonService {
 ```java
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.json.builder.JsonServiceBuilder;
-import com.enovka.gemini4j.json.builder.JsonServiceType;
+import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
+import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceType;
 import com.google.gson.Gson;
 
 public class CustomJsonProcessorExample {

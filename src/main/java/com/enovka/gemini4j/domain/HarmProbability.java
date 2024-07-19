@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
  * Note that this probability only indicates the likelihood of harm and does not
  * reflect the severity of the potential harm.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class HarmProbability {
@@ -29,6 +29,30 @@ public class HarmProbability {
      * {@link HarmProbabilityEnum}. For example, a value of
      * {@link HarmProbabilityEnum#HIGH} indicates a high probability of harm.
      */
-    @JsonProperty("harmProbability")
-    private HarmProbabilityEnum harmProbability;
+    @JsonProperty("probability")
+    private String probability; // Define como string
+
+    /**
+     * Creates a `HarmProbability` instance from a JSON string representing the
+     * harm probability.
+     *
+     * @param probability The JSON string representing the harm probability.
+     * @return A `HarmProbability` instance with the harm probability set from
+     * the JSON string.
+     */
+    public static HarmProbability fromJsonString(String probability) {
+        return HarmProbability.builder()
+                .withProbability(probability) // Define como string
+                .build();
+    }
+
+    /**
+     * Returns the `HarmProbabilityEnum` corresponding to the `probability`
+     * string.
+     *
+     * @return The `HarmProbabilityEnum` value.
+     */
+    public HarmProbabilityEnum getHarmProbabilityEnum() {
+        return HarmProbabilityEnum.valueOf(probability);
+    }
 }

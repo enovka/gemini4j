@@ -10,11 +10,10 @@ import lombok.Getter;
  * used in API requests and responses.
  * <p>
  * For a comprehensive understanding of each data type and its usage in OpenAPI,
- * refer to the official documentation:
- * <a
+ * refer to the official documentation: <a
  * href="https://spec.openapis.org/oas/v3.0.3#data-types">https://spec.openapis.org/oas/v3.0.3#data-types</a>
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum TypeEnum {

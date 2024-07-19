@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
  * calls, allowing you to specify whether the model should predict function
  * calls, natural language responses, or a combination of both.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Data
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Mode {

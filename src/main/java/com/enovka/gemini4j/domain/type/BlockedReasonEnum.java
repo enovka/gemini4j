@@ -9,7 +9,7 @@ import lombok.Getter;
  * about the nature of the block, helping developers understand why the content
  * was flagged as inappropriate.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum BlockedReasonEnum {

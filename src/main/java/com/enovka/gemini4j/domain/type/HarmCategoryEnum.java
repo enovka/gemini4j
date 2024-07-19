@@ -11,7 +11,7 @@ import lombok.Getter;
  * Gemini API requests, allowing them to fine-tune the level of content
  * filtering and moderation applied to the generated responses.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum HarmCategoryEnum {

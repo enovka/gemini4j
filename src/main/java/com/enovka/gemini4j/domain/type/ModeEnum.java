@@ -14,7 +14,7 @@ import lombok.Getter;
  * fine-tune the interaction between the model and external functions, enabling
  * sophisticated workflows and integrations.
  *
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
 @Getter
 public enum ModeEnum {
@@ -44,9 +44,9 @@ public enum ModeEnum {
      * <br> - If `allowedFunctionNames` are provided in the request, the model
      * will choose a function from that specific list.
      * <br> - Otherwise, the model can predict a call to any of the available
-     * functions declared in the request.
-     * This mode is suitable when you want to ensure that the model always
-     * interacts with external systems through function calls.
+     * functions declared in the request. This mode is suitable when you want to
+     * ensure that the model always interacts with external systems through
+     * function calls.
      */
     @JsonProperty("ANY")
     ANY,

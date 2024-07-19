@@ -3,8 +3,8 @@ package com.enovka.gemini4j.resource.spec;
 import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
-import com.enovka.gemini4j.http.exception.HttpException;
-import com.enovka.gemini4j.json.exception.JsonException;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 
 /**
  * Interface defining the contract for interacting with the Model resource of

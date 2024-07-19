@@ -3,6 +3,7 @@ package com.enovka.gemini4j.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -14,7 +15,8 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", toBuilder = true)
+@NoArgsConstructor
 public class FunctionCallingConfig {
 
     /**
@@ -35,4 +37,8 @@ public class FunctionCallingConfig {
     @JsonProperty("allowedFunctionNames")
     private List<String> allowedFunctionNames;
 
+    public FunctionCallingConfig(Mode mode, List<String> allowedFunctionNames) {
+        this.mode = mode;
+        this.allowedFunctionNames = allowedFunctionNames;
+    }
 }

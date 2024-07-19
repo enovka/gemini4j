@@ -1,7 +1,7 @@
 package com.enovka.gemini4j.client.spec;
 
-import com.enovka.gemini4j.http.spec.HttpClient;
-import com.enovka.gemini4j.json.spec.JsonService;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
+import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 
 import java.util.Map;
 
