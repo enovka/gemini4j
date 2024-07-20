@@ -2,20 +2,16 @@ package com.enovka.gemini4j.example;
 
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.exception.GeminiApiException;
-import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
 import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
 import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
 import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
-import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.ResourceBuilder;
-import com.enovka.gemini4j.resource.spec.GenerationResource;
 
 /**
- * Example demonstrating the usage of the refactored builders in the Gemini4j
- * library.
+ * Example demonstrating the correct usage of the refactored builders in the
+ * Gemini4j library.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
@@ -26,64 +22,47 @@ public class GenerationContentExample {
         // Replace with your actual API key
         String apiKey = "API-KEY";
 
-        // Create a GeminiClient
-        GeminiClient client = GeminiClientBuilder.builder()
-                .withApiKey(apiKey)
-                .withModel(
-                        "gemini-1.5-flash-001") // Set the desired Gemini model
-                .build();
-
-        // Create a GenerationResource
-        GenerationResource generationResource = ResourceBuilder.builder(client)
+        // Create a GeminiClient and GenerationResource
+        var generationResource = ResourceBuilder.builder(
+                        GeminiClientBuilder.builder()
+                                .withApiKey(apiKey)
+                                .withModel("gemini-1.5-flash-001")
+                                .build())
                 .buildGenerationResource();
 
-        // Example 1: Simple text generation with system instructions
-        GenerateContentRequest request1 = GenerateContentRequestBuilder.builder(
-                        generationResource.getGeminiClient())
-                .withUserInput(
-                        "Write a short story about a cat who goes on an adventure.") // User input prompt
-                .withSystemInstructions(
-                        "Make it a humorous story with a happy ending.") // System-level instructions for the model
-                .withGenerationConfig()
-                .withTemperature(
-                        0.7) // Controls the randomness of the output (higher = more random)
-                .withMaxOutputTokens(
-                        200) // Limits the maximum number of tokens in the generated response
-                .and()
-                .build();
-
-        // Example 2: Text generation with safety settings
-        GenerateContentRequest request2 = GenerateContentRequestBuilder.builder(
-                        generationResource.getGeminiClient())
-                .withUserInput("Tell me a joke.") // User input prompt
-                .withSafetySetting()
-                .withCategory(HarmCategoryEnum.HARM_CATEGORY_DANGEROUS_CONTENT)
-                .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
-                .and()
-                .build();
-
-        // Example 3: Text generation with multiple candidates
-        GenerateContentRequest request3 = GenerateContentRequestBuilder.builder(
-                        generationResource.getGeminiClient())
-                .withUserInput(
-                        "Give me three ideas for a birthday party.") // User input prompt
-                .withGenerationConfig()
-                .withCandidateCount(
-                        1) // Request 1 different response candidates
-                .and()
-                .build();
-
-        // Execute the requests and print the generated text
         try {
-            GeminiResult result1 = generationResource.generateContent(request1);
+            // Example 1: Simple text generation with system instructions
+            GeminiResult result1 = generationResource.generateContent(
+                    generationResource.generateContentBuilder(
+                                    "Write a short story about a cat who goes on an adventure.")
+                            .withSystemInstructions(
+                                    "Make it a humorous story with a happy ending.")
+                            .withGenerationConfig()
+                            .withTemperature(0.7)
+                            .withMaxOutputTokens(200)
+                            .and()
+                            .build());
             System.out.println("Example 1 - Generated Text: "
                     + result1.getGeneratedText());
 
-            GeminiResult result2 = generationResource.generateContent(request2);
+            // Example 2: Text generation with safety settings
+            GeminiResult result2 = generationResource.generateContent(
+                    generationResource.generateContentBuilder("Tell me a joke.")
+                            .withSafetySetting()
+                            .withCategory(
+                                    HarmCategoryEnum.HARM_CATEGORY_DANGEROUS_CONTENT)
+                            .withThreshold(
+                                    HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                            .and()
+                            .build());
             System.out.println("Example 2 - Generated Text: "
                     + result2.getGeneratedText());
 
-            GeminiResult result3 = generationResource.generateContent(request3);
+            // Example 3: Text generation using the generateTextBuilder
+            GeminiResult result3 = generationResource.generateTextBuilder(
+                            "Give me three ideas for a birthday party.")
+                    .withCandidateCount(1)
+                    .execute();
             System.out.println("Example 3 - Generated Text: "
                     + result3.getGeneratedText());
 

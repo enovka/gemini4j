@@ -1,8 +1,8 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.SafetySetting;
-import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
-import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
+import com.enovka.gemini4j.resource.builder.spec.AbstractRequestBuilder;
+import com.enovka.gemini4j.resource.builder.spec.AbstractSafetySettingBuilder;
 
 /**
  * Builder class for constructing {@link SafetySetting} objects.
@@ -10,52 +10,22 @@ import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class SafetySettingBuilder {
-
-    private final GenerateContentRequestBuilder generateContentRequestBuilder;
-    public HarmBlockThresholdEnum threshold;
-    private HarmCategoryEnum category;
+public class SafetySettingBuilder extends
+        AbstractSafetySettingBuilder<SafetySetting, AbstractRequestBuilder<?>> {
 
     /**
      * Constructor for the SafetySettingBuilder.
      *
-     * @param generateContentRequestBuilder The parent
-     * GenerateContentRequestBuilder instance.
+     * @param parentBuilder The parent {@link AbstractRequestBuilder} instance.
      */
-    public SafetySettingBuilder(
-            GenerateContentRequestBuilder generateContentRequestBuilder) {
-        this.generateContentRequestBuilder = generateContentRequestBuilder;
+    public SafetySettingBuilder(AbstractRequestBuilder<?> parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
-     * Sets the harm category for the safety setting.
-     *
-     * @param category The harm category enum.
-     * @return The builder instance for method chaining.
+     * {@inheritDoc}
      */
-    public SafetySettingBuilder withCategory(HarmCategoryEnum category) {
-        this.category = category;
-        return this;
-    }
-
-    /**
-     * Sets the harm block threshold for the safety setting.
-     *
-     * @param threshold The harm block threshold enum.
-     * @return The builder instance for method chaining.
-     */
-    public SafetySettingBuilder withThreshold(
-            HarmBlockThresholdEnum threshold) {
-        this.threshold = threshold;
-        return this;
-    }
-
-    /**
-     * Builds a {@link SafetySetting} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link SafetySetting} instance.
-     */
+    @Override
     public SafetySetting build() {
         if (category == null) {
             throw new IllegalArgumentException("Harm category is required.");
@@ -68,14 +38,14 @@ public class SafetySettingBuilder {
     }
 
     /**
-     * Adds the built {@link SafetySetting} instance to the parent builder and
-     * returns to the parent builder for continued chaining.
+     * Returns to the parent {@link AbstractRequestBuilder} after configuring
+     * the safety setting.
      *
-     * @return The parent GenerateContentRequestBuilder instance for method
+     * @return The parent {@link AbstractRequestBuilder} instance for method
      * chaining.
      */
-    public GenerateContentRequestBuilder and() {
-        generateContentRequestBuilder.withSafetySetting(build());
-        return generateContentRequestBuilder;
+    public AbstractRequestBuilder<?> and() {
+        parentBuilder.withSafetySetting(build());
+        return parentBuilder;
     }
 }

@@ -1,6 +1,7 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.Blob;
+import com.enovka.gemini4j.resource.builder.spec.AbstractComplexBuilder;
 
 /**
  * Builder for creating {@link Blob} instances.
@@ -8,19 +9,18 @@ import com.enovka.gemini4j.domain.Blob;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class BlobBuilder {
+public class BlobBuilder extends AbstractComplexBuilder<Blob, PartBuilder> {
 
-    private final PartBuilder partBuilder;
     private String mimeType;
     private String data;
 
     /**
      * Constructor for the BlobBuilder.
      *
-     * @param partBuilder The parent PartBuilder instance.
+     * @param parentBuilder The parent {@link PartBuilder} instance.
      */
-    public BlobBuilder(PartBuilder partBuilder) {
-        this.partBuilder = partBuilder;
+    public BlobBuilder(PartBuilder parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -52,25 +52,13 @@ public class BlobBuilder {
     }
 
     /**
-     * Builds a {@link Blob} instance based on the configured parameters.
-     *
-     * @return The built {@link Blob} instance.
+     * {@inheritDoc}
      */
+    @Override
     public Blob build() {
         return Blob.builder()
                 .withMimeType(mimeType)
                 .withData(data)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link Blob} instance as the inline data in the parent
-     * builder.
-     *
-     * @return The parent {@link PartBuilder} instance for method chaining.
-     */
-    public PartBuilder and() {
-        partBuilder.inlineData = build();
-        return partBuilder;
     }
 }

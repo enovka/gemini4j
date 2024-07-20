@@ -63,7 +63,7 @@ public class GenerationResourceImpl extends AbstractResource
      */
     @Override
     public GeminiResult generateContent(GenerateContentRequest request)
-            throws GeminiApiException, JsonException, HttpException {
+            throws GeminiApiException, JsonException {
         validateGenerationMethodSupport("generateContent");
         logDebug("Generating content from endpoint: "
                 + GENERATE_CONTENT_ENDPOINT);

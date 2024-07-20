@@ -18,12 +18,12 @@ public abstract class AbstractJsonService extends BaseClass
      * {@inheritDoc}
      */
     @Override
-    public abstract <T> String serialize(T object) throws JsonException;
+    public abstract <T> String serialize(T object);
 
     /**
      * {@inheritDoc}
      */
     @Override
     public abstract <T> T deserialize(String json, Class<T> type)
-            throws JsonException;
+    ;
 }

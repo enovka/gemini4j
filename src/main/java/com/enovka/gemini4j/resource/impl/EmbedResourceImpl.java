@@ -67,7 +67,7 @@ public class EmbedResourceImpl extends AbstractResource
      */
     @Override
     public EmbedContentResponse embedContent(EmbedContentRequest request)
-            throws GeminiApiException, JsonException, HttpException {
+            throws GeminiApiException, JsonException {
         //validateGenerationMethodSupport("embedContent");
         logDebug("Generating embedding from endpoint: "
                 + EMBED_CONTENT_ENDPOINT);
@@ -93,7 +93,7 @@ public class EmbedResourceImpl extends AbstractResource
     @Override
     public BatchEmbedContentsResponse batchEmbedContent(
             BatchEmbedContentsRequest request)
-            throws GeminiApiException, JsonException, HttpException {
+            throws GeminiApiException, JsonException {
         //validateGenerationMethodSupport("batchEmbedContents");
         logDebug("Generating batch embeddings from endpoint: "
                 + BATCH_EMBED_CONTENTS_ENDPOINT);

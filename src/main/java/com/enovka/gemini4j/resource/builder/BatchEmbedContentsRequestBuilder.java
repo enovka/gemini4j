@@ -1,9 +1,9 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
+import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class BatchEmbedContentsRequestBuilder {
+public class BatchEmbedContentsRequestBuilder extends
+        AbstractBuilder<BatchEmbedContentsRequest> {
 
-    private final GeminiClient geminiClient;
     private final List<EmbedContentRequest> requests;
 
     /**
@@ -29,7 +29,7 @@ public class BatchEmbedContentsRequestBuilder {
      * communication.
      */
     private BatchEmbedContentsRequestBuilder(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+        super(geminiClient);
         this.requests = new ArrayList<>();
     }
 
@@ -59,29 +59,25 @@ public class BatchEmbedContentsRequestBuilder {
 
     /**
      * Adds multiple texts to be embedded in the batch request. Each text will
-     * be wrapped in a {@link Content} object and added as an individual
-     * {@link EmbedContentRequest}.
+     * be wrapped in a {@link com.enovka.gemini4j.domain.Content} object and
+     * added as an individual {@link EmbedContentRequest}.
      *
      * @param texts The list of texts to embed.
      * @return The builder instance for method chaining.
      */
     public BatchEmbedContentsRequestBuilder withTexts(List<String> texts) {
         texts.forEach(text -> this.requests.add(
-                EmbedContentRequest.builder()
-                        .withModel(geminiClient.getModel())
+                EmbedContentRequestBuilder.builder(geminiClient)
+                        .withText(text)
                         .build()
         ));
         return this;
     }
 
     /**
-     * Builds a {@link BatchEmbedContentsRequest} instance based on the
-     * configured parameters.
-     *
-     * @return The built {@link BatchEmbedContentsRequest} instance.
-     * @throws IllegalArgumentException If no requests have been added to the
-     * batch.
+     * {@inheritDoc}
      */
+    @Override
     public BatchEmbedContentsRequest build() {
         if (requests.isEmpty()) {
             throw new IllegalArgumentException(

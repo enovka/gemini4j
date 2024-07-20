@@ -1,5 +1,7 @@
 package com.enovka.gemini4j.domain.type;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 /**
@@ -11,6 +13,7 @@ import java.util.Arrays;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
+@Getter
 public enum SupportedGenerationMethod {
 
     /**
@@ -92,6 +95,12 @@ public enum SupportedGenerationMethod {
      */
     GENERATE_ANSWER("generateAnswer");
 
+    /**
+     * -- GETTER --
+     *  Returns the string representation of the generation method.
+     *
+     * @return The string representation of the generation method.
+     */
     private final String value;
 
     SupportedGenerationMethod(String value) {
@@ -113,12 +122,4 @@ public enum SupportedGenerationMethod {
                 .orElse(null);
     }
 
-    /**
-     * Returns the string representation of the generation method.
-     *
-     * @return The string representation of the generation method.
-     */
-    public String getValue() {
-        return value;
-    }
 }

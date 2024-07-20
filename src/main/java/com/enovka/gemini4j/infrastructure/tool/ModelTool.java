@@ -93,14 +93,11 @@ public class ModelTool extends BaseClass {
      * @param modelResource The {@link ModelResource} to use for updating the
      * model list.
      */
-    public void update(ModelResource modelResource) {
+    public void update(ModelResource modelResource)
+            throws JsonException, GeminiApiException {
         logDebug("Updating model list using ModelResource.");
-        try {
-            this.models = modelResource.listModels().getModels().stream()
-                    .collect(Collectors.toMap(Model::getName, model -> model));
-        } catch (HttpException | JsonException | GeminiApiException e) {
-            logError("Error updating model list: " + e.getMessage(), e);
-        }
+        this.models = modelResource.listModels().getModels().stream()
+                .collect(Collectors.toMap(Model::getName, model -> model));
     }
 
     /**

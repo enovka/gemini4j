@@ -22,7 +22,7 @@ public interface ModelResource {
      * @throws GeminiApiException If an error occurs while fetching the models.
      */
     ListModel listModels()
-            throws GeminiApiException, HttpException, JsonException;
+            throws GeminiApiException, JsonException;
 
     /**
      * Retrieves a specific Gemini model by its name.
@@ -34,5 +34,5 @@ public interface ModelResource {
      * @since 0.0.2
      */
     Model getModel(String modelName)
-            throws GeminiApiException, HttpException, JsonException;
+            throws GeminiApiException, JsonException;
 }

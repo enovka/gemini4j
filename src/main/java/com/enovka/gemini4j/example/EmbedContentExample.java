@@ -75,7 +75,7 @@ public class EmbedContentExample {
                             "Example 2 - Embedding: " + embedding.toString())
             );
 
-        } catch (GeminiApiException | JsonException | HttpException e) {
+        } catch (GeminiApiException | JsonException e) {
             e.printStackTrace();
         }
     }

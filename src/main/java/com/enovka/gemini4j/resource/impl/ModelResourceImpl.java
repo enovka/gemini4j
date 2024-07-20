@@ -46,7 +46,7 @@ public class ModelResourceImpl extends AbstractResource
      */
     @Override
     public ListModel listModels()
-            throws HttpException, JsonException, GeminiApiException {
+            throws JsonException, GeminiApiException {
         logDebug(
                 "Listing Gemini models from endpoint: " + LIST_MODELS_ENDPOINT);
         HttpResponse response = get(LIST_MODELS_ENDPOINT,
@@ -61,7 +61,7 @@ public class ModelResourceImpl extends AbstractResource
      */
     @Override
     public Model getModel(String modelName)
-            throws GeminiApiException, HttpException, JsonException {
+            throws GeminiApiException, JsonException {
         logDebug("Getting model details for: " + modelName);
         String endpoint = String.format(GET_MODEL_ENDPOINT, modelName);
         logDebug("Requesting model from endpoint: " + endpoint);

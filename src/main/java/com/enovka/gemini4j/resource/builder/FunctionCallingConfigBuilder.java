@@ -2,6 +2,8 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.FunctionCallingConfig;
 import com.enovka.gemini4j.domain.Mode;
+import com.enovka.gemini4j.resource.builder.spec.AbstractFunctionCallingConfigBuilder;
+import com.enovka.gemini4j.resource.builder.spec.AbstractToolConfigBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,19 +14,21 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class FunctionCallingConfigBuilder {
+public class FunctionCallingConfigBuilder extends
+        AbstractFunctionCallingConfigBuilder<FunctionCallingConfig> {
 
-    private final ToolConfigBuilder toolConfigBuilder;
     private Mode mode;
     private List<String> allowedFunctionNames;
 
     /**
      * Constructor for the FunctionCallingConfigBuilder.
      *
-     * @param toolConfigBuilder The parent ToolConfigBuilder instance.
+     * @param parentBuilder The parent {@link AbstractToolConfigBuilder}
+     * instance.
      */
-    public FunctionCallingConfigBuilder(ToolConfigBuilder toolConfigBuilder) {
-        this.toolConfigBuilder = toolConfigBuilder;
+    public FunctionCallingConfigBuilder(
+            AbstractToolConfigBuilder<?> parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -65,27 +69,13 @@ public class FunctionCallingConfigBuilder {
     }
 
     /**
-     * Builds a {@link FunctionCallingConfig} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link FunctionCallingConfig} instance.
+     * {@inheritDoc}
      */
+    @Override
     public FunctionCallingConfig build() {
         return FunctionCallingConfig.builder()
                 .withMode(mode)
                 .withAllowedFunctionNames(allowedFunctionNames)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link FunctionCallingConfig} instance as the function
-     * calling config in the parent builder.
-     *
-     * @return The parent {@link ToolConfigBuilder} instance for method
-     * chaining.
-     */
-    public ToolConfigBuilder and() {
-        toolConfigBuilder.withFunctionCallingConfig(build());
-        return toolConfigBuilder;
     }
 }

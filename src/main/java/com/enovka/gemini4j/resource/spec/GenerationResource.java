@@ -37,7 +37,7 @@ public interface GenerationResource {
      * @since 0.0.2
      */
     GeminiResult generateContent(GenerateContentRequest request)
-            throws GeminiApiException, JsonException, HttpException;
+            throws GeminiApiException, JsonException;
 
     /**
      * Creates a new {@link GenerateTextRequestBuilder} instance to build a

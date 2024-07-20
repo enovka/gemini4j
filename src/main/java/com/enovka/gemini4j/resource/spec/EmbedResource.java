@@ -40,10 +40,9 @@ public interface EmbedResource {
      * @throws GeminiApiException If an error occurs during the embedding
      * generation process.
      * @throws JsonException If an error occurs during JSON processing.
-     * @throws HttpException If an error occurs during the HTTP request.
      */
     EmbedContentResponse embedContent(EmbedContentRequest request)
-            throws GeminiApiException, JsonException, HttpException;
+            throws GeminiApiException, JsonException;
 
     /**
      * Generates embeddings for multiple contents in a batch request.
@@ -55,11 +54,10 @@ public interface EmbedResource {
      * @throws GeminiApiException If an error occurs during the batch embedding
      * generation process.
      * @throws JsonException If an error occurs during JSON processing.
-     * @throws HttpException If an error occurs during the HTTP request.
      */
     BatchEmbedContentsResponse batchEmbedContent(
             BatchEmbedContentsRequest request)
-            throws GeminiApiException, JsonException, HttpException;
+            throws GeminiApiException, JsonException;
 
     /**
      * Creates a new {@link EmbedContentRequestBuilder} instance to build an

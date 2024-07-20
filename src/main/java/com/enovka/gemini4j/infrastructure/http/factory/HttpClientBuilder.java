@@ -4,6 +4,7 @@ import com.enovka.gemini4j.infrastructure.http.impl.DefaultHttpClient;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * Builder for creating {@link HttpClient} instances.
@@ -22,6 +23,15 @@ public class HttpClientBuilder {
     private Integer connectionTimeout = 5000;
     @Builder.Default
     private Integer responseTimeout = 60000;
+    /**
+     * -- GETTER --
+     *  Returns a custom
+     *  instance.
+     *
+     * @return A custom {@link HttpClient} instance.
+     *
+     */
+    @Getter
     @Builder.Default
     private HttpClient customClient = new DefaultHttpClient();
 
@@ -48,13 +58,4 @@ public class HttpClientBuilder {
         }
     }
 
-    /**
-     * Returns a custom {@link HttpClient} instance.
-     *
-     * @return A custom {@link HttpClient} instance.
-     * @since 0.0.2
-     */
-    public HttpClient getCustomClient() {
-        return customClient;
-    }
 }
