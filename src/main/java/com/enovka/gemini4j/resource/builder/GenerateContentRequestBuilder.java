@@ -1,6 +1,7 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
+import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.GenerationConfig;
 import com.enovka.gemini4j.domain.SafetySetting;
 import com.enovka.gemini4j.domain.ToolConfig;
@@ -9,7 +10,8 @@ import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
 import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
 import com.enovka.gemini4j.resource.builder.spec.AbstractRequestBuilder;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Builder for creating {@link GenerateContentRequest} instances in a fluent and
@@ -19,8 +21,8 @@ import java.util.Collections;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class GenerateContentRequestBuilder extends
-        AbstractRequestBuilder<GenerateContentRequest> {
+public class GenerateContentRequestBuilder
+        extends AbstractRequestBuilder<GenerateContentRequest> {
 
     private String userInput;
     private ToolConfig toolConfig;
@@ -183,9 +185,13 @@ public class GenerateContentRequestBuilder extends
         contentBuilder.withText(userInput);
         contentBuilder.withRole("user");
 
+        // Use ArrayList for a mutable list
+        List<Content> contents = new ArrayList<>();
+        contents.add(contentBuilder.build());
+
         return GenerateContentRequest.builder()
                 .withModel(geminiClient.getModel())
-                .withContents(Collections.singletonList(contentBuilder.build()))
+                .withContents(contents)
                 .withSystemInstruction(systemInstruction)
                 .withTools(tools)
                 .withToolConfig(toolConfig)

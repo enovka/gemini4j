@@ -16,7 +16,7 @@ import com.enovka.gemini4j.resource.spec.ModelResource;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public class ModelResourceImpl extends AbstractResource
+public class ModelResourceImpl extends AbstractResource<ModelResource>
         implements ModelResource {
 
     private static final String LIST_MODELS_ENDPOINT = "/models";

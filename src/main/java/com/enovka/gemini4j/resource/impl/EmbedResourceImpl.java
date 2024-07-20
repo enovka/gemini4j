@@ -22,7 +22,7 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class EmbedResourceImpl extends AbstractResource
+public class EmbedResourceImpl extends AbstractResource<EmbedResource>
         implements EmbedResource {
 
     private static final String EMBED_CONTENT_ENDPOINT

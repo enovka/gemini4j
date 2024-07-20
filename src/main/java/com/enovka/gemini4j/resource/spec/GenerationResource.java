@@ -4,6 +4,7 @@ import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
@@ -15,7 +16,7 @@ import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public interface GenerationResource {
+public interface GenerationResource extends MultiTurnConversationAware {
 
     /**
      * Returns the associated {@link GeminiClient}.
@@ -36,7 +37,7 @@ public interface GenerationResource {
      * @since 0.0.2
      */
     GeminiResult generateContent(GenerateContentRequest request)
-            throws GeminiApiException, JsonException;
+            throws GeminiApiException, JsonException, HttpException;
 
     /**
      * Creates a new {@link GenerateTextRequestBuilder} instance to build a

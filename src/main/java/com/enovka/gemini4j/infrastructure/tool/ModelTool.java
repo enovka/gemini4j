@@ -150,4 +150,8 @@ public class ModelTool extends BaseClass {
             return false;
         }
     }
+
+    public Model getModel(String model) {
+        return models.get("models/" + model);
+    }
 }

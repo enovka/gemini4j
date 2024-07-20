@@ -2,12 +2,15 @@ package com.enovka.gemini4j.resource.spec;
 
 import com.enovka.gemini4j.client.exception.*;
 import com.enovka.gemini4j.client.spec.GeminiClient;
+import com.enovka.gemini4j.domain.request.GenerateContentRequest;
+import com.enovka.gemini4j.domain.response.GenerateContentResponse;
 import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.infrastructure.tool.BaseClass;
 import com.enovka.gemini4j.infrastructure.tool.ModelTool;
+import com.enovka.gemini4j.infrastructure.tool.MultiTurnConversation;
 
 import java.util.Map;
 
@@ -15,14 +18,16 @@ import java.util.Map;
  * Abstract base class for resource implementations, providing shared
  * functionality.
  *
+ * @param <T> The type of response object this resource handles.
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public abstract class AbstractResource extends BaseClass {
+public abstract class AbstractResource<T> extends BaseClass {
 
     protected final GeminiClient geminiClient;
     protected final JsonService jsonService;
     protected final ModelTool modelTool = ModelTool.getInstance();
+    protected final MultiTurnConversation multiTurnConversation;
 
     /**
      * Constructs a new AbstractResource with the required GeminiClient and
@@ -37,6 +42,7 @@ public abstract class AbstractResource extends BaseClass {
                             JsonService jsonService) {
         this.geminiClient = geminiClient;
         this.jsonService = jsonService;
+        this.multiTurnConversation = new MultiTurnConversation();
     }
 
     /**
@@ -76,6 +82,21 @@ public abstract class AbstractResource extends BaseClass {
                 geminiClient.buildAuthHeaders());
         logDebug("Response Body: " + response.getBody());
         return deserializeResponse(response, type);
+    }
+
+    /**
+     * Executes a GenerateContentRequest and handles potential errors.
+     *
+     * @param request The GenerateContentRequest to execute.
+     * @return The GenerateContentResponse from the Gemini API.
+     * @throws GeminiApiException If an error occurs during the request.
+     */
+    protected GenerateContentResponse executeGenerateContentRequest(
+            GenerateContentRequest request) throws GeminiApiException {
+        String endpoint = String.format("/models/%s:generateContent",
+                geminiClient.getModel());
+        return executePostRequest(endpoint, request,
+                GenerateContentResponse.class);
     }
 
     /**

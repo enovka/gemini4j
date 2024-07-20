@@ -5,12 +5,17 @@ import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
 import com.enovka.gemini4j.domain.response.GenerateContentResponse;
+import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
-import com.enovka.gemini4j.resource.spec.AbstractResource;
+import com.enovka.gemini4j.resource.spec.AbstractMultiTurnConversationResource;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implementation of the {@link GenerationResource} interface for interacting
@@ -20,7 +25,7 @@ import com.enovka.gemini4j.resource.spec.GenerationResource;
  * @since 0.0.1
  */
 public class GenerationResourceImpl
-        extends AbstractResource
+        extends AbstractMultiTurnConversationResource<GenerateContentResponse>
         implements GenerationResource {
 
     private static final String GENERATE_CONTENT_ENDPOINT
@@ -57,12 +62,31 @@ public class GenerationResourceImpl
      */
     @Override
     public GeminiResult generateContent(GenerateContentRequest request)
-            throws GeminiApiException, JsonException {
+            throws GeminiApiException, JsonException, HttpException {
         validateGenerationMethodSupport("generateContent");
+        logDebug("Generating content from endpoint: "
+                + GENERATE_CONTENT_ENDPOINT);
+
+        request = prepareMultiTurnRequest(request);
+
+        String requestBody = jsonService.serialize(request);
+        logDebug("Request Body: " + requestBody);
+
         String endpoint = String.format(GENERATE_CONTENT_ENDPOINT,
                 geminiClient.getModel());
-        GenerateContentResponse contentResponse = executePostRequest(endpoint,
-                request, GenerateContentResponse.class);
+        Map<String, String> headers = new HashMap<>(
+                geminiClient.buildAuthHeaders());
+
+        HttpResponse response = post(endpoint, requestBody, headers);
+        logDebug("Response Body: " + response.getBody());
+
+        GenerateContentResponse contentResponse = jsonService.deserialize(
+                response.getBody(), GenerateContentResponse.class);
+
+        // Add the generated response to the conversation history
+        multiTurnConversation.addContent(
+                contentResponse.getCandidates().get(0).getContent());
+
         return GeminiResult.builder()
                 .withGenerateContentResponse(contentResponse)
                 .build();
