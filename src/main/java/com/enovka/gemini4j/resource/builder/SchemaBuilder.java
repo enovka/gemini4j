@@ -2,6 +2,8 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.Schema;
 import com.enovka.gemini4j.domain.Type;
+import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
+import com.enovka.gemini4j.resource.builder.spec.AbstractSchemaBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,48 +16,18 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class SchemaBuilder {
+public class SchemaBuilder extends AbstractSchemaBuilder<Schema> {
 
-    private Object parentBuilder;
-    // Can be FunctionDeclarationBuilder, GenerationConfigBuilder, or SchemaBuilder
-    private Type type;
-    private String format;
-    private String description;
-    private Boolean nullable;
     private List<String> enumValues;
     private Schema items;
 
     /**
-     * Constructor for the SchemaBuilder used by
-     * {@link FunctionDeclarationBuilder}.
+     * Constructor for the SchemaBuilder.
      *
-     * @param functionDeclarationBuilder The parent FunctionDeclarationBuilder
-     * instance.
+     * @param parentBuilder The parent builder instance.
      */
-    public SchemaBuilder(
-            FunctionDeclarationBuilder functionDeclarationBuilder) {
-        this.parentBuilder = functionDeclarationBuilder;
-    }
-
-    /**
-     * Constructor for the SchemaBuilder used by
-     * {@link GenerationConfigBuilder}.
-     *
-     * @param generationConfigBuilder The parent GenerationConfigBuilder
-     * instance.
-     */
-    public SchemaBuilder(GenerationConfigBuilder generationConfigBuilder) {
-        this.parentBuilder = generationConfigBuilder;
-    }
-
-    /**
-     * Constructor for the SchemaBuilder used by another SchemaBuilder (for
-     * nested items).
-     *
-     * @param schemaBuilder The parent SchemaBuilder instance.
-     */
-    public SchemaBuilder(SchemaBuilder schemaBuilder) {
-        this.parentBuilder = schemaBuilder;
+    public SchemaBuilder(AbstractBuilder<?> parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -76,39 +48,6 @@ public class SchemaBuilder {
      */
     public TypeBuilder withType() {
         return new TypeBuilder(this);
-    }
-
-    /**
-     * Sets the format for the schema.
-     *
-     * @param format The format of the schema.
-     * @return The builder instance for method chaining.
-     */
-    public SchemaBuilder withFormat(String format) {
-        this.format = format;
-        return this;
-    }
-
-    /**
-     * Sets the description for the schema.
-     *
-     * @param description The description of the schema.
-     * @return The builder instance for method chaining.
-     */
-    public SchemaBuilder withDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    /**
-     * Sets the nullable flag for the schema.
-     *
-     * @param nullable Whether the schema can be null.
-     * @return The builder instance for method chaining.
-     */
-    public SchemaBuilder withNullable(Boolean nullable) {
-        this.nullable = nullable;
-        return this;
     }
 
     /**
@@ -147,33 +86,11 @@ public class SchemaBuilder {
     }
 
     /**
-     * Builds a {@link Schema} instance based on the configured parameters.
-     *
-     * @return The built {@link Schema} instance.
+     * {@inheritDoc}
      */
+    @Override
     public Schema build() {
         return new Schema(type, format, description, nullable, enumValues,
                 items);
-    }
-
-    /**
-     * Returns to the parent builder, setting the built {@link Schema} instance
-     * as appropriate.
-     *
-     * @return The parent builder instance for method chaining.
-     */
-    public Object and() {
-        if (parentBuilder instanceof FunctionDeclarationBuilder) {
-            ((FunctionDeclarationBuilder) parentBuilder).parameters = build();
-            return parentBuilder;
-        } else if (parentBuilder instanceof GenerationConfigBuilder) {
-            ((GenerationConfigBuilder) parentBuilder).responseSchema = build();
-            return parentBuilder;
-        } else if (parentBuilder instanceof SchemaBuilder) {
-            ((SchemaBuilder) parentBuilder).items = build();
-            return parentBuilder;
-        } else {
-            throw new IllegalStateException("Invalid parent builder type.");
-        }
     }
 }

@@ -1,10 +1,8 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.Content;
-import com.enovka.gemini4j.domain.Part;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
+import com.enovka.gemini4j.resource.builder.spec.AbstractContentBuilder;
 
 /**
  * Builder for creating {@link Content} instances.
@@ -12,78 +10,50 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class ContentBuilder {
-
-    private final GenerateContentRequestBuilder generateContentRequestBuilder;
-    private List<Part> parts;
-    private String role;
+public class ContentBuilder extends AbstractContentBuilder<Content> {
 
     /**
-     * Constructor for the ContentBuilder.
+     * Private constructor to enforce builder pattern.
      *
-     * @param generateContentRequestBuilder The parent
-     * GenerateContentRequestBuilder instance.
+     * @param parentBuilder The parent {@link AbstractBuilder} instance.
      */
-    public ContentBuilder(
-            GenerateContentRequestBuilder generateContentRequestBuilder) {
-        this.generateContentRequestBuilder = generateContentRequestBuilder;
+    ContentBuilder(AbstractBuilder<?> parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
-     * Adds a part to the list of parts for the content.
+     * Creates a new instance of the ContentBuilder.
      *
-     * @param part The part to add.
+     * @param parentBuilder The parent {@link AbstractBuilder} instance.
+     * @return A new ContentBuilder instance.
+     */
+    public static ContentBuilder builder(AbstractBuilder<?> parentBuilder) {
+        return new ContentBuilder(parentBuilder);
+    }
+
+    /**
+     * Sets the text for the content.
+     *
+     * @param text The text to set.
      * @return The builder instance for method chaining.
      */
-    public ContentBuilder withPart(Part part) {
-        if (this.parts == null) {
-            this.parts = new ArrayList<>();
+    public ContentBuilder withText(String text) {
+        if (text != null && !text.isEmpty()) {
+            this.parts.add(PartBuilder.builder(this)
+                    .withText(text)
+                    .build());
         }
-        this.parts.add(part);
         return this;
     }
 
     /**
-     * Creates a new {@link PartBuilder} for building a part.
-     *
-     * @return A new {@link PartBuilder} instance.
+     * {@inheritDoc}
      */
-    public PartBuilder withPart() {
-        return new PartBuilder(this);
-    }
-
-    /**
-     * Sets the role for the content.
-     *
-     * @param role The role of the content producer (e.g., "user", "model").
-     * @return The builder instance for method chaining.
-     */
-    public ContentBuilder withRole(String role) {
-        this.role = role;
-        return this;
-    }
-
-    /**
-     * Builds a {@link Content} instance based on the configured parameters.
-     *
-     * @return The built {@link Content} instance.
-     */
+    @Override
     public Content build() {
         return Content.builder()
                 .withParts(parts)
                 .withRole(role)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link Content} instance as the system instruction in the
-     * parent builder.
-     *
-     * @return The parent {@link GenerateContentRequestBuilder} instance for
-     * method chaining.
-     */
-    public GenerateContentRequestBuilder and() {
-        generateContentRequestBuilder.systemInstruction = build();
-        return generateContentRequestBuilder;
     }
 }

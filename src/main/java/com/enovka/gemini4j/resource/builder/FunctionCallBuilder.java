@@ -1,6 +1,7 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.FunctionCall;
+import com.enovka.gemini4j.resource.builder.spec.AbstractComplexBuilder;
 
 /**
  * Builder for creating {@link FunctionCall} instances.
@@ -8,19 +9,19 @@ import com.enovka.gemini4j.domain.FunctionCall;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class FunctionCallBuilder {
+public class FunctionCallBuilder extends
+        AbstractComplexBuilder<FunctionCall, PartBuilder> {
 
-    private final PartBuilder partBuilder;
     private String name;
     private Object args;
 
     /**
      * Constructor for the FunctionCallBuilder.
      *
-     * @param partBuilder The parent PartBuilder instance.
+     * @param parentBuilder The parent {@link PartBuilder} instance.
      */
-    public FunctionCallBuilder(PartBuilder partBuilder) {
-        this.partBuilder = partBuilder;
+    public FunctionCallBuilder(PartBuilder parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -49,26 +50,13 @@ public class FunctionCallBuilder {
     }
 
     /**
-     * Builds a {@link FunctionCall} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link FunctionCall} instance.
+     * {@inheritDoc}
      */
+    @Override
     public FunctionCall build() {
         return FunctionCall.builder()
                 .withName(name)
                 .withArgs(args)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link FunctionCall} instance as the function call in the
-     * parent builder.
-     *
-     * @return The parent {@link PartBuilder} instance for method chaining.
-     */
-    public PartBuilder and() {
-        partBuilder.functionCall = build();
-        return partBuilder;
     }
 }

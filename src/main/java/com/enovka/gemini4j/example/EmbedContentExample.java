@@ -8,7 +8,6 @@ import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.enovka.gemini4j.domain.response.BatchEmbedContentsResponse;
 import com.enovka.gemini4j.domain.response.EmbedContentResponse;
 import com.enovka.gemini4j.domain.type.TaskTypeEnum;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.ResourceBuilder;
 import com.enovka.gemini4j.resource.spec.EmbedResource;
@@ -75,7 +74,7 @@ public class EmbedContentExample {
                             "Example 2 - Embedding: " + embedding.toString())
             );
 
-        } catch (GeminiApiException | JsonException | HttpException e) {
+        } catch (GeminiApiException | JsonException e) {
             e.printStackTrace();
         }
     }

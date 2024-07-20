@@ -1,6 +1,7 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.FileData;
+import com.enovka.gemini4j.resource.builder.spec.AbstractComplexBuilder;
 
 /**
  * Builder for creating {@link FileData} instances.
@@ -8,19 +9,19 @@ import com.enovka.gemini4j.domain.FileData;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class FileDataBuilder {
+public class FileDataBuilder extends
+        AbstractComplexBuilder<FileData, PartBuilder> {
 
-    private final PartBuilder partBuilder;
     private String mimeType;
     private String fileUri;
 
     /**
      * Constructor for the FileDataBuilder.
      *
-     * @param partBuilder The parent PartBuilder instance.
+     * @param parentBuilder The parent {@link PartBuilder} instance.
      */
-    public FileDataBuilder(PartBuilder partBuilder) {
-        this.partBuilder = partBuilder;
+    public FileDataBuilder(PartBuilder parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -52,25 +53,13 @@ public class FileDataBuilder {
     }
 
     /**
-     * Builds a {@link FileData} instance based on the configured parameters.
-     *
-     * @return The built {@link FileData} instance.
+     * {@inheritDoc}
      */
+    @Override
     public FileData build() {
         return FileData.builder()
                 .withMimeType(mimeType)
                 .withFileUri(fileUri)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link FileData} instance as the file data in the parent
-     * builder.
-     *
-     * @return The parent {@link PartBuilder} instance for method chaining.
-     */
-    public PartBuilder and() {
-        partBuilder.fileData = build();
-        return partBuilder;
     }
 }

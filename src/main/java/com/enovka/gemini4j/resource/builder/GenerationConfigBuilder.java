@@ -2,6 +2,8 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.GenerationConfig;
 import com.enovka.gemini4j.domain.Schema;
+import com.enovka.gemini4j.resource.builder.spec.AbstractGenerationConfigBuilder;
+import com.enovka.gemini4j.resource.builder.spec.AbstractRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +14,12 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class GenerationConfigBuilder {
+public class GenerationConfigBuilder extends
+        AbstractGenerationConfigBuilder<GenerationConfig> {
 
-    private final GenerateContentRequestBuilder generateContentRequestBuilder;
-    public Schema responseSchema;
     private List<String> stopSequences;
     private String responseMimeType;
+    private Schema responseSchema;
     private Integer candidateCount;
     private Integer maxOutputTokens;
     private Double temperature;
@@ -27,12 +29,10 @@ public class GenerationConfigBuilder {
     /**
      * Constructor for the GenerationConfigBuilder.
      *
-     * @param generateContentRequestBuilder The parent
-     * GenerateContentRequestBuilder instance.
+     * @param parentBuilder The parent {@link AbstractRequestBuilder} instance.
      */
-    public GenerationConfigBuilder(
-            GenerateContentRequestBuilder generateContentRequestBuilder) {
-        this.generateContentRequestBuilder = generateContentRequestBuilder;
+    public GenerationConfigBuilder(AbstractRequestBuilder<?> parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -139,11 +139,9 @@ public class GenerationConfigBuilder {
     }
 
     /**
-     * Builds a {@link GenerationConfig} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link GenerationConfig} instance.
+     * {@inheritDoc}
      */
+    @Override
     public GenerationConfig build() {
         return GenerationConfig.builder()
                 .withStopSequences(stopSequences)
@@ -158,14 +156,14 @@ public class GenerationConfigBuilder {
     }
 
     /**
-     * Sets the built {@link GenerationConfig} instance as the generation config
-     * in the parent builder.
+     * Returns to the parent {@link AbstractRequestBuilder} after configuring
+     * the generation config.
      *
-     * @return The parent {@link GenerateContentRequestBuilder} instance for
-     * method chaining.
+     * @return The parent {@link AbstractRequestBuilder} instance for method
+     * chaining.
      */
-    public GenerateContentRequestBuilder and() {
-        generateContentRequestBuilder.generationConfig = build();
-        return generateContentRequestBuilder;
+    public AbstractRequestBuilder<?> and() {
+        parentBuilder.withGenerationConfig(build());
+        return parentBuilder;
     }
 }

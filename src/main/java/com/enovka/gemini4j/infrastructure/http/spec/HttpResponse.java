@@ -1,5 +1,7 @@
 package com.enovka.gemini4j.infrastructure.http.spec;
 
+import lombok.Getter;
+
 import java.util.Map;
 
 /**
@@ -8,10 +10,26 @@ import java.util.Map;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
+@Getter
 public class HttpResponse {
 
+    /**
+     * -- GETTER -- Returns the HTTP status code.
+     *
+     * @return The HTTP status code.
+     */
     private final int statusCode;
+    /**
+     * -- GETTER -- Returns the response headers.
+     *
+     * @return The response headers.
+     */
     private final Map<String, String> headers;
+    /**
+     * -- GETTER -- Returns the response body.
+     *
+     * @return The response body.
+     */
     private final String body;
 
     /**
@@ -28,30 +46,4 @@ public class HttpResponse {
         this.body = body;
     }
 
-    /**
-     * Returns the HTTP status code.
-     *
-     * @return The HTTP status code.
-     */
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    /**
-     * Returns the response headers.
-     *
-     * @return The response headers.
-     */
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    /**
-     * Returns the response body.
-     *
-     * @return The response body.
-     */
-    public String getBody() {
-        return body;
-    }
 }
