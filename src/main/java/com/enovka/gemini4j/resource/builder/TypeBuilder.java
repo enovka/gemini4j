@@ -2,6 +2,8 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.Type;
 import com.enovka.gemini4j.domain.type.TypeEnum;
+import com.enovka.gemini4j.resource.builder.spec.AbstractComplexBuilder;
+import com.enovka.gemini4j.resource.builder.spec.AbstractSchemaBuilder;
 
 /**
  * Builder for creating {@link Type} instances.
@@ -9,18 +11,18 @@ import com.enovka.gemini4j.domain.type.TypeEnum;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class TypeBuilder {
+public class TypeBuilder extends
+        AbstractComplexBuilder<Type, AbstractSchemaBuilder<?>> {
 
-    private final SchemaBuilder schemaBuilder;
     private TypeEnum type;
 
     /**
      * Constructor for the TypeBuilder.
      *
-     * @param schemaBuilder The parent SchemaBuilder instance.
+     * @param parentBuilder The parent {@link AbstractSchemaBuilder} instance.
      */
-    public TypeBuilder(SchemaBuilder schemaBuilder) {
-        this.schemaBuilder = schemaBuilder;
+    public TypeBuilder(AbstractSchemaBuilder<?> parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -38,23 +40,12 @@ public class TypeBuilder {
     }
 
     /**
-     * Builds a {@link Type} instance based on the configured parameters.
-     *
-     * @return The built {@link Type} instance.
+     * {@inheritDoc}
      */
+    @Override
     public Type build() {
         return Type.builder()
                 .withType(type)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link Type} instance as the type in the parent builder.
-     *
-     * @return The parent {@link SchemaBuilder} instance for method chaining.
-     */
-    public SchemaBuilder and() {
-        schemaBuilder.withType(build());
-        return schemaBuilder;
     }
 }

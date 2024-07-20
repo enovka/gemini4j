@@ -426,7 +426,7 @@ be configurable for every model.
 #### Fields
 
 * **`stopSequences[]` string**: Optional. The set of character sequences (up to
-    5) that will stop output generation. If specified, the API will stop at the
+    1) that will stop output generation. If specified, the API will stop at the
        first appearance of a stop sequence. The stop sequence will not be
        included as
        part of the response.

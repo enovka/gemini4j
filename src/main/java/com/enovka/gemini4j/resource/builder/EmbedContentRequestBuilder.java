@@ -2,12 +2,9 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.Content;
-import com.enovka.gemini4j.domain.Part;
-import com.enovka.gemini4j.domain.TaskType;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.enovka.gemini4j.domain.type.TaskTypeEnum;
-
-import java.util.Collections;
+import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
 
 /**
  * Builder for creating {@link EmbedContentRequest} instances. This builder
@@ -17,14 +14,13 @@ import java.util.Collections;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class EmbedContentRequestBuilder {
+public class EmbedContentRequestBuilder extends
+        AbstractBuilder<EmbedContentRequest> {
 
-    private final GeminiClient geminiClient;
     private Content content;
-    private TaskType taskType;
+    private TaskTypeEnum taskType;
     private String title;
     private Integer outputDimensionality;
-    private String text;
 
     /**
      * Private constructor to enforce builder pattern.
@@ -33,7 +29,7 @@ public class EmbedContentRequestBuilder {
      * communication.
      */
     private EmbedContentRequestBuilder(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+        super(geminiClient);
     }
 
     /**
@@ -67,12 +63,11 @@ public class EmbedContentRequestBuilder {
      * @return The builder instance for method chaining.
      */
     public EmbedContentRequestBuilder withText(String text) {
-        this.text = text;
-        this.content = Content.builder()
-                .withParts(Collections.singletonList(Part.builder()
-                        .withText(text)
-                        .build()))
-                .build();
+        if (text != null && !text.isEmpty()) {
+            this.content = ContentBuilder.builder(this)
+                    .withText(text)
+                    .build();
+        }
         return this;
     }
 
@@ -83,7 +78,7 @@ public class EmbedContentRequestBuilder {
      * @return The builder instance for method chaining.
      */
     public EmbedContentRequestBuilder withTaskType(TaskTypeEnum taskType) {
-        this.taskType = TaskType.builder().withTaskType(taskType).build();
+        this.taskType = taskType;
         return this;
     }
 
@@ -113,22 +108,18 @@ public class EmbedContentRequestBuilder {
     }
 
     /**
-     * Builds an {@link EmbedContentRequest} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link EmbedContentRequest} instance.
-     * @throws IllegalArgumentException If the content or text is not set.
+     * {@inheritDoc}
      */
+    @Override
     public EmbedContentRequest build() {
-
-        if (content == null || this.text == null || this.text.isEmpty()) {
+        if (content == null) {
             throw new IllegalArgumentException(
                     "Content with text is required.");
         }
         return EmbedContentRequest.builder()
-                .withModel(geminiClient.getModel())
+                .withModel("models/" + geminiClient.getModel())
                 .withContent(content)
-                .withTaskType(TaskTypeEnum.SEMANTIC_SIMILARITY)
+                .withTaskType(taskType)
                 .withTitle(title)
                 .withOutputDimensionality(outputDimensionality)
                 .build();

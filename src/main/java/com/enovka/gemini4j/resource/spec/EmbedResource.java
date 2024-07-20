@@ -6,7 +6,6 @@ import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.enovka.gemini4j.domain.response.BatchEmbedContentsResponse;
 import com.enovka.gemini4j.domain.response.EmbedContentResponse;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.BatchEmbedContentsRequestBuilder;
 import com.enovka.gemini4j.resource.builder.EmbedContentRequestBuilder;
@@ -40,10 +39,9 @@ public interface EmbedResource {
      * @throws GeminiApiException If an error occurs during the embedding
      * generation process.
      * @throws JsonException If an error occurs during JSON processing.
-     * @throws HttpException If an error occurs during the HTTP request.
      */
     EmbedContentResponse embedContent(EmbedContentRequest request)
-            throws GeminiApiException, JsonException, HttpException;
+            throws GeminiApiException, JsonException;
 
     /**
      * Generates embeddings for multiple contents in a batch request.
@@ -55,11 +53,10 @@ public interface EmbedResource {
      * @throws GeminiApiException If an error occurs during the batch embedding
      * generation process.
      * @throws JsonException If an error occurs during JSON processing.
-     * @throws HttpException If an error occurs during the HTTP request.
      */
     BatchEmbedContentsResponse batchEmbedContent(
             BatchEmbedContentsRequest request)
-            throws GeminiApiException, JsonException, HttpException;
+            throws GeminiApiException, JsonException;
 
     /**
      * Creates a new {@link EmbedContentRequestBuilder} instance to build an

@@ -2,6 +2,8 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.FunctionCallingConfig;
 import com.enovka.gemini4j.domain.ToolConfig;
+import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
+import com.enovka.gemini4j.resource.builder.spec.AbstractToolConfigBuilder;
 
 /**
  * Builder for creating {@link ToolConfig} instances.
@@ -9,20 +11,17 @@ import com.enovka.gemini4j.domain.ToolConfig;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class ToolConfigBuilder {
+public class ToolConfigBuilder extends AbstractToolConfigBuilder<ToolConfig> {
 
-    private final GenerateContentRequestBuilder generateContentRequestBuilder;
     private FunctionCallingConfig functionCallingConfig;
 
     /**
      * Constructor for the ToolConfigBuilder.
      *
-     * @param generateContentRequestBuilder The parent
-     * GenerateContentRequestBuilder instance.
+     * @param parentBuilder The parent {@link AbstractBuilder} instance.
      */
-    public ToolConfigBuilder(
-            GenerateContentRequestBuilder generateContentRequestBuilder) {
-        this.generateContentRequestBuilder = generateContentRequestBuilder;
+    public ToolConfigBuilder(AbstractBuilder<?> parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -48,25 +47,12 @@ public class ToolConfigBuilder {
     }
 
     /**
-     * Builds a {@link ToolConfig} instance based on the configured parameters.
-     *
-     * @return The built {@link ToolConfig} instance.
+     * {@inheritDoc}
      */
+    @Override
     public ToolConfig build() {
         return ToolConfig.builder()
                 .withFunctionCallingConfig(functionCallingConfig)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link ToolConfig} instance as the tool config in the
-     * parent builder.
-     *
-     * @return The parent {@link GenerateContentRequestBuilder} instance for
-     * method chaining.
-     */
-    public GenerateContentRequestBuilder and() {
-        generateContentRequestBuilder.withToolConfig(build());
-        return generateContentRequestBuilder;
     }
 }

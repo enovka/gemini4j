@@ -11,7 +11,7 @@ import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
-import com.enovka.gemini4j.resource.spec.AbstractResource;
+import com.enovka.gemini4j.resource.spec.AbstractMultiTurnConversationResource;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
 
 import java.util.HashMap;
@@ -24,12 +24,12 @@ import java.util.Map;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public class GenerationResourceImpl extends AbstractResource
+public class GenerationResourceImpl
+        extends AbstractMultiTurnConversationResource<GenerateContentResponse>
         implements GenerationResource {
 
     private static final String GENERATE_CONTENT_ENDPOINT
             = "/models/%s:generateContent";
-    private final JsonService jsonService;
 
     /**
      * Constructs a new GenerationResourceImpl with the required GeminiClient
@@ -42,8 +42,7 @@ public class GenerationResourceImpl extends AbstractResource
      */
     public GenerationResourceImpl(GeminiClient geminiClient,
                                   JsonService jsonService) {
-        super(geminiClient);
-        this.jsonService = jsonService;
+        super(geminiClient, jsonService);
     }
 
     /**
@@ -68,6 +67,8 @@ public class GenerationResourceImpl extends AbstractResource
         logDebug("Generating content from endpoint: "
                 + GENERATE_CONTENT_ENDPOINT);
 
+        request = prepareMultiTurnRequest(request);
+
         String requestBody = jsonService.serialize(request);
         logDebug("Request Body: " + requestBody);
 
@@ -81,6 +82,11 @@ public class GenerationResourceImpl extends AbstractResource
 
         GenerateContentResponse contentResponse = jsonService.deserialize(
                 response.getBody(), GenerateContentResponse.class);
+
+        // Add the generated response to the conversation history
+        multiTurnConversation.addContent(
+                contentResponse.getCandidates().get(0).getContent());
+
         return GeminiResult.builder()
                 .withGenerateContentResponse(contentResponse)
                 .build();

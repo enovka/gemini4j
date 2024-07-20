@@ -2,6 +2,7 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.domain.HarmBlockThreshold;
 import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
+import com.enovka.gemini4j.resource.builder.spec.AbstractComplexBuilder;
 
 /**
  * Builder for creating {@link HarmBlockThreshold} instances.
@@ -9,19 +10,18 @@ import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class HarmBlockThresholdBuilder {
+public class HarmBlockThresholdBuilder extends
+        AbstractComplexBuilder<HarmBlockThreshold, SafetySettingBuilder> {
 
-    private final SafetySettingBuilder safetySettingBuilder;
     private HarmBlockThresholdEnum harmBlockThreshold;
 
     /**
      * Constructor for the HarmBlockThresholdBuilder.
      *
-     * @param safetySettingBuilder The parent SafetySettingBuilder instance.
+     * @param parentBuilder The parent {@link SafetySettingBuilder} instance.
      */
-    public HarmBlockThresholdBuilder(
-            SafetySettingBuilder safetySettingBuilder) {
-        this.safetySettingBuilder = safetySettingBuilder;
+    public HarmBlockThresholdBuilder(SafetySettingBuilder parentBuilder) {
+        super(parentBuilder);
     }
 
     /**
@@ -41,26 +41,12 @@ public class HarmBlockThresholdBuilder {
     }
 
     /**
-     * Builds a {@link HarmBlockThreshold} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link HarmBlockThreshold} instance.
+     * {@inheritDoc}
      */
+    @Override
     public HarmBlockThreshold build() {
         return HarmBlockThreshold.builder()
                 .withHarmBlockThreshold(harmBlockThreshold)
                 .build();
-    }
-
-    /**
-     * Sets the built {@link HarmBlockThreshold} instance as the threshold in
-     * the parent builder.
-     *
-     * @return The parent {@link SafetySettingBuilder} instance for method
-     * chaining.
-     */
-    public SafetySettingBuilder and() {
-        safetySettingBuilder.threshold = build().getHarmBlockThreshold();
-        return safetySettingBuilder;
     }
 }

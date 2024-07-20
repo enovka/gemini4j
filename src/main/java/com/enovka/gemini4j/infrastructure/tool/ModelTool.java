@@ -4,7 +4,6 @@ import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
 import com.enovka.gemini4j.domain.type.SupportedGenerationMethod;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -93,14 +92,11 @@ public class ModelTool extends BaseClass {
      * @param modelResource The {@link ModelResource} to use for updating the
      * model list.
      */
-    public void update(ModelResource modelResource) {
+    public void update(ModelResource modelResource)
+            throws JsonException, GeminiApiException {
         logDebug("Updating model list using ModelResource.");
-        try {
-            this.models = modelResource.listModels().getModels().stream()
-                    .collect(Collectors.toMap(Model::getName, model -> model));
-        } catch (HttpException | JsonException | GeminiApiException e) {
-            logError("Error updating model list: " + e.getMessage(), e);
-        }
+        this.models = modelResource.listModels().getModels().stream()
+                .collect(Collectors.toMap(Model::getName, model -> model));
     }
 
     /**
@@ -153,5 +149,9 @@ public class ModelTool extends BaseClass {
             logWarn("Model not found: " + modelName);
             return false;
         }
+    }
+
+    public Model getModel(String model) {
+        return models.get("models/" + model);
     }
 }

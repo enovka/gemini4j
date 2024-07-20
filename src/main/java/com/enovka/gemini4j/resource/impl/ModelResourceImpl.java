@@ -4,8 +4,6 @@ import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
-import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.resource.spec.AbstractResource;
@@ -18,13 +16,11 @@ import com.enovka.gemini4j.resource.spec.ModelResource;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public class ModelResourceImpl extends AbstractResource
+public class ModelResourceImpl extends AbstractResource<ModelResource>
         implements ModelResource {
 
     private static final String LIST_MODELS_ENDPOINT = "/models";
     private static final String GET_MODEL_ENDPOINT = "/models/%s";
-    // Corrected format string
-    private final JsonService jsonService;
 
     /**
      * Constructs a new ModelResourceImpl with the required GeminiClient and
@@ -37,21 +33,15 @@ public class ModelResourceImpl extends AbstractResource
      */
     public ModelResourceImpl(GeminiClient geminiClient,
                              JsonService jsonService) {
-        super(geminiClient);
-        this.jsonService = jsonService;
+        super(geminiClient, jsonService);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ListModel listModels()
-            throws HttpException, JsonException, GeminiApiException {
-        logDebug(
-                "Listing Gemini models from endpoint: " + LIST_MODELS_ENDPOINT);
-        HttpResponse response = get(LIST_MODELS_ENDPOINT,
-                geminiClient.buildAuthHeaders());
-        return jsonService.deserialize(response.getBody(), ListModel.class);
+    public ListModel listModels() throws GeminiApiException {
+        return executeGetRequest(LIST_MODELS_ENDPOINT, ListModel.class);
     }
 
     /**
@@ -61,11 +51,8 @@ public class ModelResourceImpl extends AbstractResource
      */
     @Override
     public Model getModel(String modelName)
-            throws GeminiApiException, HttpException, JsonException {
-        logDebug("Getting model details for: " + modelName);
+            throws GeminiApiException, JsonException {
         String endpoint = String.format(GET_MODEL_ENDPOINT, modelName);
-        logDebug("Requesting model from endpoint: " + endpoint);
-        HttpResponse response = get(endpoint, geminiClient.buildAuthHeaders());
-        return jsonService.deserialize(response.getBody(), Model.class);
+        return executeGetRequest(endpoint, Model.class);
     }
 }

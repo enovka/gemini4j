@@ -1,13 +1,16 @@
 package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.domain.*;
+import com.enovka.gemini4j.domain.Content;
+import com.enovka.gemini4j.domain.GenerationConfig;
+import com.enovka.gemini4j.domain.SafetySetting;
+import com.enovka.gemini4j.domain.ToolConfig;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
 import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
+import com.enovka.gemini4j.resource.builder.spec.AbstractRequestBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,22 +21,21 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class GenerateContentRequestBuilder {
+public class GenerateContentRequestBuilder
+        extends AbstractRequestBuilder<GenerateContentRequest> {
 
-    private final GeminiClient geminiClient;
-    public Content systemInstruction;
-    public GenerationConfig generationConfig;
     private String userInput;
-    private List<Tool> tools;
     private ToolConfig toolConfig;
-    private List<SafetySetting> safetySettings;
     private String cachedContent;
 
     /**
      * Private constructor to enforce builder pattern.
+     *
+     * @param geminiClient The GeminiClient instance to use for API
+     * communication.
      */
     private GenerateContentRequestBuilder(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+        super(geminiClient);
     }
 
     /**
@@ -64,22 +66,21 @@ public class GenerateContentRequestBuilder {
 
     /**
      * Sets the optional system instructions for the generation request. If a
-     * string is provided, it will be automatically wrapped in a {@link Content}
-     * object with the role "system".
+     * string is provided, it will be automatically wrapped in a
+     * {@link com.enovka.gemini4j.domain.Content} object with the role
+     * "system".
      *
      * @param systemInstructions The system instructions, either as a string or
-     * a {@link Content} object.
+     * a {@link com.enovka.gemini4j.domain.Content} object.
      * @return The builder instance for method chaining.
      */
     public GenerateContentRequestBuilder withSystemInstructions(
             String systemInstructions) {
         if (systemInstructions != null && !systemInstructions.isEmpty()) {
-            this.systemInstruction = Content.builder()
-                    .withParts(Collections.singletonList(
-                            Part.builder().withText(systemInstructions)
-                                    .build()))
+            this.withSystemInstruction(ContentBuilder.builder(this)
+                    .withText(systemInstructions)
                     .withRole("system")
-                    .build();
+                    .build());
         }
         return this;
     }
@@ -92,20 +93,6 @@ public class GenerateContentRequestBuilder {
      */
     public ContentBuilder withSystemInstruction() {
         return new ContentBuilder(this);
-    }
-
-    /**
-     * Adds a tool to the list of tools for the generation request.
-     *
-     * @param tool The tool to add.
-     * @return The builder instance for method chaining.
-     */
-    public GenerateContentRequestBuilder withTool(Tool tool) {
-        if (this.tools == null) {
-            this.tools = new ArrayList<>();
-        }
-        this.tools.add(tool);
-        return this;
     }
 
     /**
@@ -139,32 +126,6 @@ public class GenerateContentRequestBuilder {
     }
 
     /**
-     * Adds a safety setting to the list of safety settings for the generation
-     * request.
-     *
-     * @param safetySetting The safety setting to add.
-     * @return The builder instance for method chaining.
-     */
-    public GenerateContentRequestBuilder withSafetySetting(
-            SafetySetting safetySetting) {
-        if (this.safetySettings == null) {
-            this.safetySettings = new ArrayList<>();
-        }
-        this.safetySettings.add(safetySetting);
-        return this;
-    }
-
-    /**
-     * Creates a new {@link SafetySettingBuilder} for building a safety
-     * setting.
-     *
-     * @return A new {@link SafetySettingBuilder} instance.
-     */
-    public SafetySettingBuilder withSafetySetting() {
-        return new SafetySettingBuilder(this);
-    }
-
-    /**
      * Adds a safety setting for toxicity with the specified block threshold.
      *
      * @param harmBlockThreshold The harm block threshold for toxicity.
@@ -172,7 +133,7 @@ public class GenerateContentRequestBuilder {
      */
     public GenerateContentRequestBuilder withSafetySettingForToxicity(
             HarmBlockThresholdEnum harmBlockThreshold) {
-        return withSafetySetting(SafetySetting.builder()
+        return this.withSafetySetting(SafetySetting.builder()
                 .withCategory(HarmCategoryEnum.HARM_CATEGORY_TOXICITY)
                 .withThreshold(harmBlockThreshold).build());
     }
@@ -212,26 +173,25 @@ public class GenerateContentRequestBuilder {
     }
 
     /**
-     * Builds a {@link GenerateContentRequest} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link GenerateContentRequest} instance.
-     * @throws IllegalArgumentException If the user input is not set.
+     * {@inheritDoc}
      */
+    @Override
     public GenerateContentRequest build() {
         if (userInput == null) {
             throw new IllegalArgumentException("User input is required.");
         }
 
-        Content userContent = Content.builder()
-                .withParts(Collections.singletonList(
-                        Part.builder().withText(userInput).build()))
-                .withRole("user")
-                .build();
+        ContentBuilder contentBuilder = ContentBuilder.builder(this);
+        contentBuilder.withText(userInput);
+        contentBuilder.withRole("user");
+
+        // Use ArrayList for a mutable list
+        List<Content> contents = new ArrayList<>();
+        contents.add(contentBuilder.build());
 
         return GenerateContentRequest.builder()
                 .withModel(geminiClient.getModel())
-                .withContents(Collections.singletonList(userContent))
+                .withContents(contents)
                 .withSystemInstruction(systemInstruction)
                 .withTools(tools)
                 .withToolConfig(toolConfig)
@@ -240,5 +200,4 @@ public class GenerateContentRequestBuilder {
                 .withCachedContent(cachedContent)
                 .build();
     }
-
 }

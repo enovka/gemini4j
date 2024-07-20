@@ -4,8 +4,7 @@ import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.*;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.type.TypeEnum;
-import lombok.Builder;
-import lombok.Singular;
+import com.enovka.gemini4j.resource.builder.spec.AbstractRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,30 +18,34 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-@Builder(setterPrefix = "with")
-public class GenerationResourceBuilder {
+public class GenerationResourceBuilder extends
+        AbstractRequestBuilder<GenerateContentRequest> {
 
-    private GeminiClient geminiClient;
     private String userInput;
     private String systemInstruction;
-    @Singular("toolFunctionDeclaration")
     private List<FunctionDeclaration> functionDeclarations;
     private ToolConfig toolConfig;
-    @Singular
-    private List<SafetySetting> safetySettings;
-    private GenerationConfig generationConfig;
     private String cachedContent;
 
     /**
-     * Sets the required Gemini client for the generation request.
+     * Private constructor to enforce builder pattern.
      *
-     * @param geminiClient The Gemini client to use.
-     * @return The builder instance for method chaining.
+     * @param geminiClient The GeminiClient instance to use for API
+     * communication.
      */
-    public GenerationResourceBuilder withGeminiClient(
-            GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
-        return this;
+    private GenerationResourceBuilder(GeminiClient geminiClient) {
+        super(geminiClient);
+    }
+
+    /**
+     * Creates a new instance of the GenerationResourceBuilder.
+     *
+     * @param geminiClient The GeminiClient instance to use for API
+     * communication.
+     * @return A new GenerationResourceBuilder instance.
+     */
+    public static GenerationResourceBuilder builder(GeminiClient geminiClient) {
+        return new GenerationResourceBuilder(geminiClient);
     }
 
     /**
@@ -122,34 +125,6 @@ public class GenerationResourceBuilder {
     }
 
     /**
-     * Adds a safety setting to the list of safety settings for the generation
-     * request.
-     *
-     * @param safetySetting The safety setting to add.
-     * @return The builder instance for method chaining.
-     */
-    public GenerationResourceBuilder withSafetySetting(
-            SafetySetting safetySetting) {
-        if (this.safetySettings == null) {
-            this.safetySettings = new ArrayList<>();
-        }
-        this.safetySettings.add(safetySetting);
-        return this;
-    }
-
-    /**
-     * Sets the optional generation configuration for the generation request.
-     *
-     * @param generationConfig The generation configuration to use.
-     * @return The builder instance for method chaining.
-     */
-    public GenerationResourceBuilder withGenerationConfig(
-            GenerationConfig generationConfig) {
-        this.generationConfig = generationConfig;
-        return this;
-    }
-
-    /**
      * Sets the optional cached content name for the generation request.
      *
      * @param cachedContent The name of the cached content to use.
@@ -161,12 +136,9 @@ public class GenerationResourceBuilder {
     }
 
     /**
-     * Builds a {@link GenerateContentRequest} instance based on the configured
-     * parameters.
-     *
-     * @return The built {@link GenerateContentRequest} instance.
-     * @throws IllegalArgumentException If the user input is not set.
+     * {@inheritDoc}
      */
+    @Override
     public GenerateContentRequest build() {
         if (userInput == null) {
             throw new IllegalArgumentException("User input is required.");

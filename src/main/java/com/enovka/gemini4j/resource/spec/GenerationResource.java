@@ -16,7 +16,7 @@ import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public interface GenerationResource {
+public interface GenerationResource extends MultiTurnConversationAware {
 
     /**
      * Returns the associated {@link GeminiClient}.
