@@ -20,7 +20,7 @@ public class GenerationContentExample {
 
     public static void main(String[] args) {
         // Replace with your actual API key
-        String apiKey = "API-KEY";
+        String apiKey = "AIzaSyBk4YjBizGHvRY2EPWHvGVyvVIMT2giW4w";
 
         // Create a GeminiClient and GenerationResource
         var generationResource = ResourceBuilder.builder(
@@ -61,7 +61,6 @@ public class GenerationContentExample {
             // Example 3: Text generation using the generateTextBuilder
             GeminiResult result3 = generationResource.generateTextBuilder(
                             "Give me three ideas for a birthday party.")
-                    .withCandidateCount(1)
                     .execute();
             System.out.println("Example 3 - Generated Text: "
                     + result3.getGeneratedText());

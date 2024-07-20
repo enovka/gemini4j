@@ -96,8 +96,7 @@ public enum SupportedGenerationMethod {
     GENERATE_ANSWER("generateAnswer");
 
     /**
-     * -- GETTER --
-     *  Returns the string representation of the generation method.
+     * -- GETTER -- Returns the string representation of the generation method.
      *
      * @return The string representation of the generation method.
      */

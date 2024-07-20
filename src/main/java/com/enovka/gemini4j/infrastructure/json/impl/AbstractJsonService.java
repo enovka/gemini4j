@@ -1,6 +1,5 @@
 package com.enovka.gemini4j.infrastructure.json.impl;
 
-import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.infrastructure.tool.BaseClass;
 

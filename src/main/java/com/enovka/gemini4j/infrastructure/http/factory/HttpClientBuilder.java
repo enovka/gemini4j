@@ -24,12 +24,9 @@ public class HttpClientBuilder {
     @Builder.Default
     private Integer responseTimeout = 60000;
     /**
-     * -- GETTER --
-     *  Returns a custom
-     *  instance.
+     * -- GETTER -- Returns a custom instance.
      *
      * @return A custom {@link HttpClient} instance.
-     *
      */
     @Getter
     @Builder.Default

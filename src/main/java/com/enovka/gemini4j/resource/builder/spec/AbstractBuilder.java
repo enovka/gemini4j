@@ -15,7 +15,7 @@ public abstract class AbstractBuilder<T> {
 
     protected final GeminiClient geminiClient;
     protected AbstractBuilder<?> parentBuilder;
-            // Reference to the parent builder, if any
+    // Reference to the parent builder, if any
 
     /**
      * Constructor for the AbstractBuilder.

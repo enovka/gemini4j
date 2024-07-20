@@ -4,7 +4,6 @@ import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
 import com.enovka.gemini4j.domain.type.SupportedGenerationMethod;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 import com.fasterxml.jackson.core.type.TypeReference;

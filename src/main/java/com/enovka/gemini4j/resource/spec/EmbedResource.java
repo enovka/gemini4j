@@ -6,7 +6,6 @@ import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.enovka.gemini4j.domain.response.BatchEmbedContentsResponse;
 import com.enovka.gemini4j.domain.response.EmbedContentResponse;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.BatchEmbedContentsRequestBuilder;
 import com.enovka.gemini4j.resource.builder.EmbedContentRequestBuilder;

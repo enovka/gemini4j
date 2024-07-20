@@ -14,22 +14,19 @@ import java.util.Map;
 public class HttpResponse {
 
     /**
-     * -- GETTER --
-     *  Returns the HTTP status code.
+     * -- GETTER -- Returns the HTTP status code.
      *
      * @return The HTTP status code.
      */
     private final int statusCode;
     /**
-     * -- GETTER --
-     *  Returns the response headers.
+     * -- GETTER -- Returns the response headers.
      *
      * @return The response headers.
      */
     private final Map<String, String> headers;
     /**
-     * -- GETTER --
-     *  Returns the response body.
+     * -- GETTER -- Returns the response body.
      *
      * @return The response body.
      */

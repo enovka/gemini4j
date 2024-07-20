@@ -117,7 +117,7 @@ public class EmbedContentRequestBuilder extends
                     "Content with text is required.");
         }
         return EmbedContentRequest.builder()
-                .withModel(geminiClient.getModel())
+                .withModel("models/" + geminiClient.getModel())
                 .withContent(content)
                 .withTaskType(taskType)
                 .withTitle(title)

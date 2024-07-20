@@ -4,7 +4,6 @@ import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
