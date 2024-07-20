@@ -20,7 +20,7 @@ public class GenerationContentExample {
 
     public static void main(String[] args) {
         // Replace with your actual API key
-        String apiKey = "AIzaSyBk4YjBizGHvRY2EPWHvGVyvVIMT2giW4w";
+        String apiKey = "API-KEY";
 
         // Create a GeminiClient and GenerationResource
         var generationResource = ResourceBuilder.builder(
