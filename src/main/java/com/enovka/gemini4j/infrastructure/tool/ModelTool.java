@@ -1,10 +1,9 @@
 package com.enovka.gemini4j.infrastructure.tool;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
 import com.enovka.gemini4j.domain.type.SupportedGenerationMethod;
-import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -93,7 +92,8 @@ public class ModelTool extends BaseClass {
      * model list.
      */
     public void update(ModelResource modelResource)
-            throws JsonException, GeminiApiException {
+            throws
+            ResourceException {
         logDebug("Updating model list using ModelResource.");
         this.models = modelResource.listModels().getModels().stream()
                 .collect(Collectors.toMap(Model::getName, model -> model));

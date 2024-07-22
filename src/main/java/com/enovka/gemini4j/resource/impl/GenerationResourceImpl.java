@@ -1,16 +1,18 @@
 package com.enovka.gemini4j.resource.impl;
 
+import com.enovka.gemini4j.client.exception.GeminiApiError;
 import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
 import com.enovka.gemini4j.domain.response.GenerateContentResponse;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
+import com.enovka.gemini4j.infrastructure.exception.GeminiInfrastructureException;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.AbstractMultiTurnConversationResource;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
 
@@ -62,34 +64,50 @@ public class GenerationResourceImpl
      */
     @Override
     public GeminiResult generateContent(GenerateContentRequest request)
-            throws GeminiApiException, JsonException, HttpException {
-        validateGenerationMethodSupport("generateContent");
-        logDebug("Generating content from endpoint: "
-                + GENERATE_CONTENT_ENDPOINT);
+            throws ResourceException {
+        try {
+            validateGenerationMethodSupport("generateContent");
+            logDebug("Generating content from endpoint: "
+                    + GENERATE_CONTENT_ENDPOINT);
 
-        request = prepareMultiTurnRequest(request);
+            request = prepareMultiTurnRequest(request);
 
-        String requestBody = jsonService.serialize(request);
-        logDebug("Request Body: " + requestBody);
+            String requestBody = jsonService.serialize(request);
+            logDebug("Request Body: " + requestBody);
 
-        String endpoint = String.format(GENERATE_CONTENT_ENDPOINT,
-                geminiClient.getModel());
-        Map<String, String> headers = new HashMap<>(
-                geminiClient.buildAuthHeaders());
+            String endpoint = String.format(GENERATE_CONTENT_ENDPOINT,
+                    geminiClient.getModel());
+            Map<String, String> headers = new HashMap<>(
+                    geminiClient.buildAuthHeaders());
 
-        HttpResponse response = post(endpoint, requestBody, headers);
-        logDebug("Response Body: " + response.getBody());
+            HttpResponse response = post(endpoint, requestBody, headers);
+            logDebug("Response Body: " + response.getBody());
 
-        GenerateContentResponse contentResponse = jsonService.deserialize(
-                response.getBody(), GenerateContentResponse.class);
+            GenerateContentResponse contentResponse = jsonService.deserialize(
+                    response.getBody(), GenerateContentResponse.class);
 
-        // Add the generated response to the conversation history
-        multiTurnConversation.addContent(
-                contentResponse.getCandidates().get(0).getContent());
+            if (contentResponse.getError() != null) {
+                throw new GeminiApiException(GeminiApiError.UNKNOWN,
+                        "Gemini API returned an error: "
+                                + contentResponse.getError().getMessage());
+            }
 
-        return GeminiResult.builder()
-                .withGenerateContentResponse(contentResponse)
-                .build();
+            // Add the generated response to the conversation history
+            multiTurnConversation.addContent(
+                    contentResponse.getCandidates().get(0).getContent());
+
+            return GeminiResult.builder()
+                    .withGenerateContentResponse(contentResponse)
+                    .build();
+        } catch (JsonException e) {
+            throw new ResourceException(
+                    "Error deserializing generation response", e);
+        } catch (GeminiInfrastructureException e) {
+            throw new ResourceException(
+                    "Infrastructure error generating content", e);
+        } catch (GeminiApiException e) {
+            throw new ResourceException("Api error generating content", e);
+        }
     }
 
     /**
@@ -126,7 +144,7 @@ public class GenerationResourceImpl
             throws GeminiApiException {
         if (!getModelTool().isGenerationMethodSupported(geminiClient.getModel(),
                 generationMethod)) {
-            throw new GeminiApiException(450,
+            throw new GeminiApiException(GeminiApiError.INVALID_ARGUMENT,
                     "Generation method '" + generationMethod
                             + "' is not supported by the model.");
         }

@@ -1,14 +1,10 @@
 package com.enovka.gemini4j.domain.response;
 
 import com.enovka.gemini4j.domain.Candidate;
-import com.enovka.gemini4j.domain.ErrorResponse;
 import com.enovka.gemini4j.domain.PromptFeedback;
 import com.enovka.gemini4j.domain.UsageMetadata;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -27,12 +23,13 @@ import java.util.List;
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(setterPrefix = "with", toBuilder = true)
-public class GenerateContentResponse {
+public class GenerateContentResponse extends AbstractGeminiResponse {
 
     /**
      * Candidate responses from the model.
@@ -51,8 +48,5 @@ public class GenerateContentResponse {
      */
     @JsonProperty("usageMetadata")
     private UsageMetadata usageMetadata;
-
-    @JsonProperty("error")
-    private ErrorResponse error;
 
 }

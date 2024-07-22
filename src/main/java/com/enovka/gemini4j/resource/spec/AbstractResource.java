@@ -1,9 +1,10 @@
 package com.enovka.gemini4j.resource.spec;
 
-import com.enovka.gemini4j.client.exception.*;
+import com.enovka.gemini4j.client.exception.GeminiApiError;
+import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.domain.request.GenerateContentRequest;
-import com.enovka.gemini4j.domain.response.GenerateContentResponse;
+import com.enovka.gemini4j.domain.response.AbstractGeminiResponse;
+import com.enovka.gemini4j.infrastructure.exception.GeminiInfrastructureException;
 import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
@@ -11,6 +12,7 @@ import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.infrastructure.tool.BaseClass;
 import com.enovka.gemini4j.infrastructure.tool.ModelTool;
 import com.enovka.gemini4j.infrastructure.tool.MultiTurnConversation;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 
 import java.util.Map;
 
@@ -52,13 +54,25 @@ public abstract class AbstractResource<T> extends BaseClass {
      * @param endpoint The API endpoint to request.
      * @param type The class of the response object.
      * @return The deserialized response object.
-     * @throws GeminiApiException If an error occurs during the request.
+     * @throws ResourceException If an error occurs during the request.
+     * @since 0.1.0
      */
-    protected <R> R executeGetRequest(String endpoint, Class<R> type)
-            throws GeminiApiException {
-        logDebug("Executing GET request to endpoint: " + endpoint);
-        HttpResponse response = get(endpoint, geminiClient.buildAuthHeaders());
-        return deserializeResponse(response, type);
+    protected <R extends AbstractGeminiResponse> R executeGetRequest(
+            String endpoint, Class<R> type)
+            throws ResourceException {
+        try {
+            logDebug("Executing GET request to endpoint: " + endpoint);
+            HttpResponse response = get(endpoint,
+                    geminiClient.buildAuthHeaders());
+            return deserializeResponse(response, type);
+        } catch (JsonException e) {
+            throw new ResourceException("Error deserializing response", e);
+        } catch (GeminiInfrastructureException e) {
+            throw new ResourceException(
+                    "Infrastructure error executing GET request", e);
+        } catch (GeminiApiException e) {
+            throw new ResourceException("API error executing GET request", e);
+        }
     }
 
     /**
@@ -70,76 +84,28 @@ public abstract class AbstractResource<T> extends BaseClass {
      * request body.
      * @param type The class of the response object.
      * @return The deserialized response object.
-     * @throws GeminiApiException If an error occurs during the request.
+     * @throws ResourceException If an error occurs during the request.
+     * @since 0.1.0
      */
-    protected <R, S> R executePostRequest(String endpoint, S requestObject,
-                                          Class<R> type)
-            throws GeminiApiException {
-        logDebug("Executing POST request to endpoint: " + endpoint);
-        String requestBody = serializeRequest(requestObject);
-        logDebug("Request Body: " + requestBody);
-        HttpResponse response = post(endpoint, requestBody,
-                geminiClient.buildAuthHeaders());
-        logDebug("Response Body: " + response.getBody());
-        return deserializeResponse(response, type);
-    }
-
-    /**
-     * Executes a GenerateContentRequest and handles potential errors.
-     *
-     * @param request The GenerateContentRequest to execute.
-     * @return The GenerateContentResponse from the Gemini API.
-     * @throws GeminiApiException If an error occurs during the request.
-     */
-    protected GenerateContentResponse executeGenerateContentRequest(
-            GenerateContentRequest request) throws GeminiApiException {
-        String endpoint = String.format("/models/%s:generateContent",
-                geminiClient.getModel());
-        return executePostRequest(endpoint, request,
-                GenerateContentResponse.class);
-    }
-
-    /**
-     * Makes a GET request to the specified endpoint and handles potential
-     * errors.
-     *
-     * @param endpoint The API endpoint to request.
-     * @param headers The headers to include in the request.
-     * @return The {@link HttpResponse} object.
-     * @throws GeminiApiException If an error occurs during the request.
-     */
-    protected HttpResponse get(String endpoint, Map<String, String> headers)
-            throws GeminiApiException {
+    protected <R extends AbstractGeminiResponse, S> R executePostRequest(
+            String endpoint, S requestObject,
+            Class<R> type)
+            throws ResourceException {
         try {
-            HttpResponse response = geminiClient.getHttpClient()
-                    .get(buildEndpointUrl(endpoint), headers);
-            handleHttpResponseError(response);
-            return response;
-        } catch (HttpException e) {
-            throw handleHttpException(e);
-        }
-    }
-
-    /**
-     * Makes a POST request to the specified endpoint and handles potential
-     * errors.
-     *
-     * @param endpoint The API endpoint to request.
-     * @param body The request body.
-     * @param headers The headers to include in the request.
-     * @return The {@link HttpResponse} object.
-     * @throws GeminiApiException If an error occurs during the request.
-     */
-    protected HttpResponse post(String endpoint, String body,
-                                Map<String, String> headers)
-            throws GeminiApiException {
-        try {
-            HttpResponse response = geminiClient.getHttpClient()
-                    .post(buildEndpointUrl(endpoint), body, headers);
-            handleHttpResponseError(response);
-            return response;
-        } catch (HttpException e) {
-            throw handleHttpException(e);
+            logDebug("Executing POST request to endpoint: " + endpoint);
+            String requestBody = serializeRequest(requestObject);
+            logDebug("Request Body: " + requestBody);
+            HttpResponse response = post(endpoint, requestBody,
+                    geminiClient.buildAuthHeaders());
+            logDebug("Response Body: " + response.getBody());
+            return deserializeResponse(response, type);
+        } catch (JsonException e) {
+            throw new ResourceException("Error deserializing response", e);
+        } catch (GeminiInfrastructureException e) {
+            throw new ResourceException(
+                    "Infrastructure error executing POST request", e);
+        } catch (GeminiApiException e) {
+            throw new ResourceException("API error executing POST request", e);
         }
     }
 
@@ -159,15 +125,59 @@ public abstract class AbstractResource<T> extends BaseClass {
      *
      * @param requestObject The request object to serialize.
      * @return The JSON string representation of the request object.
-     * @throws GeminiApiException If an error occurs during serialization.
+     * @throws JsonException If an error occurs during serialization.
      */
     private <S> String serializeRequest(S requestObject)
-            throws GeminiApiException {
+            throws JsonException {
         try {
             return jsonService.serialize(requestObject);
         } catch (JsonException e) {
-            throw new GeminiApiException(500,
+            throw new JsonException(
                     "Error serializing request object: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Makes a GET request to the specified endpoint and handles potential
+     * errors.
+     *
+     * @param endpoint The API endpoint to request.
+     * @param headers The headers to include in the request.
+     * @return The {@link HttpResponse} object.
+     * @throws GeminiInfrastructureException If an error occurs during the HTTP
+     * request.
+     */
+    protected HttpResponse get(String endpoint, Map<String, String> headers)
+            throws GeminiInfrastructureException {
+        try {
+            return geminiClient.getHttpClient()
+                    .get(buildEndpointUrl(endpoint), headers);
+        } catch (HttpException e) {
+            throw new GeminiInfrastructureException(
+                    "Error executing GET request: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Makes a POST request to the specified endpoint and handles potential
+     * errors.
+     *
+     * @param endpoint The API endpoint to request.
+     * @param body The request body.
+     * @param headers The headers to include in the request.
+     * @return The {@link HttpResponse} object.
+     * @throws GeminiInfrastructureException If an error occurs during the HTTP
+     * request.
+     */
+    protected HttpResponse post(String endpoint, String body,
+                                Map<String, String> headers)
+            throws GeminiInfrastructureException {
+        try {
+            return geminiClient.getHttpClient()
+                    .post(buildEndpointUrl(endpoint), body, headers);
+        } catch (HttpException e) {
+            throw new GeminiInfrastructureException(
+                    "Error executing POST request: " + e.getMessage(), e);
         }
     }
 
@@ -178,65 +188,21 @@ public abstract class AbstractResource<T> extends BaseClass {
      * @param response The HTTP response.
      * @param type The class of the response object.
      * @return The deserialized response object.
-     * @throws GeminiApiException If an error occurs during deserialization.
+     * @throws GeminiApiException If the API returns an error.
+     * @throws JsonException If an error occurs during deserialization.
+     * @since 0.1.0
      */
-    private <R> R deserializeResponse(HttpResponse response, Class<R> type)
-            throws GeminiApiException {
-        try {
-            return jsonService.deserialize(response.getBody(), type);
-        } catch (JsonException e) {
-            throw new GeminiApiException(500,
-                    "Error deserializing response: " + e.getMessage(), e);
+    private <R extends AbstractGeminiResponse> R deserializeResponse(
+            HttpResponse response, Class<R> type)
+            throws GeminiApiException, JsonException {
+        R deserializedResponse = jsonService.deserialize(response.getBody(),
+                type);
+        if (deserializedResponse.getError() != null) {
+            throw new GeminiApiException(GeminiApiError.UNKNOWN,
+                    "Gemini API returned an error: "
+                            + deserializedResponse.getError().getMessage());
         }
-    }
-
-    /**
-     * Handles potential errors in the HTTP response.
-     *
-     * @param response The HTTP response to check for errors.
-     * @throws GeminiApiException If the response indicates an error.
-     */
-    private void handleHttpResponseError(HttpResponse response)
-            throws GeminiApiException {
-        int statusCode = response.getStatusCode();
-        if (statusCode >= 400) {
-            throw handleHttpException(new HttpException(
-                    "Request failed with status code: " + statusCode, null,
-                    statusCode));
-        }
-    }
-
-    /**
-     * Maps a {@link HttpException} to a specific {@link GeminiApiException}
-     * based on the status code.
-     *
-     * @param e The {@link HttpException} to handle.
-     * @return A specific {@link GeminiApiException} corresponding to the HTTP
-     * status code.
-     */
-    private GeminiApiException handleHttpException(HttpException e) {
-        switch (e.getStatusCode()) {
-        case 400:
-            return new GeminiInvalidArgumentException(e.getStatusCode(),
-                    e.getMessage());
-        case 403:
-            return new GeminiPermissionDeniedException(e.getStatusCode(),
-                    e.getMessage());
-        case 404:
-            return new GeminiNotFoundException(e.getStatusCode(),
-                    e.getMessage());
-        case 429:
-            return new GeminiResourceExhaustedException(e.getStatusCode(),
-                    e.getMessage());
-        case 500:
-            return new GeminiInternalException(e.getStatusCode(),
-                    e.getMessage());
-        case 503:
-            return new GeminiUnavailableException(e.getStatusCode(),
-                    e.getMessage());
-        default:
-            return new GeminiApiException(e.getStatusCode(), e.getMessage(), e);
-        }
+        return deserializedResponse;
     }
 
     protected ModelTool getModelTool() {

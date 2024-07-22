@@ -5,7 +5,7 @@ import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -16,11 +16,12 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
 @Builder(setterPrefix = "with", toBuilder = true)
-@NoArgsConstructor
-public class BatchEmbedContentsResponse {
+
+public class BatchEmbedContentsResponse extends AbstractGeminiResponse {
 
     /**
      * Output only. The embeddings for each request, in the same order as
@@ -31,6 +32,7 @@ public class BatchEmbedContentsResponse {
 
     public BatchEmbedContentsResponse(
             @JsonProperty("embeddings") List<Embedding> embeddings) {
+        super();
         this.embeddings = embeddings;
     }
 }

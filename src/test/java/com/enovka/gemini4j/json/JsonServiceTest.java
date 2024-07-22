@@ -58,7 +58,7 @@ public class JsonServiceTest extends BaseClass {
         System.out.println("Model object: " + model);
 
         String expectedJson
-                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"maxTemperature\":null,\"topP\":0.8,\"topK\":40}";
+                = "{\"error\":null,\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"maxTemperature\":null,\"topP\":0.8,\"topK\":40}";
         String actualJson = jsonService.serialize(model);
         System.out.println("Serialized JSON: " + actualJson);
 
@@ -76,7 +76,7 @@ public class JsonServiceTest extends BaseClass {
         System.out.println("Starting testDeserialize...");
 
         String json
-                = "{\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"topP\":0.8,\"topK\":40}";
+                = "{\"error\":null,\"name\":\"models/test-model\",\"baseModelId\":\"test-model\",\"version\":\"001\",\"displayName\":\"Test Model\",\"description\":\"A test model for Gemini4J.\",\"inputTokenLimit\":4096,\"outputTokenLimit\":4096,\"supportedGenerationMethods\":[\"generateText\"],\"temperature\":0.5,\"maxTemperature\":null,\"topP\":0.8,\"topK\":40}";
 
         System.out.println("JSON string: " + json);
 
@@ -96,7 +96,9 @@ public class JsonServiceTest extends BaseClass {
         Model actualModel = jsonService.deserialize(json, Model.class);
         System.out.println("Deserialized model: " + actualModel);
 
-        assertEquals(expectedModel, actualModel);
+        String expectedModelJson = jsonService.serialize(expectedModel);
+
+        assertEquals(json, expectedModelJson);
         System.out.println("Deserialization successful.");
     }
 

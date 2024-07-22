@@ -1,6 +1,5 @@
 package com.enovka.gemini4j.resource.impl;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
@@ -9,6 +8,7 @@ import com.enovka.gemini4j.domain.response.EmbedContentResponse;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.resource.builder.BatchEmbedContentsRequestBuilder;
 import com.enovka.gemini4j.resource.builder.EmbedContentRequestBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.AbstractResource;
 import com.enovka.gemini4j.resource.spec.EmbedResource;
 
@@ -57,7 +57,7 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
      */
     @Override
     public EmbedContentResponse embedContent(EmbedContentRequest request)
-            throws GeminiApiException {
+            throws ResourceException {
         String endpoint = String.format(EMBED_CONTENT_ENDPOINT,
                 geminiClient.getModel());
         return executePostRequest(endpoint, request,
@@ -70,7 +70,7 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
     @Override
     public BatchEmbedContentsResponse batchEmbedContent(
             BatchEmbedContentsRequest request)
-            throws GeminiApiException {
+            throws ResourceException {
         String endpoint = String.format(BATCH_EMBED_CONTENTS_ENDPOINT,
                 geminiClient.getModel());
         return executePostRequest(endpoint, request,

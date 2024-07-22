@@ -1,14 +1,13 @@
 package com.enovka.gemini4j.resource.spec;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.enovka.gemini4j.domain.response.BatchEmbedContentsResponse;
 import com.enovka.gemini4j.domain.response.EmbedContentResponse;
-import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.BatchEmbedContentsRequestBuilder;
 import com.enovka.gemini4j.resource.builder.EmbedContentRequestBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 
 import java.util.List;
 
@@ -36,12 +35,12 @@ public interface EmbedResource {
      * embed and other parameters.
      * @return An {@link EmbedContentResponse} containing the generated
      * embedding.
-     * @throws GeminiApiException If an error occurs during the embedding
+     * @throws ResourceException If an error occurs during the embedding
      * generation process.
-     * @throws JsonException If an error occurs during JSON processing.
+     * @since 0.1.0
      */
     EmbedContentResponse embedContent(EmbedContentRequest request)
-            throws GeminiApiException, JsonException;
+            throws ResourceException;
 
     /**
      * Generates embeddings for multiple contents in a batch request.
@@ -50,13 +49,13 @@ public interface EmbedResource {
      * {@link EmbedContentRequest} objects.
      * @return A {@link BatchEmbedContentsResponse} containing a list of
      * generated embeddings.
-     * @throws GeminiApiException If an error occurs during the batch embedding
+     * @throws ResourceException If an error occurs during the batch embedding
      * generation process.
-     * @throws JsonException If an error occurs during JSON processing.
+     * @since 0.1.0
      */
     BatchEmbedContentsResponse batchEmbedContent(
             BatchEmbedContentsRequest request)
-            throws GeminiApiException, JsonException;
+            throws ResourceException;
 
     /**
      * Creates a new {@link EmbedContentRequestBuilder} instance to build an

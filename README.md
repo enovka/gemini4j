@@ -44,91 +44,231 @@ questions.
   models, and more. This allows developers to access a wide range of Gemini's
   capabilities through a unified and consistent API.
 
-**Example Usage:**
+**Library in Active Development:**
+
+Please note that Gemini4J is in active development and is constantly evolving to
+incorporate new features and improvements as they become available in the Google
+Gemini API. While some aspects of the Gemini API documentation are still under
+development, we are committed to providing comprehensive documentation and
+examples for using Gemini4J. As of July 22, 2024, we have observed significant
+enhancements in the Google Gemini API documentation, and we are actively working
+on updating Gemini4J to reflect these changes and introduce new functionalities.
+
+**Example Usage with Advanced Run Settings:**
+
+This example demonstrates how to use Gemini4J to configure various run settings,
+mirroring the options available in Google AI Studio:
 
 ```java
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.domain.ListModel;
-import com.enovka.gemini4j.domain.response.GenerateContentResponse;
+import com.enovka.gemini4j.domain.GenerationConfig;
+import com.enovka.gemini4j.domain.response.GeminiResult;
+import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
+import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
+import com.enovka.gemini4j.domain.type.ResponseMimeType;
+import com.enovka.gemini4j.resource.builder.GenerationResourceBuilder;
 import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
-import com.enovka.gemini4j.resource.spec.ModelResource;
 
-public class SimpleExample {
+import java.util.Collections;
 
-    public static void main(String[] args) {
-        // Replace with your actual API key
-        String apiKey = "API-KEY";
+/**
+ * Example class demonstrating the usage of the Gemini4j library with advanced
+ * run settings, mirroring the options available in Google AI Studio.
+ *
+ * @author Everson Novka <enovka@gmail.com>
+ * @since 0.1.0
+ */
+public class GeminiRunSettingsExample {
 
-        // Create a GeminiClient
-        GeminiClient client = GeminiClientBuilder.builder()
-                .withApiKey(apiKey)
-                .withModel(
-                        "gemini-1.5-flash-001") // Set the desired Gemini model
+    /**
+     * Main method to execute the example.
+     *
+     * @param args Command line arguments (not used).
+     * @throws ResourceException If an error occurs during the Gemini API call.
+     */
+    public static void main(String[] args) throws ResourceException {
+        GeminiRunSettingsExample example = new GeminiRunSettingsExample();
+        example.runGeminiWithSettings(
+                "You are a helpful and informative AI assistant.",
+                "What is the capital of France?",
+                "gemini-1.5-flash-001",
+                0.7,
+                "###",
+                0.8
+        );
+    }
+
+    /**
+     * Executes a Gemini generation request using the provided run settings.
+     * This method showcases how to configure various parameters like system
+     * instructions, user input, model selection, temperature, stop sequences,
+     * top-p value, and safety settings, similar to the options available in
+     * Google AI Studio.
+     *
+     * @param systemInstructions The system instructions to guide the model's
+     * behavior. These instructions provide high-level guidance to the model,
+     * influencing its personality and the type of responses it generates. For
+     * example, "You are a helpful and informative AI assistant."
+     * @param userInput The user's input or prompt that initiates the
+     * generation process. This is the core input that the model will use to
+     * generate a response.
+     * @param model The name of the Gemini model to use. Each Gemini model has
+     * different capabilities and characteristics, so selecting the appropriate
+     * model is crucial for achieving the desired results.
+     * @param temperature The temperature value to control the randomness of the
+     * output. This value ranges from 0.0 to 2.0, with higher values leading to
+     * more creative and unpredictable outputs, while lower values result in
+     * more deterministic and focused responses.
+     * @param stopSequence The stop sequence to halt the generation process.
+     * This is a specific sequence of characters that, when encountered, will
+     * signal the model to stop generating further text. This can be useful for
+     * controlling the length or structure of the generated output.
+     * @param topP The top-p value for nucleus sampling. This parameter
+     * influences the diversity of the generated text by controlling the
+     * probability distribution of tokens considered during generation. A higher
+     * top-p value (closer to 1.0) includes a wider range of tokens, potentially
+     * leading to more diverse and creative outputs.
+     * @throws ResourceException If an error occurs during the generation
+     * process. This exception encapsulates any errors that might occur while
+     * interacting with the Gemini API, such as network issues, invalid
+     * requests, or server errors.
+     */
+    public void runGeminiWithSettings(String systemInstructions,
+                                      String userInput, String model,
+                                      double temperature,
+                                      String stopSequence, double topP)
+            throws ResourceException {
+
+        // 1. Create a GeminiClient instance using the builder pattern.
+        // The API key is retrieved from the environment variable "GEMINI_API_KEY".
+        // The selected model is set for this client instance.
+        GeminiClient geminiClient = GeminiClientBuilder.builder()
+                .withApiKey(System.getenv("GEMINI_API_KEY"))
+                .withModel(model)
                 .build();
 
-        // Create a GenerationResource
-        GenerationResource generationResource = ResourceBuilder.builder(client)
-                .buildGenerationResource();
+        // 2. Build the GenerationResource using the ResourceBuilder, providing the
+        // configured GeminiClient. This resource is responsible for handling
+        // content generation requests.
+        GenerationResource generationResource = ResourceBuilder.builder(
+                geminiClient).buildGenerationResource();
 
-        // Example 1: Simple text generation with system instructions
-        GenerateContentRequest request1 = GenerateContentRequestBuilder.builder(
-                        generationResource.getGeminiClient())
-                .withUserInput(
-                        "Write a short story about a cat who goes on an adventure.") // User input prompt
-                .withSystemInstructions(
-                        "Make it a humorous story with a happy ending.") // System-level instructions for the model
-                .withGenerationConfig()
-                .withTemperature(
-                        0.7) // Controls the randomness of the output (higher = more random)
-                .withMaxOutputTokens(
-                        200) // Limits the maximum number of tokens in the generated response
-                .and()
-                .build();
+        // 3. Construct the GenerateContentRequest using the GenerationResourceBuilder.
+        // This builder provides a fluent API for configuring all the parameters
+        // of the generation request.
+        GeminiResult result = generationResource.generateContent(
+                GenerationResourceBuilder.builder(geminiClient)
+                        // 3.1 Set the user input for the generation request.
+                        .withUserInput(userInput)
+                        // 3.2 Set the system instructions to guide the model's behavior.
+                        .withSystemInstruction(systemInstructions)
+                        // 3.3 Configure the generation parameters using the GenerationConfig builder.
+                        .withGenerationConfig(GenerationConfig.builder()
+                                // 3.3.1 Set the temperature value for controlling randomness.
+                                .withTemperature(temperature)
+                                // 3.3.2 Set the top-p value for nucleus sampling.
+                                .withTopP(topP)
+                                // 3.3.3 Set the response MIME type to plain text.
+                                .withResponseMimeType(
+                                        ResponseMimeType.TEXT_PLAIN.getMimeType())
+                                // 3.3.4 Add a stop sequence to halt generation.
+                                .withStopSequences(
+                                        Collections.singletonList(stopSequence))
+                                .build())
+                        // 3.4 Configure safety settings for various harm categories.
+                        // Each safety setting consists of a category and a threshold.
+                        .withSafetySetting()
+                        // 3.4.1 Set the category to Harassment, which filters content that is abusive,
+                        // threatening, or intended to harass or bully individuals or groups.
+                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_HARASSMENT)
+                            // 3.4.2 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, which means that
+                            // content with a medium or high probability of being harmful in this category
+                            // will be blocked.
+                            .withThreshold(
+                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                        // 3.4.3 Chain the next safety setting using 'and()'.
+                        .and()
+                        .withSafetySetting()
+                            // 3.4.4 Set the category to Hate Speech, which blocks content that expresses
+                            // hatred, prejudice, or discrimination based on protected characteristics
+                            // like race, religion, or sexual orientation.
+                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_HATE_SPEECH)
+                            // 3.4.5 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for this category as well.
+                            .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                        // 3.4.6 Chain the next safety setting using 'and()'.
+                        .and()
+                        // 3.4.7 Configure safety setting for Sexually Explicit content.
+                        .withSafetySetting()
+                        // 3.4.8 Set the category to Sexually Explicit, which filters content that is
+                        // sexually suggestive, explicit, or inappropriate for general audiences.
+                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_SEXUALLY_EXPLICIT)
+                            // 3.4.9 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, blocking content with a medium
+                            // or high probability of being sexually explicit.
+                            .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                        // 3.4.10 Chain the next safety setting using 'and()'.
+                        .and()
+                        // 3.4.11 Configure safety setting for Dangerous Content.
+                        .withSafetySetting()
+                            // 3.4.12 Set the category to Dangerous Content, which blocks content that promotes
+                            // violence, illegal activities, self-harm, or other dangerous behavior.
+                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_DANGEROUS_CONTENT)
+                            // 3.4.13 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for dangerous content.
+                            .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                        // 3.4.14 End the safety settings chain using 'and()'.
+                        .and()
+                        // 3.5 Finally, build the GenerateContentRequest object.
+                        .build()
+        );
 
-        // Example 2: Text generation with safety settings
-        GenerateContentRequest request2 = GenerateContentRequestBuilder.builder(
-                        generationResource.getGeminiClient())
-                .withUserInput("Tell me a joke.") // User input prompt
-                .withSafetySetting()
-                .withCategory(HarmCategoryEnum.HARM_CATEGORY_DANGEROUS_CONTENT)
-                .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
-                .and()
-                .build();
-
-        // Example 3: Text generation with multiple candidates
-        GenerateContentRequest request3 = GenerateContentRequestBuilder.builder(
-                        generationResource.getGeminiClient())
-                .withUserInput(
-                        "Give me three ideas for a birthday party.") // User input prompt
-                .withGenerationConfig()
-                .withCandidateCount(
-                        1) // Request 1 different response candidates
-                .and()
-                .build();
-
-        // Execute the requests and print the generated text
-        try {
-            GeminiResult result1 = generationResource.generateContent(request1);
-            System.out.println("Example 1 - Generated Text: "
-                    + result1.getGeneratedText());
-
-            GeminiResult result2 = generationResource.generateContent(request2);
-            System.out.println("Example 2 - Generated Text: "
-                    + result2.getGeneratedText());
-
-            GeminiResult result3 = generationResource.generateContent(request3);
-            System.out.println("Example 3 - Generated Text: "
-                    + result3.getGeneratedText());
-
-        } catch (GeminiApiException e) {
-            e.printStackTrace();
-        }
+        // 4. Print the generated text from the GeminiResult.
+        System.out.println("Generated Text: " + result.getGeneratedText());
     }
 }
 ```
+## Installation
+
+1. **Add the Gemini4J dependency to your project's `pom.xml` file:**
+
+   ```xml
+   <dependency>
+     <groupId>com.enovka</groupId>
+     <artifactId>gemini4j</artifactId>
+     <version>0.1.0</version>
+   </dependency>
+   ```
+
+2. **Configure Maven to use GitHub Packages:**
+
+    * **Create a `settings.xml` file:** If you don't have one, create a `settings.xml` file in the `~/.m2` directory.
+    * **Add the GitHub Packages repository to your `settings.xml`:**
+
+      ```xml
+      <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                            http://maven.apache.org/xsd/settings-1.0.0.xsd">
+ 
+        <repositories>
+          <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+          </repository>
+          <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/enovka/gemini4j</url>
+            <snapshots>
+              <enabled>true</enabled>
+            </snapshots>
+          </repository>
+        </repositories>
+      </settings>
+      ```
+**You can find the Gemini4J library on GitHub Packages:** https://github.com/enovka/gemini4j/packages/2210376
+
+**Note:** If you're using a build system other than Maven, you can find the Gemini4J library on GitHub Packages and follow the instructions for your specific build system.
 
 ## Gemini4J Roadmap: Version 1.0.0
 
@@ -138,18 +278,18 @@ with the Google Gemini API.
 
 ### Phase 1: Core Functionality and Essential Resources
 
-* **Complete `GenerationResource`:**
+* ~~Complete `GenerationResource`:**
     * ~~Implement all remaining methods of the `GenerationResource` interface,
       providing full coverage of the content generation capabilities offered by
       the Gemini API.~~
-    * **Crucial Feature:** Implement **incremental conversation support**,
+    * ~~**Crucial Feature:** Implement **incremental conversation support**,
       enabling developers to build conversational experiences by maintaining
-      context across multiple interactions with the API.
-* **Enhance `ModelResource`:**
+      context across multiple interactions with the API.~~
+* ~~Enhance `ModelResource`:**
     * ~~Add the `getModel()` method to the `ModelResource` interface, allowing
       developers to retrieve detailed information about specific Gemini
       models.~~
-* **Implement `EmbedResource`:**
+* ~~Implement `EmbedResource`:**
     * ~~Create a new `EmbedResource` interface and its corresponding
       implementation to expose the embedding functionalities of the Gemini API.
       This will allow developers to generate embeddings for text and content,

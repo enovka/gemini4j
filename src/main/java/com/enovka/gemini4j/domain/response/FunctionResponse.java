@@ -1,10 +1,7 @@
 package com.enovka.gemini4j.domain.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -15,12 +12,13 @@ import lombok.experimental.Accessors;
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(setterPrefix = "with", toBuilder = true)
-public class FunctionResponse {
+public class FunctionResponse extends AbstractGeminiResponse {
 
     /**
      * Required. The name of the function to call. It Must be a-z, A-Z, 0-9, or

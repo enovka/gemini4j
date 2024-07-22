@@ -6,7 +6,7 @@
 
     <groupId>com.enovka</groupId>
     <artifactId>gemini4j</artifactId>
-    <version>0.0.3</version>
+    <version>0.1.0</version>
 
     <name>Gemini4J</name>
     <description>A powerful and easy-to-use Java library that simplifies
@@ -33,14 +33,9 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>GitHub Apache Maven Packages</name>
+            <name>GitHub enovka Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/enovka/gemini4j</url>
         </repository>
-        <snapshotRepository>
-            <id>github-snapshots</id>
-            <name>GitHub Apache Maven Snapshot Packages</name>
-            <url>https://maven.pkg.github.com/enovka/gemini4j</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <properties>
@@ -65,9 +60,12 @@
         <mockito.version>5.12.0</mockito.version>
         <rest.assured.version>5.5.0</rest.assured.version>
         <jsonassert.version>1.5.3</jsonassert.version>
-        <wiremock.version>3.8.0</wiremock.version>
+        <wiremock.version>3.9.0</wiremock.version>
         <maven.dependency.plugin.version>3.7.1</maven.dependency.plugin.version>
         <maven.failsafe.plugin>3.3.1</maven.failsafe.plugin>
+        <maven.gpg.plugin.version>3.2.4</maven.gpg.plugin.version>
+        <maven.wrapper.plugin.version>3.3.2</maven.wrapper.plugin.version>
+        <maven.surefire.plugin.version>3.3.1</maven.surefire.plugin.version>
     </properties>
 
     <dependencies>
@@ -83,7 +81,6 @@
             <artifactId>maven-dependency-plugin</artifactId>
             <version>${maven.dependency.plugin.version}</version>
         </dependency>
-
         <!-- Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -189,13 +186,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>${maven.surefire.plugin.version}</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-wrapper-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>${maven.wrapper.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
