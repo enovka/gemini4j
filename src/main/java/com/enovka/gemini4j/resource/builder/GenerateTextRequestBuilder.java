@@ -1,12 +1,10 @@
 package com.enovka.gemini4j.resource.builder;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.domain.GenerationConfig;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
-import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.spec.AbstractRequestBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
 
 import java.util.ArrayList;
@@ -166,11 +164,11 @@ public class GenerateTextRequestBuilder extends
      * response.
      *
      * @return The {@link GeminiResult} from the Gemini API.
-     * @throws GeminiApiException If an error occurs during the API request.
-     * @throws JsonException If an error occurs during JSON processing.
+     * @throws ResourceException If an error occurs during the API request. as a
+     * network error or JSON processing error.
      */
     public GeminiResult execute()
-            throws GeminiApiException, JsonException, HttpException {
+            throws ResourceException {
         return generationResource.generateContent(build());
     }
 }

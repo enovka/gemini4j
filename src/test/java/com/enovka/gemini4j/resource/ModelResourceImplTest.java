@@ -3,13 +3,18 @@ package com.enovka.gemini4j.resource;
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.ListModel;
-import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
-import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.domain.Model;
+import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.impl.ModelResourceImpl;
+import com.enovka.gemini4j.resource.spec.ModelResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.List;
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for {@link ModelResourceImpl}.
@@ -19,31 +24,55 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 public class ModelResourceImplTest {
 
-    private ModelResourceImpl modelResource;
-    private GeminiClient geminiClient;
-    private JsonService jsonService;
+    private ModelResource modelResource;
 
     @BeforeEach
     public void setUp() {
-        geminiClient = GeminiClientBuilder.builder()
+        GeminiClient geminiClient = GeminiClientBuilder.builder()
                 .withApiKey(System.getenv("GEMINI_API_KEY"))
                 .build();
-        jsonService = JsonServiceBuilder.builder().build().build();
-        modelResource = new ModelResourceImpl(geminiClient, jsonService);
+        modelResource = ResourceBuilder.builder(geminiClient)
+                .buildModelResource();
     }
 
     /**
-     * Tests the {@link ModelResourceImpl#listModels()} method.
+     * Tests the {@link ModelResourceImpl#listModels()} method in isolation.
+     *
+     * @throws ResourceException If an error occurs while fetching the models.
      */
     @Test
-    public void testListModels() {
-        try {
-            ListModel models = modelResource.listModels();
-            assertFalse(models.getModels().isEmpty(),
-                    "Model list should not be empty.");
-        } catch (Exception e) {
-            // Handle exceptions appropriately
-            System.err.println("Error listing models: " + e.getMessage());
-        }
+    public void testGetModels() throws ResourceException {
+        ListModel models = modelResource.listModels();
+        assertFalse(models.getModels().isEmpty(),
+                "Model list should not be empty.");
+    }
+
+    /**
+     * Tests the {@link ModelResourceImpl#getModel(String)} method by fetching a
+     * random model from the list returned by
+     * {@link ModelResourceImpl#listModels()}.
+     *
+     * @throws ResourceException If an error occurs while fetching the models or
+     * the specific model.
+     */
+    @Test
+    public void testGetModel() throws ResourceException {
+        ListModel listModel = modelResource.listModels();
+        assertFalse(listModel.getModels().isEmpty(),
+                "Model list should not be empty.");
+
+        // Get a random model from the list
+        Random random = new Random();
+        List<Model> models = listModel.getModels();
+        Model randomModel = models.get(random.nextInt(models.size()));
+
+        // Fetch the model using its name
+        Model fetchedModel = modelResource.getModel(
+                randomModel.getName().replace("models/", ""));
+
+        // Assertions
+        assertNotNull(fetchedModel, "Fetched model should not be null.");
+        assertEquals(randomModel.getName(), fetchedModel.getName(),
+                "Model names should match.");
     }
 }

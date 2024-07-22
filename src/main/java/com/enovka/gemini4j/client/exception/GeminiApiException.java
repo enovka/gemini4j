@@ -1,53 +1,55 @@
 package com.enovka.gemini4j.client.exception;
 
-import lombok.Getter;
-
 /**
  * Base class for all exceptions thrown by the Gemini4J library.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since &lt;enovka@gmail.com&gt;1-beta
+ * @since 0.0.1-beta
  */
-@Getter
 public class GeminiApiException extends Exception {
 
     /**
-     * Returns the HTTP error code returned by the Gemini API.
+     * The error type for this exception.
+     *
+     * @since 0.1.0
      */
-    private final int errorCode;
-    /**
-     * Returns the error message returned by the Gemini API.
-     */
-    private final String errorMessage;
+    private final GeminiApiError error;
 
     /**
-     * Constructs a new GeminiApiException with the specified error code and
+     * Constructs a new GeminiApiException with the specified error type and
      * message.
      *
-     * @param errorCode The HTTP error code returned by the Gemini API.
-     * @param errorMessage The error message returned by the Gemini API.
-     * @see <a href="https://ai.google.dev/api/rest/v1beta/models">Gemini API
-     * Documentation</a>
+     * @param error The error type for this exception.
+     * @param message The error message.
+     * @since 0.1.0
      */
-    public GeminiApiException(int errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
+    public GeminiApiException(GeminiApiError error, String message) {
+        super(message);
+        this.error = error;
     }
 
     /**
-     * Constructs a new GeminiApiException with the specified error code and
-     * message.
+     * Constructs a new GeminiApiException with the specified error type,
+     * message, and cause.
      *
-     * @param errorCode The HTTP error code returned by the Gemini API.
-     * @param errorMessage The error message returned by the Gemini API.
-     * @param cause The original exception that caused this exception.
-     * @see <a href="https://ai.google.dev/api/rest/v1beta/models">Gemini API
-     * Documentation</a>
+     * @param error The error type for this exception.
+     * @param message The error message.
+     * @param cause The cause of the exception.
+     * @since 0.1.0
      */
-    public GeminiApiException(int errorCode, String errorMessage,
+    public GeminiApiException(GeminiApiError error, String message,
                               Throwable cause) {
-        super(errorMessage, cause);
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
+        super(message, cause);
+        this.error = error;
+    }
+
+    /**
+     * Returns the error type for this exception.
+     *
+     * @return The error type.
+     * @since 0.1.0
+     */
+    public GeminiApiError getError() {
+        return error;
     }
 }

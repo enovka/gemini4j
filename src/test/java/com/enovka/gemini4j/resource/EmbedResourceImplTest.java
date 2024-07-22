@@ -4,12 +4,14 @@ import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.enovka.gemini4j.domain.response.EmbedContentResponse;
-import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
-import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.impl.EmbedResourceImpl;
+import com.enovka.gemini4j.resource.spec.EmbedResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -20,36 +22,44 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class EmbedResourceImplTest {
 
-    private EmbedResourceImpl embedResource;
-    private GeminiClient geminiClient;
-    private JsonService jsonService;
+    private EmbedResource embedResource;
 
     @BeforeEach
     public void setUp() {
-        geminiClient = GeminiClientBuilder.builder()
+        GeminiClient geminiClient = GeminiClientBuilder.builder()
                 .withApiKey(System.getenv("GEMINI_API_KEY"))
-                .withModel("models/text-embedding-004")
+                .withModel("text-embedding-004")
                 .build();
-        jsonService = JsonServiceBuilder.builder().build().build();
-        embedResource = new EmbedResourceImpl(geminiClient, jsonService);
+
+        embedResource = ResourceBuilder.builder(geminiClient)
+                .buildEmbedResource();
     }
 
     /**
      * Tests the {@link EmbedResourceImpl#embedContent(EmbedContentRequest)}
-     * method.
+     * method with different text inputs.
+     *
+     * @throws ResourceException If an error occurs during the embedding
+     * generation process.
      */
     @Test
-    public void testEmbedContent() {
-        EmbedContentRequest request = embedResource.embedContentBuilder(
-                        "This is a test sentence.")
-                .build();
-        try {
-            EmbedContentResponse response = embedResource.embedContent(request);
+    public void testEmbedContent()
+            throws ResourceException {
+        String[] testTexts = {
+                "This is a test sentence.",
+                "Another sentence for embedding.",
+                "Short text.",
+                "Long text with more words to embed."
+        };
+
+        for (String text : testTexts) {
+            EmbedContentResponse response = embedResource.embedContent(
+                    embedResource.embedContentBuilder(text)
+                            .build());
             assertNotNull(response.getEmbedding(),
-                    "Embedding should not be null.");
-        } catch (Exception e) {
-            // Handle exceptions appropriately
-            System.err.println("Error embedding content: " + e.getMessage());
+                    "Embedding should not be null for text: " + text);
+            assertFalse(response.getEmbedding().getValues().isEmpty(),
+                    "Embedding values should not be empty for text: " + text);
         }
     }
 }

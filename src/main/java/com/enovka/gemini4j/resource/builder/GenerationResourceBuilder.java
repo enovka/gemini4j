@@ -143,12 +143,14 @@ public class GenerationResourceBuilder extends
         if (userInput == null) {
             throw new IllegalArgumentException("User input is required.");
         }
-
-        Content systemInstructionContent = Content.builder()
-                .withParts(Collections.singletonList(
-                        Part.builder().withText(systemInstruction).build()))
-                .withRole("system")
-                .build();
+        Content systemInstructionContent = null;
+        if (systemInstruction != null && !systemInstruction.isEmpty()) {
+            systemInstructionContent = Content.builder()
+                    .withParts(Collections.singletonList(
+                            Part.builder().withText(systemInstruction).build()))
+                    .withRole("system")
+                    .build();
+        }
 
         Content userInputContent = Content.builder()
                 .withParts(Collections.singletonList(
@@ -163,8 +165,9 @@ public class GenerationResourceBuilder extends
         return GenerateContentRequest.builder()
                 .withModel(geminiClient.getModel())
                 .withContents(
-                        List.of(userInputContent, systemInstructionContent))
+                        List.of(userInputContent))
                 .withTools(List.of(tool))
+                .withSystemInstruction(systemInstructionContent)
                 .withToolConfig(toolConfig)
                 .withSafetySettings(safetySettings)
                 .withGenerationConfig(generationConfig)

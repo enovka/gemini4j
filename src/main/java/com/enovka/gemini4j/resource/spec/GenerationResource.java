@@ -1,13 +1,11 @@
 package com.enovka.gemini4j.resource.spec;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
-import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
-import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.resource.builder.GenerateContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.GenerateTextRequestBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 
 /**
  * Interface defining the contract for interacting with the Generation resource
@@ -33,11 +31,11 @@ public interface GenerationResource extends MultiTurnConversationAware {
      * generation parameters.
      * @return A {@link GeminiResult} containing the generated content and
      * shortcuts.
-     * @throws GeminiApiException If an error occurs during content generation.
-     * @since 0.0.2
+     * @throws ResourceException If an error occurs during content generation.
+     * @since 0.1.0
      */
     GeminiResult generateContent(GenerateContentRequest request)
-            throws GeminiApiException, JsonException, HttpException;
+            throws ResourceException;
 
     /**
      * Creates a new {@link GenerateTextRequestBuilder} instance to build a

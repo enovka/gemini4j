@@ -1,11 +1,10 @@
 package com.enovka.gemini4j.resource.impl;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
-import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.AbstractResource;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 
@@ -40,7 +39,7 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
      * {@inheritDoc}
      */
     @Override
-    public ListModel listModels() throws GeminiApiException {
+    public ListModel listModels() throws ResourceException {
         return executeGetRequest(LIST_MODELS_ENDPOINT, ListModel.class);
     }
 
@@ -50,8 +49,7 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
      * @since 0.0.2
      */
     @Override
-    public Model getModel(String modelName)
-            throws GeminiApiException, JsonException {
+    public Model getModel(String modelName) throws ResourceException {
         String endpoint = String.format(GET_MODEL_ENDPOINT, modelName);
         return executeGetRequest(endpoint, Model.class);
     }

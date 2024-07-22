@@ -5,6 +5,7 @@ import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -14,11 +15,12 @@ import lombok.experimental.Accessors;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
 @Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
-public class EmbedContentResponse {
+public class EmbedContentResponse extends AbstractGeminiResponse {
 
     /**
      * Output only. The embedding generated from the input content.

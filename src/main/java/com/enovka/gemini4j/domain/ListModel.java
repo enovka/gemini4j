@@ -1,10 +1,8 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.response.AbstractGeminiResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -14,12 +12,13 @@ import java.util.List;
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
 @Builder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListModel {
+public class ListModel extends AbstractGeminiResponse {
 
     /**
      * The returned Models.

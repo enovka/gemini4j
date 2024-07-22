@@ -5,6 +5,7 @@ import com.enovka.gemini4j.domain.InputFeedback;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -12,10 +13,11 @@ import lombok.experimental.Accessors;
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
 @Builder(setterPrefix = "with", toBuilder = true)
-public class GenerateAnswerResponse {
+public class GenerateAnswerResponse extends AbstractGeminiResponse {
 
     /**
      * Candidate answer from the model.
