@@ -15,7 +15,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 11
@@ -24,8 +23,14 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-      - name: Start WireMock
-        run: java -jar wiremock-standalone-3.8.0.jar --port 8080 &
+      - name: Set up environment variables
+        run: echo "env=ci" >> $GITHUB_ENV
+      - name: Set up environment variables
+        run: echo "GPG_KEY_NAME=${{ secrets.GPG_KEY_NAME }}" >> $GITHUB_ENV
+      - name: Set up environment variables
+        run: echo "GPG_PASSPHRASE=${{ secrets.GPG_PASSPHRASE }}" >> $GITHUB_ENV
+      - name: Set up environment variables
+        run: echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> $GITHUB_ENV
       - name: Build with Maven
         run: mvn -B package --file ${{ env.POM_FILE }}
       - name: Update dependency graph

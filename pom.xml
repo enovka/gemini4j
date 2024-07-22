@@ -187,6 +187,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <GEMINI_API_KEY>${env.GEMINI_API_KEY}</GEMINI_API_KEY>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -258,4 +263,21 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>ci</value>
+                </property>
+            </activation>
+            <properties>
+                <gpg.keyName>${env.GPG_KEY_NAME}</gpg.keyName>
+                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+                <GEMINI_API_KEY>${env.GEMINI_API_KEY}</GEMINI_API_KEY>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>
