@@ -2,7 +2,6 @@ package com.enovka.gemini4j.infrastructure.http.impl;
 
 import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.http.spec.AbstractHttpClient;
-import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -17,12 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default implementation of the {@link HttpClient} interface using Apache
- * HttpClient. This class provides basic HTTP request functionalities such as
- * GET and POST.
- *
- * @author Everson Novka
- * @since 0.0.1
+ * {@inheritDoc}
  */
 public class DefaultHttpClient extends AbstractHttpClient {
 
@@ -51,19 +45,13 @@ public class DefaultHttpClient extends AbstractHttpClient {
     }
 
     /**
-     * Executes a GET request to the specified URL with the provided headers.
-     *
-     * @param url The URL to send the GET request to.
-     * @param headers The headers to include in the request.
-     * @return An {@link HttpResponse} object containing the response status
-     * code, headers, and body.
-     * @throws HttpException If an error occurs during the request execution.
+     * {@inheritDoc}
      */
     @Override
-    public HttpResponse get(String url, Map<String, String> headers)
+    protected HttpResponse executeGetRequest(String url,
+                                              Map<String, String> headers)
             throws HttpException {
         HttpGet request;
-
         try {
             request = new HttpGet(url);
             addHeadersToRequest(request, headers);
@@ -87,19 +75,12 @@ public class DefaultHttpClient extends AbstractHttpClient {
     }
 
     /**
-     * Executes a POST request to the specified URL with the provided body and
-     * headers.
-     *
-     * @param url The URL to send the POST request to.
-     * @param body The body to include in the request.
-     * @param headers The headers to include in the request.
-     * @return An {@link HttpResponse} object containing the response status
-     * code, headers, and body.
-     * @throws HttpException If an error occurs during the request execution.
+     * {@inheritDoc}
      */
     @Override
-    public HttpResponse post(String url, String body,
-                             Map<String, String> headers) throws HttpException {
+    protected HttpResponse executePostRequest(String url, String body,
+                                               Map<String, String> headers)
+            throws HttpException {
         HttpPost request;
         try {
             request = new HttpPost(url);
