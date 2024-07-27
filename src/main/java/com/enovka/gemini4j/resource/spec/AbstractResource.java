@@ -115,7 +115,7 @@ public abstract class AbstractResource<T> extends BaseClass {
      * @param endpoint The API endpoint path.
      * @return The complete endpoint URL.
      */
-    private String buildEndpointUrl(String endpoint) {
+    protected String buildEndpointUrl(String endpoint) {
         return geminiClient.getBaseUrl() + endpoint + "?key="
                 + geminiClient.getApiKey();
     }
@@ -127,7 +127,7 @@ public abstract class AbstractResource<T> extends BaseClass {
      * @return The JSON string representation of the request object.
      * @throws JsonException If an error occurs during serialization.
      */
-    private <S> String serializeRequest(S requestObject)
+    protected <S> String serializeRequest(S requestObject)
             throws JsonException {
         try {
             return jsonService.serialize(requestObject);
@@ -192,9 +192,14 @@ public abstract class AbstractResource<T> extends BaseClass {
      * @throws JsonException If an error occurs during deserialization.
      * @since 0.1.0
      */
-    private <R extends AbstractGeminiResponse> R deserializeResponse(
+    protected <R extends AbstractGeminiResponse> R deserializeResponse(
             HttpResponse response, Class<R> type)
             throws GeminiApiException, JsonException {
+        if (response.getBody() == null || response.getBody().isEmpty()
+                || response.getBody().trim().length() <= 3) {
+            return null;
+        }
+
         R deserializedResponse = jsonService.deserialize(response.getBody(),
                 type);
         if (deserializedResponse.getError() != null) {

@@ -5,6 +5,7 @@ import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,7 +88,8 @@ public abstract class AbstractMultiTurnConversationResource<T>
                     = multiTurnConversation.getLatestContext(
                     getModelTool().getModel(geminiClient.getModel())
                             .getInputTokenLimit());
-            request.getContents().addAll(0, latestContext);
+            request.setContents(new ArrayList<>(request.getContents()));
+            request.getContents().addAll(0, new ArrayList<>(latestContext));
             multiTurnConversation.addContent(request.getContents()
                     .get(request.getContents().size() - 1));
         }

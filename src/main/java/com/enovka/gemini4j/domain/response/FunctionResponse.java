@@ -1,8 +1,10 @@
 package com.enovka.gemini4j.domain.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 /**
  * The result output from a FunctionCall that contains a string representing the
@@ -15,9 +17,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder(setterPrefix = "with", toBuilder = true)
+@SuperBuilder(setterPrefix = "with")
 public class FunctionResponse extends AbstractGeminiResponse {
 
     /**

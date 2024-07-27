@@ -44,6 +44,27 @@ public abstract class AbstractHttpClient extends BaseClass
      * {@inheritDoc}
      */
     @Override
+    public HttpResponse patch(String url, String body,
+                              Map<String, String> headers)
+            throws HttpException {
+        acquireRateLimitPermit();
+        return executePatchRequest(url, body, headers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public HttpResponse delete(String url, Map<String, String> headers)
+            throws HttpException {
+        acquireRateLimitPermit();
+        return executeDeleteRequest(url, headers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
@@ -104,5 +125,32 @@ public abstract class AbstractHttpClient extends BaseClass
      */
     protected abstract HttpResponse executePostRequest(String url, String body,
                                                        Map<String, String> headers)
+            throws HttpException;
+
+    /**
+     * Executes the actual PATCH request logic. This method is called after the
+     * rate limit permit is acquired.
+     *
+     * @param url The URL to send the PATCH request to.
+     * @param body The request body.
+     * @param headers The headers to include in the request.
+     * @return An {@link HttpResponse} object containing the response.
+     * @throws HttpException If an error occurs during the request execution.
+     */
+    protected abstract HttpResponse executePatchRequest(String url, String body,
+                                                        Map<String, String> headers)
+            throws HttpException;
+
+    /**
+     * Executes the actual DELETE request logic. This method is called after the
+     * rate limit permit is acquired.
+     *
+     * @param url The URL to send the DELETE request to.
+     * @param headers The headers to include in the request.
+     * @return An {@link HttpResponse} object containing the response.
+     * @throws HttpException If an error occurs during the request execution.
+     */
+    protected abstract HttpResponse executeDeleteRequest(String url,
+                                                         Map<String, String> headers)
             throws HttpException;
 }

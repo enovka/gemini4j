@@ -3,9 +3,11 @@ package com.enovka.gemini4j.resource.builder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.resource.impl.CachedContentResourceImpl;
 import com.enovka.gemini4j.resource.impl.EmbedResourceImpl;
 import com.enovka.gemini4j.resource.impl.GenerationResourceImpl;
 import com.enovka.gemini4j.resource.impl.ModelResourceImpl;
+import com.enovka.gemini4j.resource.spec.CachedContentResource;
 import com.enovka.gemini4j.resource.spec.EmbedResource;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
 import com.enovka.gemini4j.resource.spec.ModelResource;
@@ -22,7 +24,7 @@ public class ResourceBuilder {
     private JsonService jsonService;
 
     /**
-     * Private constructor to enforce builder pattern.
+     * Private constructor to enforce a builder pattern.
      */
     private ResourceBuilder(GeminiClient geminiClient) {
         if (geminiClient == null) {
@@ -83,5 +85,16 @@ public class ResourceBuilder {
      */
     public ModelResource buildModelResource() {
         return new ModelResourceImpl(geminiClient, jsonService);
+    }
+
+    /**
+     * Creates a new {@link CachedContentResource} instance based on the builder
+     * configuration.
+     *
+     * @return A new {@link CachedContentResource} instance.
+     * @since 0.0.2
+     */
+    public CachedContentResource buildCachedContentResource() {
+        return new CachedContentResourceImpl(geminiClient, jsonService);
     }
 }

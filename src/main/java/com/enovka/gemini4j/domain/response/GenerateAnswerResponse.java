@@ -3,10 +3,10 @@ package com.enovka.gemini4j.domain.response;
 import com.enovka.gemini4j.domain.Candidate;
 import com.enovka.gemini4j.domain.InputFeedback;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Response from the model for a grounded answer.
@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
+@SuperBuilder(setterPrefix = "with")
 public class GenerateAnswerResponse extends AbstractGeminiResponse {
 
     /**

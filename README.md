@@ -228,6 +228,7 @@ public class GeminiRunSettingsExample {
     }
 }
 ```
+
 ## Installation
 
 1. **Add the Gemini4J dependency to your project's `pom.xml` file:**
@@ -242,7 +243,8 @@ public class GeminiRunSettingsExample {
 
 2. **Configure Maven to use GitHub Packages:**
 
-    * **Create a `settings.xml` file:** If you don't have one, create a `settings.xml` file in the `~/.m2` directory.
+    * **Create a `settings.xml` file:** If you don't have one, create
+      a `settings.xml` file in the `~/.m2` directory.
     * **Add the GitHub Packages repository to your `settings.xml`:**
 
       ```xml
@@ -266,9 +268,13 @@ public class GeminiRunSettingsExample {
         </repositories>
       </settings>
       ```
-**You can find the Gemini4J library on GitHub Packages:** https://github.com/enovka/gemini4j/packages/2210376
 
-**Note:** If you're using a build system other than Maven, you can find the Gemini4J library on GitHub Packages and follow the instructions for your specific build system.
+**You can find the Gemini4J library on GitHub Packages:
+** https://github.com/enovka/gemini4j/packages/2210376
+
+**Note:** If you're using a build system other than Maven, you can find the
+Gemini4J library on GitHub Packages and follow the instructions for your
+specific build system.
 
 ## Gemini4J Roadmap: Version 1.0.0
 

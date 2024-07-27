@@ -127,18 +127,18 @@ public class GenerationResourceImplTest {
         // Define the conversation turns
         expectedConversation.add(new ConversationTurn("user", "Hi there!"));
         expectedConversation.add(new ConversationTurn("model",
-                null)); // Placeholder for the model's response
+                null));
         expectedConversation.add(
                 new ConversationTurn("user", "What's your name?"));
         expectedConversation.add(new ConversationTurn("model",
-                null)); // Placeholder for the model's response
+                null));
         expectedConversation.add(
                 new ConversationTurn("user", "Tell me a fun fact."));
         expectedConversation.add(new ConversationTurn("model",
-                null)); // Placeholder for the model's response
+                null));
         expectedConversation.add(new ConversationTurn("user", "Goodbye!"));
         expectedConversation.add(new ConversationTurn("model",
-                null)); // Placeholder for the model's response
+                null));
 
         // Simulate the conversation
         for (int i = 0; i < expectedConversation.size(); i++) {

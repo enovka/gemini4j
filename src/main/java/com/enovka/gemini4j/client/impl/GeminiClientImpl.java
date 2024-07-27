@@ -1,4 +1,4 @@
-package com.enovka.gemini4j.client.imp;
+package com.enovka.gemini4j.client.impl;
 
 import com.enovka.gemini4j.client.spec.AbstractGeminiClient;
 import com.enovka.gemini4j.client.spec.GeminiClient;
@@ -11,7 +11,7 @@ import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public class GeminiClientImp extends AbstractGeminiClient {
+public class GeminiClientImpl extends AbstractGeminiClient {
 
     /**
      * Constructs a new AbstractGeminiClient with the required API key, model,
@@ -24,10 +24,10 @@ public class GeminiClientImp extends AbstractGeminiClient {
      * @param jsonService The JSON service to use for serialization and
      * deserialization.
      */
-    public GeminiClientImp(String apiKey, String model,
-                           HttpClient httpClient,
-                           String baseUrl,
-                           JsonService jsonService) {
+    public GeminiClientImpl(String apiKey, String model,
+                            HttpClient httpClient,
+                            String baseUrl,
+                            JsonService jsonService) {
         super(apiKey, model, httpClient, baseUrl, jsonService);
     }
 }

@@ -4,8 +4,10 @@ import com.enovka.gemini4j.domain.Candidate;
 import com.enovka.gemini4j.domain.PromptFeedback;
 import com.enovka.gemini4j.domain.UsageMetadata;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -26,9 +28,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder(setterPrefix = "with", toBuilder = true)
+@SuperBuilder(setterPrefix = "with")
 public class GenerateContentResponse extends AbstractGeminiResponse {
 
     /**
@@ -49,4 +49,6 @@ public class GenerateContentResponse extends AbstractGeminiResponse {
     @JsonProperty("usageMetadata")
     private UsageMetadata usageMetadata;
 
+    public GenerateContentResponse() {
+    }
 }

@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.client.builder;
 
-import com.enovka.gemini4j.client.imp.GeminiClientImp;
+import com.enovka.gemini4j.client.impl.GeminiClientImpl;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
 import com.enovka.gemini4j.infrastructure.http.factory.HttpClientType;
@@ -29,7 +29,7 @@ public class GeminiClientBuilder {
     private Duration windowDuration = Duration.ofMinutes(1); // Default value
 
     /**
-     * Private constructor to enforce builder pattern.
+     * Private constructor to enforce a builder pattern.
      */
     private GeminiClientBuilder() {
     }
@@ -144,7 +144,7 @@ public class GeminiClientBuilder {
                 .withWindowDuration(windowDuration)
                 .build().build();
 
-        return new GeminiClientImp(apiKey, model, httpClient, baseUrl,
+        return new GeminiClientImpl(apiKey, model, httpClient, baseUrl,
                 jsonService);
     }
 }

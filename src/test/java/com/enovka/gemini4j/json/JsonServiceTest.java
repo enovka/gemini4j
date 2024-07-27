@@ -42,18 +42,18 @@ public class JsonServiceTest extends BaseClass {
     public void testSerialize() throws JsonException {
         System.out.println("Starting testSerialize...");
 
-        Model model = new Model().setName("models/test-model")
-                .setBaseModelId("test-model")
-                .setVersion("001")
-                .setDisplayName("Test Model")
-                .setDescription("A test model for Gemini4J.")
-                .setInputTokenLimit(4096)
-                .setOutputTokenLimit(4096)
-                .setSupportedGenerationMethods(
+        Model model = Model.builder().withName("models/test-model")
+                .withBaseModelId("test-model")
+                .withVersion("001")
+                .withDisplayName("Test Model")
+                .withDescription("A test model for Gemini4J.")
+                .withInputTokenLimit(4096)
+                .withOutputTokenLimit(4096)
+                .withSupportedGenerationMethods(
                         Collections.singletonList("generateText"))
-                .setTemperature(0.5)
-                .setTopP(0.8)
-                .setTopK(40);
+                .withTemperature(0.5)
+                .withTopP(0.8)
+                .withTopK(40).build();
 
         System.out.println("Model object: " + model);
 
@@ -80,18 +80,18 @@ public class JsonServiceTest extends BaseClass {
 
         System.out.println("JSON string: " + json);
 
-        Model expectedModel = new Model().setName("models/test-model")
-                .setBaseModelId("test-model")
-                .setVersion("001")
-                .setDisplayName("Test Model")
-                .setDescription("A test model for Gemini4J.")
-                .setInputTokenLimit(4096)
-                .setOutputTokenLimit(4096)
-                .setSupportedGenerationMethods(
+        Model expectedModel = Model.builder().withName("models/test-model")
+                .withBaseModelId("test-model")
+                .withVersion("001")
+                .withDisplayName("Test Model")
+                .withDescription("A test model for Gemini4J.")
+                .withInputTokenLimit(4096)
+                .withOutputTokenLimit(4096)
+                .withSupportedGenerationMethods(
                         Collections.singletonList("generateText"))
-                .setTemperature(0.5)
-                .setTopP(0.8)
-                .setTopK(40);
+                .withTemperature(0.5)
+                .withTopP(0.8)
+                .withTopK(40).build();
 
         Model actualModel = jsonService.deserialize(json, Model.class);
         System.out.println("Deserialized model: " + actualModel);

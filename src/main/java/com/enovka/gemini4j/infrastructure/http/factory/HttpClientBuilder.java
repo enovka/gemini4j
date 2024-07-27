@@ -61,20 +61,21 @@ public class HttpClientBuilder {
      */
     public HttpClient build() {
         switch (httpClientType) {
-            case DEFAULT:
-                DefaultHttpClient defaultHttpClient = new DefaultHttpClient(connectionTimeout, responseTimeout);
-                // Configure rate limiter in the HTTP client
-                defaultHttpClient.setRateLimiter(requestsPerWindow, windowDuration);
-                return defaultHttpClient;
-            case CUSTOM:
-                if (customClient == null) {
-                    throw new IllegalArgumentException(
-                            "Custom HttpClient instance is required when using HttpClientType.CUSTOM.");
-                }
-                return customClient;
-            default:
+        case DEFAULT:
+            DefaultHttpClient defaultHttpClient = new DefaultHttpClient(
+                    connectionTimeout, responseTimeout);
+            // Configure rate limiter in the HTTP client
+            defaultHttpClient.setRateLimiter(requestsPerWindow, windowDuration);
+            return defaultHttpClient;
+        case CUSTOM:
+            if (customClient == null) {
                 throw new IllegalArgumentException(
-                        "Unknown HttpClientType: " + httpClientType);
+                        "Custom HttpClient instance is required when using HttpClientType.CUSTOM.");
+            }
+            return customClient;
+        default:
+            throw new IllegalArgumentException(
+                    "Unknown HttpClientType: " + httpClientType);
         }
     }
 }
