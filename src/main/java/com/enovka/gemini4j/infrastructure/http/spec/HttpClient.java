@@ -37,6 +37,30 @@ public interface HttpClient {
             throws HttpException;
 
     /**
+     * Sends a PATCH request to the specified URL with the provided headers and
+     * body.
+     *
+     * @param url The URL to send the request to.
+     * @param body The request body.
+     * @param headers The headers to include in the request.
+     * @return The HTTP response wrapped in an {@link HttpResponse}.
+     * @throws HttpException If an error occurs during the request.
+     */
+    HttpResponse patch(String url, String body, Map<String, String> headers)
+            throws HttpException;
+
+    /**
+     * Sends a DELETE request to the specified URL with the provided headers.
+     *
+     * @param url The URL to send the request to.
+     * @param headers The headers to include in the request.
+     * @return The HTTP response wrapped in an {@link HttpResponse}.
+     * @throws HttpException If an error occurs during the request.
+     */
+    HttpResponse delete(String url, Map<String, String> headers)
+            throws HttpException;
+
+    /**
      * Sets the connection timeout in milliseconds.
      *
      * @param connectionTimeout The connection timeout in milliseconds.

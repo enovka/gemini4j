@@ -13,7 +13,7 @@ import com.enovka.gemini4j.resource.builder.spec.AbstractContentBuilder;
 public class ContentBuilder extends AbstractContentBuilder<Content> {
 
     /**
-     * Private constructor to enforce builder pattern.
+     * Private constructor to enforce a builder pattern.
      *
      * @param parentBuilder The parent {@link AbstractBuilder} instance.
      */

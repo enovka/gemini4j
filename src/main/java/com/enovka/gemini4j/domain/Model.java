@@ -2,8 +2,10 @@ package com.enovka.gemini4j.domain;
 
 import com.enovka.gemini4j.domain.response.AbstractGeminiResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -15,9 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
-@AllArgsConstructor
-@NoArgsConstructor
+@SuperBuilder(setterPrefix = "with")
 public class Model extends AbstractGeminiResponse {
 
     /**
@@ -130,4 +130,6 @@ public class Model extends AbstractGeminiResponse {
     @JsonProperty("topK")
     private Integer topK;
 
+    public Model() {
+    }
 }

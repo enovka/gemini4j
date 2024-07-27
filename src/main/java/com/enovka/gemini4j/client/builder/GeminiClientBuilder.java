@@ -1,11 +1,14 @@
 package com.enovka.gemini4j.client.builder;
 
-import com.enovka.gemini4j.client.imp.GeminiClientImp;
+import com.enovka.gemini4j.client.impl.GeminiClientImpl;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
+import com.enovka.gemini4j.infrastructure.http.factory.HttpClientType;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
 import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+
+import java.time.Duration;
 
 /**
  * Builder for creating {@link GeminiClient} instances.
@@ -17,14 +20,16 @@ public class GeminiClientBuilder {
 
     private String apiKey;
     private String model = "models/gemini-pro-vision-001";
-    private HttpClient httpClient = HttpClientBuilder.builder().build()
-            .getCustomClient();
     private String baseUrl = "https://generativelanguage.googleapis.com/v1beta";
     private JsonService jsonService = JsonServiceBuilder.builder().build()
             .build();
+    private Integer connectionTimeout = 5000; // Default value
+    private Integer responseTimeout = 60000; // Default value
+    private Integer requestsPerWindow = Integer.MAX_VALUE; // Default value
+    private Duration windowDuration = Duration.ofMinutes(1); // Default value
 
     /**
-     * Private constructor to enforce builder pattern.
+     * Private constructor to enforce a builder pattern.
      */
     private GeminiClientBuilder() {
     }
@@ -64,17 +69,6 @@ public class GeminiClientBuilder {
     }
 
     /**
-     * Sets the HTTP client to use for communication with the Gemini API.
-     *
-     * @param httpClient The HTTP client instance.
-     * @return The builder instance for method chaining.
-     */
-    public GeminiClientBuilder withHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
-        return this;
-    }
-
-    /**
      * Sets the base URL for the Gemini API.
      *
      * @param baseUrl The base URL.
@@ -97,13 +91,60 @@ public class GeminiClientBuilder {
     }
 
     /**
+     * Sets the connection timeout in milliseconds.
+     *
+     * @param connectionTimeout The connection timeout in milliseconds.
+     * @return The builder instance for method chaining.
+     */
+    public GeminiClientBuilder withConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+        return this;
+    }
+
+    /**
+     * Sets the response timeout in milliseconds.
+     *
+     * @param responseTimeout The response timeout in milliseconds.
+     * @return The builder instance for method chaining.
+     */
+    public GeminiClientBuilder withResponseTimeout(int responseTimeout) {
+        this.responseTimeout = responseTimeout;
+        return this;
+    }
+
+    /**
+     * Sets the rate limiter parameters for the HTTP client.
+     *
+     * @param requestsPerWindow The maximum number of requests allowed per time
+     * window.
+     * @param windowDuration The duration of the sliding time window for rate
+     * limiting.
+     * @return The builder instance for method chaining.
+     */
+    public GeminiClientBuilder withRateLimiter(int requestsPerWindow,
+                                               Duration windowDuration) {
+        this.requestsPerWindow = requestsPerWindow;
+        this.windowDuration = windowDuration;
+        return this;
+    }
+
+    /**
      * Builds a new {@link GeminiClient} instance based on the configured
      * parameters.
      *
      * @return A new {@link GeminiClient} instance.
      */
     public GeminiClient build() {
-        return new GeminiClientImp(apiKey, model, httpClient, baseUrl,
+        // Create HttpClient with all configurations
+        HttpClient httpClient = HttpClientBuilder.builder()
+                .withHttpClientType(HttpClientType.DEFAULT)
+                .withConnectionTimeout(connectionTimeout)
+                .withResponseTimeout(responseTimeout)
+                .withRequestsPerWindow(requestsPerWindow)
+                .withWindowDuration(windowDuration)
+                .build().build();
+
+        return new GeminiClientImpl(apiKey, model, httpClient, baseUrl,
                 jsonService);
     }
 }

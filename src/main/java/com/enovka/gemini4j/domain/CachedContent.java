@@ -1,11 +1,11 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.response.AbstractGeminiResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -19,12 +19,11 @@ import java.util.List;
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class CachedContent {
+@SuperBuilder(setterPrefix = "with")
+public class CachedContent extends AbstractGeminiResponse {
 
     /**
      * Input only. Immutable. The content to cache.
@@ -108,7 +107,7 @@ public class CachedContent {
 
     /**
      * Optional. Input only. Immutable. Developer set system instruction.
-     * Currently text only.
+     * Currently, text only.
      */
     @JsonProperty("systemInstruction")
     private Content systemInstruction;
@@ -120,4 +119,6 @@ public class CachedContent {
     @JsonProperty("toolConfig")
     private ToolConfig toolConfig;
 
+    public CachedContent() {
+    }
 }

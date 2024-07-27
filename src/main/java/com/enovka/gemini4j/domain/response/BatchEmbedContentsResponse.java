@@ -3,10 +3,10 @@ package com.enovka.gemini4j.domain.response;
 import com.enovka.gemini4j.domain.Embedding;
 import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -19,8 +19,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
-
+@SuperBuilder(setterPrefix = "with")
 public class BatchEmbedContentsResponse extends AbstractGeminiResponse {
 
     /**

@@ -6,43 +6,67 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
+import java.time.Duration;
+
 /**
- * Builder for creating {@link HttpClient} instances.
- *
- * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 0.0.1
+ * {@inheritDoc}
  */
 @Data
 @Builder(setterPrefix = "with")
 public class HttpClientBuilder {
 
+    /**
+     * The type of HTTP client to build.
+     */
     @Builder.Default
     private HttpClientType httpClientType = HttpClientType.DEFAULT;
 
+    /**
+     * The connection timeout in milliseconds.
+     */
     @Builder.Default
     private Integer connectionTimeout = 5000;
+
+    /**
+     * The response timeout in milliseconds.
+     */
     @Builder.Default
     private Integer responseTimeout = 60000;
+
     /**
-     * -- GETTER -- Returns a custom instance.
-     *
-     * @return A custom {@link HttpClient} instance.
+     * A custom HttpClient instance to use when `httpClientType` is set to
+     * `CUSTOM`.
      */
     @Getter
     @Builder.Default
     private HttpClient customClient = new DefaultHttpClient();
 
     /**
+     * The maximum number of requests allowed per time window.
+     */
+    @Builder.Default
+    private Integer requestsPerWindow = 14;
+
+    /**
+     * The duration of the sliding time window for rate limiting.
+     */
+    @Builder.Default
+    private Duration windowDuration = Duration.ofMinutes(1);
+
+    /**
      * Creates a new {@link HttpClient} instance based on the builder
      * configuration.
      *
      * @return A new {@link HttpClient} instance.
-     * @since 0.0.2
      */
     public HttpClient build() {
         switch (httpClientType) {
         case DEFAULT:
-            return new DefaultHttpClient(connectionTimeout, responseTimeout);
+            DefaultHttpClient defaultHttpClient = new DefaultHttpClient(
+                    connectionTimeout, responseTimeout);
+            // Configure rate limiter in the HTTP client
+            defaultHttpClient.setRateLimiter(requestsPerWindow, windowDuration);
+            return defaultHttpClient;
         case CUSTOM:
             if (customClient == null) {
                 throw new IllegalArgumentException(
@@ -54,5 +78,4 @@ public class HttpClientBuilder {
                     "Unknown HttpClientType: " + httpClientType);
         }
     }
-
 }
