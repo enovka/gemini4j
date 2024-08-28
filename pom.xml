@@ -6,7 +6,7 @@
 
     <groupId>com.enovka</groupId>
     <artifactId>gemini4j</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
 
     <name>Gemini4J</name>
     <description>A powerful and easy-to-use Java library that simplifies
@@ -50,7 +50,7 @@
         <maven.javadoc.encoding>UTF-8</maven.javadoc.encoding>
         <maven.javadoc.locale>en_US</maven.javadoc.locale>
         <lombok.version>1.18.34</lombok.version>
-        <maven.javadoc.plugin.version>3.7.0</maven.javadoc.plugin.version>
+        <maven.javadoc.plugin.version>3.10.0</maven.javadoc.plugin.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.project.info.reports.plugin.version>3.6.1
         </maven.project.info.reports.plugin.version>
@@ -60,7 +60,7 @@
         <mockito.version>5.12.0</mockito.version>
         <rest.assured.version>5.5.0</rest.assured.version>
         <jsonassert.version>1.5.3</jsonassert.version>
-        <wiremock.version>3.9.0</wiremock.version>
+        <wiremock.version>3.9.1</wiremock.version>
         <maven.dependency.plugin.version>3.7.1</maven.dependency.plugin.version>
         <maven.failsafe.plugin>3.3.1</maven.failsafe.plugin>
         <maven.gpg.plugin.version>3.2.4</maven.gpg.plugin.version>
@@ -188,9 +188,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
-                    <systemPropertyVariables>
-                        <GEMINI_API_KEY>${env.GEMINI_API_KEY}</GEMINI_API_KEY>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 
@@ -263,21 +260,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>ci</id>
-            <activation>
-                <property>
-                    <name>env</name>
-                    <value>ci</value>
-                </property>
-            </activation>
-            <properties>
-                <gpg.keyName>${env.GPG_KEY_NAME}</gpg.keyName>
-                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-                <GEMINI_API_KEY>${env.GEMINI_API_KEY}</GEMINI_API_KEY>
-            </properties>
-        </profile>
-    </profiles>
-
 </project>

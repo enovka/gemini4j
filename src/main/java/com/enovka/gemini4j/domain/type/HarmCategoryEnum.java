@@ -114,6 +114,9 @@ public enum HarmCategoryEnum {
     @JsonProperty("HARM_CATEGORY_SEXUALLY_EXPLICIT")
     HARM_CATEGORY_SEXUALLY_EXPLICIT,
 
+    //TODO google not specific information's about this in your documentation
+    @JsonProperty("HARM_CATEGORY_CIVIC_INTEGRITY")
+    HARM_CATEGORY_CIVIC_INTEGRITY,
     /**
      * **Dangerous Content:** Content posing a significant risk of harm or
      * danger to individuals or society, such as instructions for building

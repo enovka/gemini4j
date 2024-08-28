@@ -94,6 +94,15 @@ public class DefaultHttpClient extends AbstractHttpClient {
             request.setEntity(new StringEntity(body));
             try (CloseableHttpResponse response = apacheHttpClient.execute(
                     request)) {
+                if (response == null) {
+                    throw new HttpException("Bad request. Response is null.");
+                } else if (response.getStatusLine().getStatusCode() >= 400) {
+                    String errorMessage = EntityUtils.toString(
+                            response.getEntity());
+                    throw new HttpException(
+                            "Bad request. " + errorMessage + " Status code: "
+                                    + response.getStatusLine().getStatusCode());
+                }
                 return createHttpResponse(response);
             }
         } catch (Exception e) {

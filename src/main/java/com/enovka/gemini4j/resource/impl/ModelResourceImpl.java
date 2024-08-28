@@ -19,7 +19,7 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
         implements ModelResource {
 
     private static final String LIST_MODELS_ENDPOINT = "/models";
-    private static final String GET_MODEL_ENDPOINT = "/models/%s";
+    private static final String GET_MODEL_ENDPOINT = "/%s";
 
     /**
      * Constructs a new ModelResourceImpl with the required GeminiClient and

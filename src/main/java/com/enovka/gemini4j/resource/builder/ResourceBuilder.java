@@ -3,14 +3,8 @@ package com.enovka.gemini4j.resource.builder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
-import com.enovka.gemini4j.resource.impl.CachedContentResourceImpl;
-import com.enovka.gemini4j.resource.impl.EmbedResourceImpl;
-import com.enovka.gemini4j.resource.impl.GenerationResourceImpl;
-import com.enovka.gemini4j.resource.impl.ModelResourceImpl;
-import com.enovka.gemini4j.resource.spec.CachedContentResource;
-import com.enovka.gemini4j.resource.spec.EmbedResource;
-import com.enovka.gemini4j.resource.spec.GenerationResource;
-import com.enovka.gemini4j.resource.spec.ModelResource;
+import com.enovka.gemini4j.resource.impl.*;
+import com.enovka.gemini4j.resource.spec.*;
 
 /**
  * Builder for creating resource instances for interacting with the Gemini API.
@@ -25,6 +19,9 @@ public class ResourceBuilder {
 
     /**
      * Private constructor to enforce a builder pattern.
+     *
+     * @param geminiClient The GeminiClient instance to use for API
+     * communication.
      */
     private ResourceBuilder(GeminiClient geminiClient) {
         if (geminiClient == null) {
@@ -96,5 +93,16 @@ public class ResourceBuilder {
      */
     public CachedContentResource buildCachedContentResource() {
         return new CachedContentResourceImpl(geminiClient, jsonService);
+    }
+
+    /**
+     * Creates a new {@link CountTokensResource} instance based on the builder
+     * configuration.
+     *
+     * @return A new {@link CountTokensResource} instance.
+     * @since 0.1.3
+     */
+    public CountTokensResource buildCountTokensResource() {
+        return new CountTokensResourceImpl(geminiClient, jsonService);
     }
 }

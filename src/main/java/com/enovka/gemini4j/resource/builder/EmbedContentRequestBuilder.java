@@ -2,9 +2,15 @@ package com.enovka.gemini4j.resource.builder;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.Content;
+import com.enovka.gemini4j.domain.Part;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
 import com.enovka.gemini4j.domain.type.TaskTypeEnum;
-import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * Builder for creating {@link EmbedContentRequest} instances. This builder
@@ -14,9 +20,12 @@ import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class EmbedContentRequestBuilder extends
-        AbstractBuilder<EmbedContentRequest> {
+@Getter(AccessLevel.PRIVATE)
+@Setter(AccessLevel.PRIVATE)
+@Accessors(chain = true)
+public class EmbedContentRequestBuilder {
 
+    private final GeminiClient geminiClient;
     private Content content;
     private TaskTypeEnum taskType;
     private String title;
@@ -29,7 +38,7 @@ public class EmbedContentRequestBuilder extends
      * communication.
      */
     private EmbedContentRequestBuilder(GeminiClient geminiClient) {
-        super(geminiClient);
+        this.geminiClient = geminiClient;
     }
 
     /**
@@ -64,8 +73,8 @@ public class EmbedContentRequestBuilder extends
      */
     public EmbedContentRequestBuilder withText(String text) {
         if (text != null && !text.isEmpty()) {
-            this.content = ContentBuilder.builder(this)
-                    .withText(text)
+            this.content = Content.builder()
+                    .withParts(List.of(Part.builder().withText(text).build()))
                     .build();
         }
         return this;
@@ -108,20 +117,23 @@ public class EmbedContentRequestBuilder extends
     }
 
     /**
-     * {@inheritDoc}
+     * Builds the {@link EmbedContentRequest} instance based on the configured
+     * parameters.
+     *
+     * @return The built {@link EmbedContentRequest} instance.
      */
-    @Override
     public EmbedContentRequest build() {
         if (content == null) {
             throw new IllegalArgumentException(
                     "Content with text is required.");
         }
         return EmbedContentRequest.builder()
-                .withModel("models/" + geminiClient.getModel())
+                .withModel(geminiClient.getModel())
                 .withContent(content)
                 .withTaskType(taskType)
                 .withTitle(title)
-                .withOutputDimensionality(outputDimensionality)
+                .withOutputDimensionality(outputDimensionality == null ? 768
+                        : outputDimensionality)
                 .build();
     }
 }

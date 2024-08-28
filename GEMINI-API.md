@@ -3395,7 +3395,8 @@ of 1 million Chunks.
           characters that are lowercase alphanumeric or dashes (-). The ID
           cannot start or end with a dash. If the name is empty on create, a
           random 12-character unique ID will be generated.
-          Example: `corpora/{corpus_id}/documents/{document_id}/chunks/123a456b789c`
+          Example:
+          `corpora/{corpus_id}/documents/{document_id}/chunks/123a456b789c`
 
 * **data**
     * **object (ChunkData)**

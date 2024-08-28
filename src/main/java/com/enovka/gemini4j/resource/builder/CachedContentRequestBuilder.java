@@ -3,11 +3,15 @@ package com.enovka.gemini4j.resource.builder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.*;
 import com.enovka.gemini4j.domain.request.CachedContentRequest;
-import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Builder for creating {@link CachedContent} instances. This builder provides a
@@ -17,9 +21,12 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class CachedContentRequestBuilder extends
-        AbstractBuilder<CachedContentRequest> {
+@Getter(AccessLevel.PRIVATE)
+@Setter(AccessLevel.PRIVATE)
+@Accessors(chain = true)
+public class CachedContentRequestBuilder {
 
+    private final GeminiClient geminiClient;
     private List<Content> contents;
     private List<Tool> tools;
     private String model;
@@ -37,7 +44,7 @@ public class CachedContentRequestBuilder extends
      * communication.
      */
     private CachedContentRequestBuilder(GeminiClient geminiClient) {
-        super(geminiClient);
+        this.geminiClient = geminiClient;
     }
 
     /**
@@ -80,24 +87,30 @@ public class CachedContentRequestBuilder extends
         }
         this.contents.add(Content.builder()
                 .withRole(role)
-                .withParts(List.of(PartBuilder.builder(this)
-                        .withText(text)
-                        .build()))
+                .withParts(List.of(Part.builder().withText(text).build()))
                 .build());
         return this;
     }
 
     /**
-     * Adds a tool to be cached.
+     * Adds a tool with function declarations to the request.
      *
-     * @param tool The tool to cache.
+     * @param name The name of the tool.
+     * @param description A brief description of the tool.
+     * @param functionDeclarationConfigurer A consumer to configure the function
+     * declarations for the tool.
      * @return The builder instance for method chaining.
      */
-    public CachedContentRequestBuilder withTool(Tool tool) {
-        if (this.tools == null) {
-            this.tools = new ArrayList<>();
-        }
-        this.tools.add(tool);
+    public CachedContentRequestBuilder withTool(String name,
+                                                String description,
+                                                Consumer<GenerateContentRequestBuilder.FunctionDeclarationBuilder> functionDeclarationConfigurer) {
+        GenerateContentRequestBuilder.FunctionDeclarationBuilder
+                functionDeclarationBuilder
+                = new GenerateContentRequestBuilder.FunctionDeclarationBuilder();
+        functionDeclarationConfigurer.accept(functionDeclarationBuilder);
+        this.tools = List.of(Tool.builder()
+                .withFunctionDeclarations(functionDeclarationBuilder.build())
+                .build());
         return this;
     }
 
@@ -150,21 +163,25 @@ public class CachedContentRequestBuilder extends
     public CachedContentRequestBuilder withSystemInstruction(
             String systemInstruction) {
         this.systemInstruction = Content.builder()
-                .withParts(List.of(PartBuilder.builder(this)
-                        .withText(systemInstruction)
+                .withParts(List.of(Part.builder().withText(systemInstruction)
                         .build()))
                 .build();
         return this;
     }
 
     /**
-     * Sets the tool config to be cached.
+     * Configures the tool configuration for the request.
      *
-     * @param toolConfig The tool config to cache.
+     * @param toolConfigConfigurer A consumer to configure the tool
+     * configuration.
      * @return The builder instance for method chaining.
      */
-    public CachedContentRequestBuilder withToolConfig(ToolConfig toolConfig) {
-        this.toolConfig = toolConfig;
+    public CachedContentRequestBuilder withToolConfig(
+            Consumer<GenerateContentRequestBuilder.ToolConfigBuilder> toolConfigConfigurer) {
+        GenerateContentRequestBuilder.ToolConfigBuilder toolConfigBuilder
+                = new GenerateContentRequestBuilder.ToolConfigBuilder();
+        toolConfigConfigurer.accept(toolConfigBuilder);
+        this.toolConfig = toolConfigBuilder.build();
         return this;
     }
 
@@ -226,11 +243,13 @@ public class CachedContentRequestBuilder extends
     /**
      * {@inheritDoc}
      */
-    @Override
     public CachedContentRequest build() {
         if (model == null) {
             throw new IllegalArgumentException(
                     "Model is required.");
+        }
+        if (contents == null) {
+            this.contents = new ArrayList<>();
         }
         return CachedContentRequest.builder()
                 .withContents(contents)
@@ -243,69 +262,5 @@ public class CachedContentRequestBuilder extends
                 .withName(name)
                 .withDisplayName(displayName)
                 .build();
-    }
-
-    /**
-     * Builder for creating {@link Part} instances.
-     *
-     * @author Everson Novka &lt;enovka@gmail.com&gt;
-     * @since 0.0.2
-     */
-    public static class PartBuilder extends AbstractBuilder<Part> {
-
-        private String text;
-        private FunctionCall functionCall;
-
-        /**
-         * Private constructor to enforce a builder pattern.
-         *
-         * @param parentBuilder The parent {@link AbstractBuilder} instance.
-         */
-        public PartBuilder(AbstractBuilder<?> parentBuilder) {
-            super(parentBuilder);
-        }
-
-        /**
-         * Creates a new instance of the PartBuilder.
-         *
-         * @param parentBuilder The parent {@link AbstractBuilder} instance.
-         * @return A new PartBuilder instance.
-         */
-        public static PartBuilder builder(AbstractBuilder<?> parentBuilder) {
-            return new PartBuilder(parentBuilder);
-        }
-
-        /**
-         * Sets the inline text for the part.
-         *
-         * @param text The inline text.
-         * @return The builder instance for method chaining.
-         */
-        public PartBuilder withText(String text) {
-            this.text = text;
-            return this;
-        }
-
-        /**
-         * Sets the function call for the part.
-         *
-         * @param functionCall The function call.
-         * @return The builder instance for method chaining.
-         */
-        public PartBuilder withFunctionCall(FunctionCall functionCall) {
-            this.functionCall = functionCall;
-            return this;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Part build() {
-            return Part.builder()
-                    .withText(text)
-                    .withFunctionCall(functionCall)
-                    .build();
-        }
     }
 }

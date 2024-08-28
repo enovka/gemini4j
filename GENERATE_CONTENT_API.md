@@ -9,7 +9,8 @@ details.
 
 ### Endpoint
 
-POST `https://generativelanguage.googleapis.com/v1beta/{model=models/*}:generateContent`
+POST
+`https://generativelanguage.googleapis.com/v1beta/{model=models/*}:generateContent`
 
 ### Path parameters
 
@@ -43,7 +44,8 @@ input `GenerateContentRequest`.
 
 ### Endpoint
 
-POST `https://generativelanguage.googleapis.com/v1beta/{model=models/*}:streamGenerateContent`
+POST
+`https://generativelanguage.googleapis.com/v1beta/{model=models/*}:streamGenerateContent`
 
 ### Path parameters
 

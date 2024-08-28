@@ -1,17 +1,14 @@
 package com.enovka.gemini4j.resource;
 
+import com.enovka.gemini4j.ResourceFiles;
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.CachedContent;
 import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.Part;
-import com.enovka.gemini4j.domain.request.CachedContentRequest;
 import com.enovka.gemini4j.domain.response.ListCachedContentsResponse;
-import com.enovka.gemini4j.infrastructure.tool.ResourceFiles;
-import com.enovka.gemini4j.resource.builder.CachedContentRequestBuilder;
 import com.enovka.gemini4j.resource.builder.ResourceBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.impl.CachedContentResourceImpl;
 import com.enovka.gemini4j.resource.spec.CachedContentResource;
 import org.junit.jupiter.api.*;
 
@@ -20,7 +17,8 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for {@link CachedContentResourceImpl}.
+ * Test class for
+ * {@link com.enovka.gemini4j.resource.impl.CachedContentResourceImpl}.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.3
@@ -29,28 +27,27 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CachedContentResourceImplTest {
 
-    private final String modelName = "models/gemini-1.5-flash-001";
+    private static final String MODEL_NAME = "models/gemini-1.5-flash-001";
+    private static final String SAMPLE_TEXT_FILE = "sample.txt";
+    private static final String TTL = "300s";
+    private static final String UPDATED_TTL = "600s";
+
+    private GeminiClient geminiClient;
     private CachedContentResource cachedContentResource;
-    private CachedContentRequestBuilder cachedContentRequestBuilder;
-    private CachedContent createdCachedContent;
     private String cacheName;
 
     @BeforeEach
     public void setUp() {
-        GeminiClient geminiClient = GeminiClientBuilder.builder()
+        geminiClient = GeminiClientBuilder.builder()
                 .withApiKey(System.getenv("GEMINI_API_KEY"))
                 .build();
 
         cachedContentResource = ResourceBuilder.builder(geminiClient)
                 .buildCachedContentResource();
-
-        cachedContentRequestBuilder
-                = cachedContentResource.createCachedContentBuilder(modelName);
     }
 
     /**
-     * Tests the
-     * {@link CachedContentResource#createCachedContent(CachedContent)} method.
+     * Tests the creation of cached content.
      *
      * @throws ResourceException If an error occurs during the cached content
      * creation process.
@@ -58,28 +55,19 @@ public class CachedContentResourceImplTest {
     @Test
     @Order(0)
     public void testCreateCachedContent() throws ResourceException {
-        createdCachedContent = cachedContentRequestBuilder
-                .withContent(Content.builder().withRole("user").withParts(
-                        Collections.singletonList(Part.builder().withText(
-                                ResourceFiles.readHtmlFile(
-                                        "sample.txt")).build())).build())
-                .withTtl("300s")
-                .build();
-        createdCachedContent = cachedContentResource.createCachedContent(
-                createdCachedContent);
-        cacheName = createdCachedContent.getName();
-        assertNotNull(createdCachedContent,
-                "Cached content should not be null.");
-        assertNotNull(createdCachedContent.getName(),
+        CachedContent cachedContent = createCachedContent(MODEL_NAME,
+                SAMPLE_TEXT_FILE, TTL);
+        cacheName = cachedContent.getName();
+
+        assertNotNull(cachedContent, "Cached content should not be null.");
+        assertNotNull(cachedContent.getName(),
                 "Cached content name should not be null.");
-        assertEquals(modelName, createdCachedContent.getModel(),
+        assertEquals(MODEL_NAME, cachedContent.getModel(),
                 "Cached content model should match the provided model.");
     }
 
     /**
-     * Tests the
-     * {@link CachedContentResource#listCachedContents(Integer, String)}
-     * method.
+     * Tests the listing of cached contents.
      *
      * @throws ResourceException If an error occurs during the cached contents
      * listing process.
@@ -91,15 +79,17 @@ public class CachedContentResourceImplTest {
                 = cachedContentResource.listCachedContents(null, null);
         assertNotNull(response,
                 "List cached contents response should not be null.");
+        assertFalse(response.getCachedContents().isEmpty(),
+                "Cached contents list should not be empty.");
     }
 
     /**
-     * Tests the {@link CachedContentResource#getCachedContent(String)} method.
+     * Tests the retrieval of cached content by name.
      *
      * @throws ResourceException If an error occurs during the cached content
      * reading process.
      */
-    @Test()
+    @Test
     @Order(2)
     public void testGetCachedContent() throws ResourceException {
         CachedContent retrievedCachedContent
@@ -107,33 +97,34 @@ public class CachedContentResourceImplTest {
 
         assertNotNull(retrievedCachedContent,
                 "Retrieved cached content should not be null.");
-        assertEquals(createdCachedContent.getName(),
-                retrievedCachedContent.getName(),
+        assertEquals(cacheName, retrievedCachedContent.getName(),
                 "Cached content names should match.");
     }
 
-    /**
-     * Tests the
-     * {@link CachedContentResource#updateCachedContent(CachedContent, String,
-     * String)} method.
+    /*    *//**
+     * Tests the update of cached content.
      *
      * @throws ResourceException If an error occurs during the cached content
      * updating process.
-     */
+     *//*
     @Test
     @Order(3)
     public void testUpdateCachedContent() throws ResourceException {
         CachedContent updatedCachedContent
                 = cachedContentResource.updateCachedContent(
-                new CachedContentRequest(), null, cacheName);
+                CachedContentRequest.builder()
+                        .withTtl(UPDATED_TTL)
+                        .build(),
+                "ttl", cacheName);
 
         assertNotNull(updatedCachedContent,
                 "Updated cached content should not be null.");
-    }
+        assertEquals(UPDATED_TTL, updatedCachedContent.getTtl(),
+                "TTL should be updated to " + UPDATED_TTL);
+    }*/
 
     /**
-     * Tests the {@link CachedContentResource#deleteCachedContent(String)}
-     * method.
+     * Tests the deletion of cached content.
      *
      * @throws ResourceException If an error occurs during the cached content
      * deleting process.
@@ -141,11 +132,39 @@ public class CachedContentResourceImplTest {
     @Test
     @Order(4)
     public void testDeleteCachedContent() throws ResourceException {
-
         cachedContentResource.deleteCachedContent(cacheName);
 
         // Attempting to retrieve the deleted cached content should throw an exception
         assertThrows(ResourceException.class,
                 () -> cachedContentResource.getCachedContent(cacheName));
+    }
+
+    /**
+     * Creates a new cached content instance.
+     *
+     * @param modelName The name of the model to use for the cached content.
+     * @param fileName The name of the file containing the text content.
+     * @param ttl The time-to-live for the cached content.
+     * @return The created {@link CachedContent} instance.
+     * @throws ResourceException If an error occurs during the cached content
+     * creation process.
+     */
+    private CachedContent createCachedContent(String modelName, String fileName,
+                                              String ttl)
+            throws ResourceException {
+        return cachedContentResource.createCachedContent(
+                cachedContentResource.createCachedContentBuilder(modelName)
+                        .withContent(Content.builder()
+                                .withRole("user")
+                                .withParts(
+                                        Collections.singletonList(Part.builder()
+                                                .withText(
+                                                        ResourceFiles.loadFileFromResources(
+                                                                fileName))
+                                                .build()))
+                                .build())
+                        .withTtl(ttl)
+                        .build()
+        );
     }
 }

@@ -141,7 +141,7 @@ public class ModelTool extends BaseClass {
                                                String generationMethod) {
         logDebug("Checking if generation method is supported for model: "
                 + modelName);
-        Model model = models.get("models/" + modelName); // Adjust lookup key
+        Model model = models.get(modelName.replaceFirst("^/", ""));
         if (model != null) {
             return model.getSupportedGenerationMethods().contains(
                     generationMethod);
@@ -152,6 +152,6 @@ public class ModelTool extends BaseClass {
     }
 
     public Model getModel(String model) {
-        return models.get("models/" + model);
+        return models.get(model.replaceFirst("^/", ""));
     }
 }

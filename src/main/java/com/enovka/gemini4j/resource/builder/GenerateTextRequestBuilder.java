@@ -1,11 +1,17 @@
 package com.enovka.gemini4j.resource.builder;
 
+import com.enovka.gemini4j.client.spec.GeminiClient;
+import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.GenerationConfig;
+import com.enovka.gemini4j.domain.Part;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
 import com.enovka.gemini4j.domain.response.GeminiResult;
-import com.enovka.gemini4j.resource.builder.spec.AbstractRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,10 +24,13 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class GenerateTextRequestBuilder extends
-        AbstractRequestBuilder<GenerateContentRequest> {
+@Getter(AccessLevel.PRIVATE)
+@Setter(AccessLevel.PRIVATE)
+@Accessors(chain = true)
+public class GenerateTextRequestBuilder {
 
     private final GenerationResource generationResource;
+    private final GeminiClient geminiClient;
     private String userInput;
     private Double temperature;
     private Integer candidateCount;
@@ -36,8 +45,8 @@ public class GenerateTextRequestBuilder extends
      * @param generationResource The GenerationResource instance.
      */
     public GenerateTextRequestBuilder(GenerationResource generationResource) {
-        super(generationResource.getGeminiClient());
         this.generationResource = generationResource;
+        this.geminiClient = generationResource.getGeminiClient();
     }
 
     /**
@@ -130,9 +139,11 @@ public class GenerateTextRequestBuilder extends
     }
 
     /**
-     * {@inheritDoc}
+     * Builds the {@link GenerateContentRequest} instance based on the
+     * configured parameters.
+     *
+     * @return The built {@link GenerateContentRequest} instance.
      */
-    @Override
     public GenerateContentRequest build() {
         if (userInput == null) {
             throw new IllegalArgumentException("User input is required.");
@@ -147,14 +158,15 @@ public class GenerateTextRequestBuilder extends
                 .withStopSequences(stopSequences)
                 .build();
 
-        ContentBuilder contentBuilder = ContentBuilder.builder(this);
-        contentBuilder.withText(userInput);
-        contentBuilder.withRole("user");
+        Content content = Content.builder()
+                .withParts(Collections.singletonList(
+                        Part.builder().withText(userInput).build()))
+                .withRole("user")
+                .build();
 
         return GenerateContentRequest.builder()
-                .withModel(generationResource.getGeminiClient().getModel())
-                .withContents(Collections.singletonList(contentBuilder.build()))
-                .withSafetySettings(safetySettings)
+                .withModel(geminiClient.getModel())
+                .withContents(Collections.singletonList(content))
                 .withGenerationConfig(generationConfig)
                 .build();
     }
@@ -164,7 +176,7 @@ public class GenerateTextRequestBuilder extends
      * response.
      *
      * @return The {@link GeminiResult} from the Gemini API.
-     * @throws ResourceException If an error occurs during the API request. as a
+     * @throws ResourceException If an error occurs during the API request. As a
      * network error or JSON processing error.
      */
     public GeminiResult execute()

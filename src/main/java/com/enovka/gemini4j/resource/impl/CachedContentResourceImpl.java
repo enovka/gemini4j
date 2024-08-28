@@ -132,6 +132,7 @@ public class CachedContentResourceImpl
     @Override
     public CachedContentRequestBuilder createCachedContentBuilder(
             String model) {
+
         return CachedContentRequestBuilder.builder(geminiClient)
                 .withModel(model);
     }

@@ -21,7 +21,9 @@ import java.util.Map;
 
 /**
  * Implementation of the {@link GenerationResource} interface for interacting
- * with the Generation resource of the Gemini API.
+ * with the Generation resource of the Gemini API. This class provides methods
+ * for generating text, chat messages, and other content using the Gemini Pro,
+ * Gemini Flash, and other compatible models.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
@@ -31,7 +33,7 @@ public class GenerationResourceImpl
         implements GenerationResource {
 
     private static final String GENERATE_CONTENT_ENDPOINT
-            = "/models/%s:generateContent";
+            = "%s:generateContent";
 
     /**
      * Constructs a new GenerationResourceImpl with the required GeminiClient

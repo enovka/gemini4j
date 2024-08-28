@@ -67,7 +67,6 @@ import com.enovka.gemini4j.domain.response.GeminiResult;
 import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
 import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
 import com.enovka.gemini4j.domain.type.ResponseMimeType;
-import com.enovka.gemini4j.resource.builder.GenerationResourceBuilder;
 import com.enovka.gemini4j.resource.builder.ResourceBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.GenerationResource;
@@ -183,40 +182,46 @@ public class GeminiRunSettingsExample {
                         .withSafetySetting()
                         // 3.4.1 Set the category to Harassment, which filters content that is abusive,
                         // threatening, or intended to harass or bully individuals or groups.
-                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_HARASSMENT)
-                            // 3.4.2 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, which means that
-                            // content with a medium or high probability of being harmful in this category
-                            // will be blocked.
-                            .withThreshold(
+                        .withCategory(HarmCategoryEnum.HARM_CATEGORY_HARASSMENT)
+                        // 3.4.2 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, which means that
+                        // content with a medium or high probability of being harmful in this category
+                        // will be blocked.
+                        .withThreshold(
                                 HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
                         // 3.4.3 Chain the next safety setting using 'and()'.
                         .and()
                         .withSafetySetting()
-                            // 3.4.4 Set the category to Hate Speech, which blocks content that expresses
-                            // hatred, prejudice, or discrimination based on protected characteristics
-                            // like race, religion, or sexual orientation.
-                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_HATE_SPEECH)
-                            // 3.4.5 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for this category as well.
-                            .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                        // 3.4.4 Set the category to Hate Speech, which blocks content that expresses
+                        // hatred, prejudice, or discrimination based on protected characteristics
+                        // like race, religion, or sexual orientation.
+                        .withCategory(
+                                HarmCategoryEnum.HARM_CATEGORY_HATE_SPEECH)
+                        // 3.4.5 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for this category as well.
+                        .withThreshold(
+                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
                         // 3.4.6 Chain the next safety setting using 'and()'.
                         .and()
                         // 3.4.7 Configure safety setting for Sexually Explicit content.
                         .withSafetySetting()
                         // 3.4.8 Set the category to Sexually Explicit, which filters content that is
                         // sexually suggestive, explicit, or inappropriate for general audiences.
-                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_SEXUALLY_EXPLICIT)
-                            // 3.4.9 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, blocking content with a medium
-                            // or high probability of being sexually explicit.
-                            .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                        .withCategory(
+                                HarmCategoryEnum.HARM_CATEGORY_SEXUALLY_EXPLICIT)
+                        // 3.4.9 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, blocking content with a medium
+                        // or high probability of being sexually explicit.
+                        .withThreshold(
+                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
                         // 3.4.10 Chain the next safety setting using 'and()'.
                         .and()
                         // 3.4.11 Configure safety setting for Dangerous Content.
                         .withSafetySetting()
-                            // 3.4.12 Set the category to Dangerous Content, which blocks content that promotes
-                            // violence, illegal activities, self-harm, or other dangerous behavior.
-                            .withCategory(HarmCategoryEnum.HARM_CATEGORY_DANGEROUS_CONTENT)
-                            // 3.4.13 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for dangerous content.
-                            .withThreshold(HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
+                        // 3.4.12 Set the category to Dangerous Content, which blocks content that promotes
+                        // violence, illegal activities, self-harm, or other dangerous behavior.
+                        .withCategory(
+                                HarmCategoryEnum.HARM_CATEGORY_DANGEROUS_CONTENT)
+                        // 3.4.13 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for dangerous content.
+                        .withThreshold(
+                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
                         // 3.4.14 End the safety settings chain using 'and()'.
                         .and()
                         // 3.5 Finally, build the GenerateContentRequest object.
