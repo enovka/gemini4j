@@ -1,5 +1,6 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.type.TypeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class Schema {
      * Required. Data type.
      */
     @JsonProperty("type")
-    private Type type;
+    private TypeEnum type;
 
     /**
      * Optional. The format of the data. This is used only for primitive
@@ -80,7 +81,7 @@ public class Schema {
     @JsonProperty("items")
     private Schema items;
 
-    public Schema(Type type, String format, String description,
+    public Schema(TypeEnum type, String format, String description,
                   Boolean nullable, List<String> enumValues, Schema items) {
         this.type = type;
         this.format = format;

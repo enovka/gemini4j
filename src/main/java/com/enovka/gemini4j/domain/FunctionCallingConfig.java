@@ -1,5 +1,6 @@
 package com.enovka.gemini4j.domain;
 
+import com.enovka.gemini4j.domain.type.ModeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,12 @@ public class FunctionCallingConfig {
     /**
      * Optional. Specifies the mode in which function calling should execute. If
      * unspecified, the default value will be set to AUTO.
+     * <p>
+     * This field is now of type {@link Mode}, ensuring that it is serialized as
+     * an object JSON.
      */
     @JsonProperty("mode")
-    private Mode mode;
+    private ModeEnum mode;
 
     /**
      * Optional. A set of function names that, when provided, limits the
@@ -37,7 +41,14 @@ public class FunctionCallingConfig {
     @JsonProperty("allowedFunctionNames")
     private List<String> allowedFunctionNames;
 
-    public FunctionCallingConfig(Mode mode, List<String> allowedFunctionNames) {
+    /**
+     * Constructor for the FunctionCallingConfig.
+     *
+     * @param mode The function calling mode.
+     * @param allowedFunctionNames The list of allowed function names.
+     */
+    public FunctionCallingConfig(ModeEnum mode,
+                                 List<String> allowedFunctionNames) {
         this.mode = mode;
         this.allowedFunctionNames = allowedFunctionNames;
     }

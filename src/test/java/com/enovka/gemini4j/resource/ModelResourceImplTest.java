@@ -6,7 +6,6 @@ import com.enovka.gemini4j.domain.ListModel;
 import com.enovka.gemini4j.domain.Model;
 import com.enovka.gemini4j.resource.builder.ResourceBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.impl.ModelResourceImpl;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for {@link ModelResourceImpl}.
+ * Test class for {@link com.enovka.gemini4j.resource.impl.ModelResourceImpl}.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.3
@@ -36,21 +35,20 @@ public class ModelResourceImplTest {
     }
 
     /**
-     * Tests the {@link ModelResourceImpl#listModels()} method in isolation.
+     * Tests listing available Gemini models.
      *
      * @throws ResourceException If an error occurs while fetching the models.
      */
     @Test
-    public void testGetModels() throws ResourceException {
+    public void testListModels() throws ResourceException {
         ListModel models = modelResource.listModels();
+        assertNotNull(models, "ListModel should not be null.");
         assertFalse(models.getModels().isEmpty(),
                 "Model list should not be empty.");
     }
 
     /**
-     * Tests the {@link ModelResourceImpl#getModel(String)} method by fetching a
-     * random model from the list returned by
-     * {@link ModelResourceImpl#listModels()}.
+     * Tests retrieving a specific Gemini model by its name.
      *
      * @throws ResourceException If an error occurs while fetching the models or
      * the specific model.
@@ -67,8 +65,7 @@ public class ModelResourceImplTest {
         Model randomModel = models.get(random.nextInt(models.size()));
 
         // Fetch the model using its name
-        Model fetchedModel = modelResource.getModel(
-                randomModel.getName().replace("models/", ""));
+        Model fetchedModel = modelResource.getModel(randomModel.getName());
 
         // Assertions
         assertNotNull(fetchedModel, "Fetched model should not be null.");

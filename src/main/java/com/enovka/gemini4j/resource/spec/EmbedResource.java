@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Interface defining the contract for interacting with the embedding resource
  * of the Gemini API. This resource provides methods for generating embeddings
- * for text and other types of content.
+ * for text and other types of content using the text-embedding-004 model.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
@@ -29,7 +29,8 @@ public interface EmbedResource {
     GeminiClient getGeminiClient();
 
     /**
-     * Generates an embedding for the given content.
+     * Generates an embedding for the given content using the text-embedding-004
+     * model.
      *
      * @param request The {@link EmbedContentRequest} containing the content to
      * embed and other parameters.
@@ -43,7 +44,8 @@ public interface EmbedResource {
             throws ResourceException;
 
     /**
-     * Generates embeddings for multiple contents in a batch request.
+     * Generates embeddings for multiple contents in a batch request using the
+     * text-embedding-004 model.
      *
      * @param request The {@link BatchEmbedContentsRequest} containing a list of
      * {@link EmbedContentRequest} objects.
@@ -60,7 +62,18 @@ public interface EmbedResource {
     /**
      * Creates a new {@link EmbedContentRequestBuilder} instance to build an
      * {@link EmbedContentRequest} for generating an embedding for the given
-     * text.
+     * text using the text-embedding-004 model.
+     *
+     * <p>Example usage:
+     *
+     * <pre>{@code
+     * String text = "This is a test sentence.";
+     * EmbedContentRequestBuilder builder = embedResource.embedContentBuilder(text);
+     * EmbedContentRequest request = builder.build();
+     * EmbedContentResponse response = embedResource.embedContent(request);
+     * List<Double> embeddingValues = response.getEmbedding().getValues();
+     * System.out.println(embeddingValues);
+     * }</pre>
      *
      * @param text The text to embed.
      * @return A new {@link EmbedContentRequestBuilder} instance.
@@ -70,7 +83,18 @@ public interface EmbedResource {
     /**
      * Creates a new {@link BatchEmbedContentsRequestBuilder} instance to build
      * a {@link BatchEmbedContentsRequestBuilder} for generating embeddings for
-     * the given list of texts.
+     * the given list of texts using the text-embedding-004 model.
+     *
+     * <p>Example usage:
+     *
+     * <pre>{@code
+     * List<String> texts = Arrays.asList("This is a test sentence.", "Another sentence for embedding.");
+     * BatchEmbedContentsRequestBuilder builder = embedResource.batchEmbedContentsBuilder(texts);
+     * BatchEmbedContentsRequest request = builder.build();
+     * BatchEmbedContentsResponse response = embedResource.batchEmbedContent(request);
+     * List<Embedding> embeddings = response.getEmbeddings();
+     * System.out.println(embeddings);
+     * }</pre>
      *
      * @param texts The list of texts to embed.
      * @return A new {@link BatchEmbedContentsRequestBuilder} instance.

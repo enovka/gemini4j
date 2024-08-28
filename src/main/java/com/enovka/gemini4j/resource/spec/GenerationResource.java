@@ -9,7 +9,9 @@ import com.enovka.gemini4j.resource.exception.ResourceException;
 
 /**
  * Interface defining the contract for interacting with the Generation resource
- * of the Gemini API.
+ * of the Gemini API. This resource provides methods for generating text, chat
+ * messages, and other content using the Gemini Pro, Gemini Flash, and other
+ * compatible models.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
@@ -39,8 +41,23 @@ public interface GenerationResource extends MultiTurnConversationAware {
 
     /**
      * Creates a new {@link GenerateTextRequestBuilder} instance to build a
-     * {@link GenerateContentRequest} for generating text.
+     * {@link GenerateContentRequest} for generating text using the Gemini Pro,
+     * Gemini Flash, and other compatible models.
      *
+     * <p>Example usage:
+     *
+     * <pre>{@code
+     * String userInput = "Write a short story about a magic backpack.";
+     * GenerateTextRequestBuilder builder = generationResource.generateTextBuilder(userInput);
+     * builder.withTemperature(0.7);
+     * builder.withMaxOutputTokens(200);
+     * GenerateContentRequest request = builder.build();
+     * GeminiResult result = generationResource.generateContent(request);
+     * String generatedText = result.getGeneratedText();
+     * System.out.println(generatedText);
+     * }</pre>
+     *
+     * @param userInput The required user input for the generation request.
      * @return A new {@link GenerateTextRequestBuilder} instance.
      * @since 0.0.2
      */
@@ -48,7 +65,23 @@ public interface GenerationResource extends MultiTurnConversationAware {
 
     /**
      * Creates a new {@link GenerateContentRequestBuilder} instance to build a
-     * {@link GenerateContentRequest} for generating content.
+     * {@link GenerateContentRequest} for generating content using the Gemini
+     * Pro, Gemini Flash, and other compatible models.
+     *
+     * <p>Example usage:
+     *
+     * <pre>{@code
+     * String userInput = "Tell me a joke.";
+     * GenerateContentRequestBuilder builder = generationResource.generateContentBuilder(userInput);
+     * builder.withSystemInstruction("You are a funny AI assistant.");
+     * builder.withSafetySetting(safety -> safety
+     *     .withHarassment(HarmBlockThresholdEnum.BLOCK_NONE)
+     *     .withHateSpeech(HarmBlockThresholdEnum.BLOCK_NONE));
+     * GenerateContentRequest request = builder.build();
+     * GeminiResult result = generationResource.generateContent(request);
+     * String generatedText = result.getGeneratedText();
+     * System.out.println(generatedText);
+     * }</pre>
      *
      * @param userInput The required user input for the generation request.
      * @return A new {@link GenerateContentRequestBuilder} instance.

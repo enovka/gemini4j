@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * Implementation of the {@link EmbedResource} interface for interacting with
  * the embedding resource of the Gemini API. This class provides methods for
- * generating embeddings for text and other types of content.
+ * generating embeddings for text and other types of content using the
+ * text-embedding-004 model.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
@@ -26,9 +27,9 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
         implements EmbedResource {
 
     private static final String EMBED_CONTENT_ENDPOINT
-            = "/models/%s:embedContent";
+            = "/%s:embedContent";
     private static final String BATCH_EMBED_CONTENTS_ENDPOINT
-            = "/models/%s:batchEmbedContents";
+            = "/%s:batchEmbedContents";
 
     /**
      * Constructs a new EmbedResourceImpl with the required GeminiClient and

@@ -1,4 +1,4 @@
-package com.enovka.gemini4j.infrastructure.tool;
+package com.enovka.gemini4j;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,9 +7,9 @@ import java.nio.file.Paths;
 
 public class ResourceFiles {
 
-    public static String readHtmlFile(String fileName) {
+    public static String loadFileFromResources(String fileName) {
         try {
-            Path resourcesPath = Paths.get("src", "main", "resources");
+            Path resourcesPath = Paths.get("src", "test", "resources");
             Path filePath = resourcesPath.resolve(fileName);
             return Files.readString(filePath);
         } catch (IOException e) {

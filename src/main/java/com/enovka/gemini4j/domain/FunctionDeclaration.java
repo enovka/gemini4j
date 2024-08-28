@@ -33,11 +33,10 @@ public class FunctionDeclaration {
 
     /**
      * Optional. Describes the parameters to this function. Reflects the Open
-     * API 3.03 Parameter Object string Key: the name of the parameter.
-     * Parameter names are case-sensitive. Schema Value: the Schema defining the
-     * type used for the parameter.
+     * API 3.03 Parameter Object.
+     * <p>
+     * This field represents the schema of all parameters for this function.
      */
     @JsonProperty("parameters")
     private Schema parameters;
-
 }

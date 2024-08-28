@@ -3,7 +3,10 @@ package com.enovka.gemini4j.resource.builder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
-import com.enovka.gemini4j.resource.builder.spec.AbstractBuilder;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +20,12 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
  */
-public class BatchEmbedContentsRequestBuilder extends
-        AbstractBuilder<BatchEmbedContentsRequest> {
+@Getter(AccessLevel.PRIVATE)
+@Setter(AccessLevel.PRIVATE)
+@Accessors(chain = true)
+public class BatchEmbedContentsRequestBuilder {
 
+    private final GeminiClient geminiClient;
     private final List<EmbedContentRequest> requests;
 
     /**
@@ -29,7 +35,7 @@ public class BatchEmbedContentsRequestBuilder extends
      * communication.
      */
     private BatchEmbedContentsRequestBuilder(GeminiClient geminiClient) {
-        super(geminiClient);
+        this.geminiClient = geminiClient;
         this.requests = new ArrayList<>();
     }
 
@@ -75,9 +81,11 @@ public class BatchEmbedContentsRequestBuilder extends
     }
 
     /**
-     * {@inheritDoc}
+     * Builds the {@link BatchEmbedContentsRequest} instance based on the
+     * configured parameters.
+     *
+     * @return The built {@link BatchEmbedContentsRequest} instance.
      */
-    @Override
     public BatchEmbedContentsRequest build() {
         if (requests.isEmpty()) {
             throw new IllegalArgumentException(
