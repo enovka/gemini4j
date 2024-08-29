@@ -3,6 +3,7 @@ package com.enovka.gemini4j.resource.impl;
 import com.enovka.gemini4j.client.exception.GeminiApiException;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.CachedContent;
+import com.enovka.gemini4j.domain.request.CachedContentRequest;
 import com.enovka.gemini4j.domain.response.AbstractGeminiResponse;
 import com.enovka.gemini4j.domain.response.ListCachedContentsResponse;
 import com.enovka.gemini4j.infrastructure.exception.GeminiInfrastructureException;
@@ -62,9 +63,11 @@ public class CachedContentResourceImpl
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.1.3
      */
     @Override
-    public CachedContent createCachedContent(CachedContent request)
+    public CachedContent execute(CachedContentRequest request)
             throws ResourceException {
         return executePostRequest(CREATE_CACHED_CONTENT_ENDPOINT, request,
                 CachedContent.class);
@@ -133,7 +136,7 @@ public class CachedContentResourceImpl
     public CachedContentRequestBuilder createCachedContentBuilder(
             String model) {
 
-        return CachedContentRequestBuilder.builder(geminiClient)
+        return CachedContentRequestBuilder.builder(this)
                 .withModel(model);
     }
 

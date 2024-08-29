@@ -55,9 +55,11 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.1.3
      */
     @Override
-    public EmbedContentResponse embedContent(EmbedContentRequest request)
+    public EmbedContentResponse execute(EmbedContentRequest request)
             throws ResourceException {
         String endpoint = String.format(EMBED_CONTENT_ENDPOINT,
                 geminiClient.getModel());
@@ -67,9 +69,11 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.1.3
      */
     @Override
-    public BatchEmbedContentsResponse batchEmbedContent(
+    public BatchEmbedContentsResponse execute(
             BatchEmbedContentsRequest request)
             throws ResourceException {
         String endpoint = String.format(BATCH_EMBED_CONTENTS_ENDPOINT,
@@ -83,7 +87,7 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
      */
     @Override
     public EmbedContentRequestBuilder embedContentBuilder(String text) {
-        return EmbedContentRequestBuilder.builder(geminiClient)
+        return EmbedContentRequestBuilder.builder(this)
                 .withText(text);
     }
 
@@ -93,7 +97,7 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
     @Override
     public BatchEmbedContentsRequestBuilder batchEmbedContentsBuilder(
             List<String> texts) {
-        return BatchEmbedContentsRequestBuilder.builder(geminiClient)
+        return BatchEmbedContentsRequestBuilder.builder(this)
                 .withTexts(texts);
     }
 }

@@ -3,6 +3,9 @@ package com.enovka.gemini4j.resource.builder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.request.BatchEmbedContentsRequest;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
+import com.enovka.gemini4j.domain.response.BatchEmbedContentsResponse;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.EmbedResource;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,29 +29,33 @@ import java.util.List;
 public class BatchEmbedContentsRequestBuilder {
 
     private final GeminiClient geminiClient;
+    private final EmbedResource embedResource;
     private final List<EmbedContentRequest> requests;
 
     /**
-     * Private constructor to enforce builder pattern.
+     * Constructor for the BatchEmbedContentsRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
+     * @param embedResource The EmbedResource instance to use for API
      * communication.
+     * @since 0.1.3
      */
-    private BatchEmbedContentsRequestBuilder(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+    public BatchEmbedContentsRequestBuilder(EmbedResource embedResource) {
+        this.embedResource = embedResource;
+        this.geminiClient = embedResource.getGeminiClient();
         this.requests = new ArrayList<>();
     }
 
     /**
      * Creates a new instance of the BatchEmbedContentsRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
+     * @param embedResource The EmbedResource instance to use for API
      * communication.
      * @return A new BatchEmbedContentsRequestBuilder instance.
+     * @since 0.1.3
      */
     public static BatchEmbedContentsRequestBuilder builder(
-            GeminiClient geminiClient) {
-        return new BatchEmbedContentsRequestBuilder(geminiClient);
+            EmbedResource embedResource) {
+        return new BatchEmbedContentsRequestBuilder(embedResource);
     }
 
     /**
@@ -73,7 +80,7 @@ public class BatchEmbedContentsRequestBuilder {
      */
     public BatchEmbedContentsRequestBuilder withTexts(List<String> texts) {
         texts.forEach(text -> this.requests.add(
-                EmbedContentRequestBuilder.builder(geminiClient)
+                EmbedContentRequestBuilder.builder(embedResource)
                         .withText(text)
                         .build()
         ));
@@ -95,5 +102,16 @@ public class BatchEmbedContentsRequestBuilder {
                 .withModel(geminiClient.getModel())
                 .withRequests(requests)
                 .build();
+    }
+
+    /**
+     * Executes the batch embed content request and returns the response.
+     *
+     * @return The {@link BatchEmbedContentsResponse} from the Gemini API.
+     * @throws ResourceException If an error occurs during the API request.
+     * @since 0.1.3
+     */
+    public BatchEmbedContentsResponse execute() throws ResourceException {
+        return embedResource.execute(build());
     }
 }

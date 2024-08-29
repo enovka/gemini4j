@@ -279,7 +279,7 @@ public class GenerationResourceImplTest {
         GenerateContentRequest request
                 = generationResource.generateContentBuilder(userInput)
                 .build();
-        return generationResource.generateContent(request);
+        return generationResource.execute(request);
     }
 
     /**
@@ -297,7 +297,7 @@ public class GenerationResourceImplTest {
                 = generationResource.generateContentBuilder(userInput)
                 .withSystemInstruction(systemInstruction)
                 .build();
-        return generationResource.generateContent(request);
+        return generationResource.execute(request);
     }
 
     /**
@@ -318,7 +318,7 @@ public class GenerationResourceImplTest {
                 .withGenerationConfig(
                         config -> config.withTemperature(temperature))
                 .build();
-        return generationResource.generateContent(request);
+        return generationResource.execute(request);
     }
 
     /**
@@ -342,7 +342,7 @@ public class GenerationResourceImplTest {
                         .withDangerousContent(
                                 HarmBlockThresholdEnum.BLOCK_NONE))
                 .build();
-        return generationResource.generateContent(request);
+        return generationResource.execute(request);
     }
 
     /**
@@ -371,7 +371,7 @@ public class GenerationResourceImplTest {
                         .withFunctionCallingConfig(calling -> calling
                                 .withMode(ModeEnum.AUTO)))
                 .build();
-        return generationResource.generateContent(request);
+        return generationResource.execute(request);
     }
 
     /**
@@ -392,7 +392,7 @@ public class GenerationResourceImplTest {
                         .withDangerousContent(HarmBlockThresholdEnum.BLOCK_NONE)
                         .withHateSpeech(HarmBlockThresholdEnum.BLOCK_NONE))
                 .build();
-        return generationResource.generateContent(request);
+        return generationResource.execute(request);
     }
 
     /**
@@ -435,7 +435,7 @@ public class GenerationResourceImplTest {
      * @throws ResourceException If an error occurs during token counting.
      */
     private int countTokens(String text) throws ResourceException {
-        return countTokensResource.countTokens(
+        return countTokensResource.execute(
                 countTokensResource.countTokensBuilder(text)
                         .build()).getTotalTokens();
     }
@@ -453,7 +453,7 @@ public class GenerationResourceImplTest {
     private CachedContent createCachedContent(String modelName, String fileName,
                                               String ttl)
             throws ResourceException {
-        return cachedContentResource.createCachedContent(
+        return cachedContentResource.execute(
                 cachedContentResource.createCachedContentBuilder(
                                 "models/" + modelName.replaceAll("^(/)?models(/)?", ""))
                         .withContent(Content.builder()

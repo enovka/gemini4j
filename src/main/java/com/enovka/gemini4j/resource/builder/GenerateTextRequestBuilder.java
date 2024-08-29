@@ -50,6 +50,19 @@ public class GenerateTextRequestBuilder {
     }
 
     /**
+     * Creates a new instance of the GenerateTextRequestBuilder.
+     *
+     * @param generationResource The GenerationResource instance to use for API
+     * communication.
+     * @return A new GenerateTextRequestBuilder instance.
+     * @since 0.1.3
+     */
+    public static GenerateTextRequestBuilder builder(
+            GenerationResource generationResource) {
+        return new GenerateTextRequestBuilder(generationResource);
+    }
+
+    /**
      * Sets the required user input (text prompt) for the text generation
      * request.
      *
@@ -181,6 +194,6 @@ public class GenerateTextRequestBuilder {
      */
     public GeminiResult execute()
             throws ResourceException {
-        return generationResource.generateContent(build());
+        return generationResource.execute(build());
     }
 }

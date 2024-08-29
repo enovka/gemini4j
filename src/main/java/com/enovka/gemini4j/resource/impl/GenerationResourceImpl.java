@@ -62,10 +62,10 @@ public class GenerationResourceImpl
     /**
      * {@inheritDoc}
      *
-     * @since 0.0.2
+     * @since 0.1.3
      */
     @Override
-    public GeminiResult generateContent(GenerateContentRequest request)
+    public GeminiResult execute(GenerateContentRequest request)
             throws ResourceException {
         try {
             validateGenerationMethodSupport("generateContent");
@@ -131,7 +131,7 @@ public class GenerationResourceImpl
      */
     @Override
     public GenerateTextRequestBuilder generateTextBuilder(String userInput) {
-        return new GenerateTextRequestBuilder(this)
+        return GenerateTextRequestBuilder.builder(this)
                 .withUserInput(userInput);
     }
 

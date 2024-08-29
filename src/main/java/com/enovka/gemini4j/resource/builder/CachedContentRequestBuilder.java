@@ -3,6 +3,8 @@ package com.enovka.gemini4j.resource.builder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.*;
 import com.enovka.gemini4j.domain.request.CachedContentRequest;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.CachedContentResource;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +29,7 @@ import java.util.function.Consumer;
 public class CachedContentRequestBuilder {
 
     private final GeminiClient geminiClient;
+    private final CachedContentResource cachedContentResource;
     private List<Content> contents;
     private List<Tool> tools;
     private String model;
@@ -38,25 +41,29 @@ public class CachedContentRequestBuilder {
     private String displayName;
 
     /**
-     * Private constructor to enforce a builder pattern.
+     * Constructor for the CachedContentRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
-     * communication.
+     * @param cachedContentResource The CachedContentResource instance to use
+     * for API communication.
+     * @since 0.1.3
      */
-    private CachedContentRequestBuilder(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+    public CachedContentRequestBuilder(
+            CachedContentResource cachedContentResource) {
+        this.cachedContentResource = cachedContentResource;
+        this.geminiClient = cachedContentResource.getGeminiClient();
     }
 
     /**
      * Creates a new instance of the CachedContentRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
-     * communication.
+     * @param cachedContentResource The CachedContentResource instance to use
+     * for API communication.
      * @return A new CachedContentRequestBuilder instance.
+     * @since 0.1.3
      */
     public static CachedContentRequestBuilder builder(
-            GeminiClient geminiClient) {
-        return new CachedContentRequestBuilder(geminiClient);
+            CachedContentResource cachedContentResource) {
+        return new CachedContentRequestBuilder(cachedContentResource);
     }
 
     /**
@@ -262,5 +269,16 @@ public class CachedContentRequestBuilder {
                 .withName(name)
                 .withDisplayName(displayName)
                 .build();
+    }
+
+    /**
+     * Executes the create cached content request and returns the response.
+     *
+     * @return The {@link CachedContent} from the Gemini API.
+     * @throws ResourceException If an error occurs during the API request.
+     * @since 0.1.3
+     */
+    public CachedContent execute() throws ResourceException {
+        return cachedContentResource.execute(build());
     }
 }

@@ -152,7 +152,7 @@ public class CachedContentResourceImplTest {
     private CachedContent createCachedContent(String modelName, String fileName,
                                               String ttl)
             throws ResourceException {
-        return cachedContentResource.createCachedContent(
+        return cachedContentResource.execute(
                 cachedContentResource.createCachedContentBuilder(modelName)
                         .withContent(Content.builder()
                                 .withRole("user")
@@ -164,7 +164,6 @@ public class CachedContentResourceImplTest {
                                                 .build()))
                                 .build())
                         .withTtl(ttl)
-                        .build()
-        );
+                        .build());
     }
 }

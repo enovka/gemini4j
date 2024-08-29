@@ -25,16 +25,16 @@ public interface CountTokensResource {
     GeminiClient getGeminiClient();
 
     /**
-     * Counts the number of tokens in the given content using the specified
-     * Gemini model.
+     * Executes a token counting request using the specified Gemini model.
      *
      * @param request The {@link CountTokensRequest} containing the content to
      * be tokenized and other parameters.
      * @return A {@link CountTokensResponse} containing the token count.
      * @throws ResourceException If an error occurs during the token counting
      * process.
+     * @since 0.1.3
      */
-    CountTokensResponse countTokens(CountTokensRequest request)
+    CountTokensResponse execute(CountTokensRequest request)
             throws ResourceException;
 
     /**
@@ -48,7 +48,7 @@ public interface CountTokensResource {
      * String text = "This is a test sentence.";
      * CountTokensRequestBuilder builder = countTokensResource.countTokensBuilder(text);
      * CountTokensRequest request = builder.build();
-     * CountTokensResponse response = countTokensResource.countTokens(request);
+     * CountTokensResponse response = countTokensResource.execute(request);
      * int tokenCount = response.getTotalTokens();
      * System.out.println("Token count: " + tokenCount);
      * }</pre>

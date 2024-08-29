@@ -5,6 +5,9 @@ import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.Part;
 import com.enovka.gemini4j.domain.request.CountTokensRequest;
 import com.enovka.gemini4j.domain.request.GenerateContentRequest;
+import com.enovka.gemini4j.domain.response.CountTokensResponse;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.CountTokensResource;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,29 +32,33 @@ import java.util.function.Consumer;
 public class CountTokensRequestBuilder {
 
     private final GeminiClient geminiClient;
+    private final CountTokensResource countTokensResource;
     private List<Content> contents;
     private GenerateContentRequest generateContentRequest;
 
     /**
-     * Private constructor to enforce builder pattern.
+     * Constructor for the CountTokensRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
-     * communication.
+     * @param countTokensResource The CountTokensResource instance to use for
+     * API communication.
+     * @since 0.1.3
      */
-    private CountTokensRequestBuilder(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+    public CountTokensRequestBuilder(CountTokensResource countTokensResource) {
+        this.countTokensResource = countTokensResource;
+        this.geminiClient = countTokensResource.getGeminiClient();
     }
 
     /**
      * Creates a new instance of the CountTokensRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
-     * communication.
+     * @param countTokensResource The CountTokensResource instance to use for
+     * API communication.
      * @return A new CountTokensRequestBuilder instance.
+     * @since 0.1.3
      */
     public static CountTokensRequestBuilder builder(
-            GeminiClient geminiClient) {
-        return new CountTokensRequestBuilder(geminiClient);
+            CountTokensResource countTokensResource) {
+        return new CountTokensRequestBuilder(countTokensResource);
     }
 
     /**
@@ -130,5 +137,16 @@ public class CountTokensRequestBuilder {
                 .withGenerateContentRequest(generateContentRequest)
                 .withModel(geminiClient.getModel())
                 .build();
+    }
+
+    /**
+     * Executes the count tokens request and returns the response.
+     *
+     * @return The {@link CountTokensResponse} from the Gemini API.
+     * @throws ResourceException If an error occurs during the API request.
+     * @since 0.1.3
+     */
+    public CountTokensResponse execute() throws ResourceException {
+        return countTokensResource.execute(build());
     }
 }

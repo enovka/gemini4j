@@ -48,9 +48,11 @@ public class CountTokensResourceImpl
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.1.3
      */
     @Override
-    public CountTokensResponse countTokens(CountTokensRequest request)
+    public CountTokensResponse execute(CountTokensRequest request)
             throws ResourceException {
         String endpoint = String.format(COUNT_TOKENS_ENDPOINT,
                 geminiClient.getModel());
@@ -63,7 +65,7 @@ public class CountTokensResourceImpl
      */
     @Override
     public CountTokensRequestBuilder countTokensBuilder(String text) {
-        return CountTokensRequestBuilder.builder(geminiClient)
+        return CountTokensRequestBuilder.builder(this)
                 .withTextContent(text);
     }
 }

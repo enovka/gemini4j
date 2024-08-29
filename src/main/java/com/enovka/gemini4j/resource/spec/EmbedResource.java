@@ -29,8 +29,8 @@ public interface EmbedResource {
     GeminiClient getGeminiClient();
 
     /**
-     * Generates an embedding for the given content using the text-embedding-004
-     * model.
+     * Executes an embedding generation request for the given content using the
+     * text-embedding-004 model.
      *
      * @param request The {@link EmbedContentRequest} containing the content to
      * embed and other parameters.
@@ -38,14 +38,14 @@ public interface EmbedResource {
      * embedding.
      * @throws ResourceException If an error occurs during the embedding
      * generation process.
-     * @since 0.1.0
+     * @since 0.1.3
      */
-    EmbedContentResponse embedContent(EmbedContentRequest request)
+    EmbedContentResponse execute(EmbedContentRequest request)
             throws ResourceException;
 
     /**
-     * Generates embeddings for multiple contents in a batch request using the
-     * text-embedding-004 model.
+     * Executes a batch embedding generation request for multiple contents using
+     * the text-embedding-004 model.
      *
      * @param request The {@link BatchEmbedContentsRequest} containing a list of
      * {@link EmbedContentRequest} objects.
@@ -53,9 +53,9 @@ public interface EmbedResource {
      * generated embeddings.
      * @throws ResourceException If an error occurs during the batch embedding
      * generation process.
-     * @since 0.1.0
+     * @since 0.1.3
      */
-    BatchEmbedContentsResponse batchEmbedContent(
+    BatchEmbedContentsResponse execute(
             BatchEmbedContentsRequest request)
             throws ResourceException;
 
@@ -70,7 +70,7 @@ public interface EmbedResource {
      * String text = "This is a test sentence.";
      * EmbedContentRequestBuilder builder = embedResource.embedContentBuilder(text);
      * EmbedContentRequest request = builder.build();
-     * EmbedContentResponse response = embedResource.embedContent(request);
+     * EmbedContentResponse response = embedResource.execute(request);
      * List<Double> embeddingValues = response.getEmbedding().getValues();
      * System.out.println(embeddingValues);
      * }</pre>
@@ -91,7 +91,7 @@ public interface EmbedResource {
      * List<String> texts = Arrays.asList("This is a test sentence.", "Another sentence for embedding.");
      * BatchEmbedContentsRequestBuilder builder = embedResource.batchEmbedContentsBuilder(texts);
      * BatchEmbedContentsRequest request = builder.build();
-     * BatchEmbedContentsResponse response = embedResource.batchEmbedContent(request);
+     * BatchEmbedContentsResponse response = embedResource.execute(request);
      * List<Embedding> embeddings = response.getEmbeddings();
      * System.out.println(embeddings);
      * }</pre>

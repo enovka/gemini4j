@@ -27,16 +27,16 @@ public interface GenerationResource extends MultiTurnConversationAware {
     GeminiClient getGeminiClient();
 
     /**
-     * Generates content using the provided request.
+     * Executes a content generation request.
      *
      * @param request The {@link GenerateContentRequest} containing the
      * generation parameters.
      * @return A {@link GeminiResult} containing the generated content and
      * shortcuts.
      * @throws ResourceException If an error occurs during content generation.
-     * @since 0.1.0
+     * @since 0.1.3
      */
-    GeminiResult generateContent(GenerateContentRequest request)
+    GeminiResult execute(GenerateContentRequest request)
             throws ResourceException;
 
     /**
@@ -52,7 +52,7 @@ public interface GenerationResource extends MultiTurnConversationAware {
      * builder.withTemperature(0.7);
      * builder.withMaxOutputTokens(200);
      * GenerateContentRequest request = builder.build();
-     * GeminiResult result = generationResource.generateContent(request);
+     * GeminiResult result = generationResource.execute(request);
      * String generatedText = result.getGeneratedText();
      * System.out.println(generatedText);
      * }</pre>
@@ -78,7 +78,7 @@ public interface GenerationResource extends MultiTurnConversationAware {
      *     .withHarassment(HarmBlockThresholdEnum.BLOCK_NONE)
      *     .withHateSpeech(HarmBlockThresholdEnum.BLOCK_NONE));
      * GenerateContentRequest request = builder.build();
-     * GeminiResult result = generationResource.generateContent(request);
+     * GeminiResult result = generationResource.execute(request);
      * String generatedText = result.getGeneratedText();
      * System.out.println(generatedText);
      * }</pre>

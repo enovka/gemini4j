@@ -4,7 +4,10 @@ import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.Content;
 import com.enovka.gemini4j.domain.Part;
 import com.enovka.gemini4j.domain.request.EmbedContentRequest;
+import com.enovka.gemini4j.domain.response.EmbedContentResponse;
 import com.enovka.gemini4j.domain.type.TaskTypeEnum;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.EmbedResource;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,31 +29,35 @@ import java.util.List;
 public class EmbedContentRequestBuilder {
 
     private final GeminiClient geminiClient;
+    private final EmbedResource embedResource;
     private Content content;
     private TaskTypeEnum taskType;
     private String title;
     private Integer outputDimensionality;
 
     /**
-     * Private constructor to enforce builder pattern.
+     * Constructor for the EmbedContentRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
+     * @param embedResource The EmbedResource instance to use for API
      * communication.
+     * @since 0.1.3
      */
-    private EmbedContentRequestBuilder(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+    public EmbedContentRequestBuilder(EmbedResource embedResource) {
+        this.embedResource = embedResource;
+        this.geminiClient = embedResource.getGeminiClient();
     }
 
     /**
      * Creates a new instance of the EmbedContentRequestBuilder.
      *
-     * @param geminiClient The GeminiClient instance to use for API
+     * @param embedResource The EmbedResource instance to use for API
      * communication.
      * @return A new EmbedContentRequestBuilder instance.
+     * @since 0.1.3
      */
     public static EmbedContentRequestBuilder builder(
-            GeminiClient geminiClient) {
-        return new EmbedContentRequestBuilder(geminiClient);
+            EmbedResource embedResource) {
+        return new EmbedContentRequestBuilder(embedResource);
     }
 
     /**
@@ -135,5 +142,16 @@ public class EmbedContentRequestBuilder {
                 .withOutputDimensionality(outputDimensionality == null ? 768
                         : outputDimensionality)
                 .build();
+    }
+
+    /**
+     * Executes the embed content request and returns the response.
+     *
+     * @return The {@link EmbedContentResponse} from the Gemini API.
+     * @throws ResourceException If an error occurs during the API request.
+     * @since 0.1.3
+     */
+    public EmbedContentResponse execute() throws ResourceException {
+        return embedResource.execute(build());
     }
 }

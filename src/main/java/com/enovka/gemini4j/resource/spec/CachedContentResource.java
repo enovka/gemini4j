@@ -2,6 +2,7 @@ package com.enovka.gemini4j.resource.spec;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.CachedContent;
+import com.enovka.gemini4j.domain.request.CachedContentRequest;
 import com.enovka.gemini4j.domain.response.ListCachedContentsResponse;
 import com.enovka.gemini4j.resource.builder.CachedContentRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
@@ -24,16 +25,16 @@ public interface CachedContentResource {
     GeminiClient getGeminiClient();
 
     /**
-     * Creates a cached content.
+     * Executes a request to create cached content.
      *
-     * @param request The {@link CachedContent} containing the content to cache
-     * and other parameters.
+     * @param request The {@link CachedContentRequest} containing the content to
+     * cache and other parameters.
      * @return An {@link CachedContent} containing the generated cached content.
      * @throws ResourceException If an error occurs during the cached content
      * generation process.
-     * @since 0.1.0
+     * @since 0.1.3
      */
-    CachedContent createCachedContent(CachedContent request)
+    CachedContent execute(CachedContentRequest request)
             throws ResourceException;
 
     /**

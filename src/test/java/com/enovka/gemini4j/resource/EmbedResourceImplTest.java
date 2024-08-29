@@ -50,7 +50,7 @@ public class EmbedResourceImplTest {
             throws ResourceException {
         EmbedContentRequest request = embedResource.embedContentBuilder(text)
                 .build();
-        return embedResource.embedContent(request);
+        return embedResource.execute(request);
     }
 
     /**
@@ -70,7 +70,7 @@ public class EmbedResourceImplTest {
         BatchEmbedContentsRequest request
                 = embedResource.batchEmbedContentsBuilder(texts)
                 .build();
-        return embedResource.batchEmbedContent(request);
+        return embedResource.execute(request);
     }
 
     /**
@@ -90,7 +90,7 @@ public class EmbedResourceImplTest {
         EmbedContentRequest request = embedResource.embedContentBuilder(text)
                 .withTaskType(taskType)
                 .build();
-        return embedResource.embedContent(request);
+        return embedResource.execute(request);
     }
 
     /**
@@ -114,7 +114,7 @@ public class EmbedResourceImplTest {
                 .withTaskType(taskType)
                 .withTitle(title)
                 .build();
-        return embedResource.embedContent(request);
+        return embedResource.execute(request);
     }
 
     @BeforeEach
