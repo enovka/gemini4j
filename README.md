@@ -1,285 +1,272 @@
 ## Gemini4J: A Java Library for the Google Gemini API
 
-Gemini4J is a powerful and intuitive Java library that empowers developers to
-seamlessly integrate the advanced capabilities of the Google Gemini API into
-their applications. With Gemini4J, you can unlock the potential of Gemini's
-state-of-the-art artificial intelligence to generate text, translate languages,
-create diverse creative content, and obtain informative answers to your
-questions.
+Gemini4J is a powerful and intuitive Java library designed to simplify the integration of the Google Gemini API into your Java applications. This library provides a user-friendly interface for accessing Gemini's advanced AI capabilities, including text generation, language translation, creative content creation, and insightful question answering.
 
 **Key Features of Google Gemini:**
 
-* **Advanced Text Generation:** Gemini is a cutting-edge language model capable
-  of generating natural and creative text in various styles and formats. It can
-  adapt to different writing styles, tones, and complexities, making it ideal
-  for tasks ranging from writing stories and poems to crafting marketing copy
-  and technical documentation.
-* **Natural Language Understanding:** Gemini possesses a deep understanding of
-  human language, enabling it to comprehend complex questions, translate
-  languages accurately, and generate contextually relevant content. This makes
-  it suitable for applications like chatbots, question answering systems, and
-  content summarization.
-* **Creative and Informative Content:** Gemini can be used to create a wide
-  range of content, including stories, poems, articles, emails, and much more.
-  It can also provide informative summaries and answer questions based on its
-  vast knowledge base, making it a valuable tool for research, education, and
-  entertainment.
-* **Flexibility and Customization:** The Gemini API offers customization options
-  to fine-tune the model's behavior. Parameters like temperature and top-k
-  sampling allow developers to control the level of creativity and randomness in
-  the responses, tailoring the output to specific application needs.
+* **Advanced Text Generation:** Gemini excels in generating natural and creative text across diverse styles and formats. Its adaptability to various writing styles, tones, and complexities makes it an ideal tool for tasks ranging from crafting compelling stories and poems to generating marketing copy and technical documentation.
+* **Natural Language Understanding:**  Gemini's deep understanding of human language enables it to interpret complex questions, translate languages accurately, and generate contextually relevant content. This makes it well-suited for applications such as chatbots, question answering systems, and content summarization.
+* **Creative and Informative Content:** Gemini empowers you to create a wide array of content, including stories, poems, articles, emails, and more. It can also provide informative summaries and answer questions based on its extensive knowledge base, making it a valuable asset for research, education, and entertainment.
+* **Flexibility and Customization:** The Gemini API offers customization options to fine-tune the model's behavior. Parameters like temperature and top-k sampling allow developers to control the level of creativity and randomness in the responses, tailoring the output to specific application needs.
 
 **Gemini4J Simplifies Integration with the Gemini API by Providing:**
 
-* **Abstraction of API Complexity:** Gemini4J encapsulates the underlying
-  complexities of HTTP communication and JSON serialization, allowing developers
-  to focus on their application logic without needing to delve into low-level
-  details.
-* **Intuitive and Easy-to-Use Interface:** Gemini4J provides a high-level
-  interface for interacting with the Gemini API resources, making integration
-  quick and straightforward. This simplifies the process of leveraging Gemini's
-  capabilities, reducing development time and effort.
-* **Support for Key Gemini Features:** Gemini4J offers support for key Gemini
-  features, including text generation, embedding generation, listing available
-  models, and more. This allows developers to access a wide range of Gemini's
-  capabilities through a unified and consistent API.
+* **Abstraction of API Complexity:** Gemini4J handles the underlying complexities of HTTP communication and JSON serialization, allowing you to focus on your application logic without getting bogged down in low-level details.
+* **Intuitive and Easy-to-Use Interface:** Gemini4J offers a high-level interface for interacting with the Gemini API resources, making integration quick and straightforward. This simplifies the process of leveraging Gemini's capabilities, reducing development time and effort.
+* **Support for Key Gemini Features:** Gemini4J provides comprehensive support for key Gemini features, including:
+    * **Text Generation:**  Generate creative and informative text using various Gemini models.
+    * **Embedding Generation:** Create embeddings for text and content, enabling semantic search and similarity comparisons.
+    * **Model Management:** List available models and retrieve detailed information about specific models.
+    * **Cached Content Management:** Create, list, retrieve, update, and delete cached content for optimized performance.
+    * **Token Counting:**  Count the number of tokens in text and other content using Gemini's tokenizer.
 
-**Library in Active Development:**
+**Important Note:**
 
-Please note that Gemini4J is in active development and is constantly evolving to
-incorporate new features and improvements as they become available in the Google
-Gemini API. While some aspects of the Gemini API documentation are still under
-development, we are committed to providing comprehensive documentation and
-examples for using Gemini4J. As of July 22, 2024, we have observed significant
-enhancements in the Google Gemini API documentation, and we are actively working
-on updating Gemini4J to reflect these changes and introduce new functionalities.
+Gemini4J is actively under development, continuously evolving to incorporate new features and improvements as they become available in the Google Gemini API. While I strive to maintain compatibility, significant changes in the Gemini API might necessitate breaking changes in Gemini4J, especially before reaching version 1.0.0. To mitigate potential issues during future upgrades, it is highly recommended to implement an abstraction layer on top of Gemini4J within your application. This abstraction layer will provide a buffer against breaking changes, making future updates smoother.
 
-**Example Usage with Advanced Run Settings:**
+This approach stems from the library's origins. It was initially developed in conjunction with a separate software project, during a time when the Gemini API documentation was limited. The development process involved a degree of trial and error, experimenting with different JSON structures to determine the essential attributes for API requests.  As the library matures and the Gemini API documentation becomes more comprehensive, I am progressively decoupling Gemini4J from the original project and refining it into a standalone, robust library. This involves ongoing refactoring to ensure a clean and maintainable codebase.
 
-This example demonstrates how to use Gemini4J to configure various run settings,
-mirroring the options available in Google AI Studio:
+## Current Limitations
+
+While Gemini4J strives to provide comprehensive access to the Google Gemini API, some functionalities are still under development due to ongoing refinements in the API itself and the active development status of the library.
+
+**Specifically, the following features are not yet fully functional:**
+
+* **Function Calling:** The methods related to function calling, such as `withTool`, `withToolConfig`, and `withFunctionDeclaration` in the `GenerateContentRequestBuilder` and `CachedContentRequestBuilder`, are not yet fully operational. This is due to the evolving nature of the function calling interface in the Gemini API.
+
+* **Updating Cached Content:**  The `updateCachedContent` method in the `CachedContentResource` is currently not functional. This is related to limitations in the current version of the Gemini API, which does not fully support updating existing cached content.
+
+I am actively working on implementing these features as the Gemini API matures and provides more stable interfaces for these functionalities. Future releases of Gemini4J will include support for these features as they become available.
+
+
+## Installation
+
+Add the Gemini4J dependency to your project's `pom.xml` file:
+
+```xml
+<dependency>
+  <groupId>com.enovka</groupId>
+  <artifactId>gemini4j</artifactId>
+  <version>0.1.3</version>
+</dependency>
+```
+
+## Getting Started with Gemini4J
+
+This guide provides a step-by-step introduction to using Gemini4J, covering essential concepts and demonstrating how to leverage its core functionalities.
+
+### 1. Setting Up Your Gemini Client
+
+The `GeminiClient` is your gateway to the Gemini API. You'll need to create an instance of it, providing your API key, which you can obtain from the Google Cloud Console.
 
 ```java
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.domain.GenerationConfig;
-import com.enovka.gemini4j.domain.response.GeminiResult;
-import com.enovka.gemini4j.domain.type.HarmBlockThresholdEnum;
-import com.enovka.gemini4j.domain.type.HarmCategoryEnum;
-import com.enovka.gemini4j.domain.type.ResponseMimeType;
-import com.enovka.gemini4j.resource.builder.ResourceBuilder;
-import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.GenerationResource;
 
-import java.util.Collections;
+public class Gemini4jExample {
 
-/**
- * Example class demonstrating the usage of the Gemini4j library with advanced
- * run settings, mirroring the options available in Google AI Studio.
- *
- * @author Everson Novka <enovka@gmail.com>
- * @since 0.1.0
- */
-public class GeminiRunSettingsExample {
+    public static void main(String[] args) {
+        // Replace "YOUR_API_KEY" with your actual Gemini API key
+        String apiKey = "YOUR_API_KEY";
 
-    /**
-     * Main method to execute the example.
-     *
-     * @param args Command line arguments (not used).
-     * @throws ResourceException If an error occurs during the Gemini API call.
-     */
-    public static void main(String[] args) throws ResourceException {
-        GeminiRunSettingsExample example = new GeminiRunSettingsExample();
-        example.runGeminiWithSettings(
-                "You are a helpful and informative AI assistant.",
-                "What is the capital of France?",
-                "gemini-1.5-flash-001",
-                0.7,
-                "###",
-                0.8
-        );
-    }
-
-    /**
-     * Executes a Gemini generation request using the provided run settings.
-     * This method showcases how to configure various parameters like system
-     * instructions, user input, model selection, temperature, stop sequences,
-     * top-p value, and safety settings, similar to the options available in
-     * Google AI Studio.
-     *
-     * @param systemInstructions The system instructions to guide the model's
-     * behavior. These instructions provide high-level guidance to the model,
-     * influencing its personality and the type of responses it generates. For
-     * example, "You are a helpful and informative AI assistant."
-     * @param userInput The user's input or prompt that initiates the
-     * generation process. This is the core input that the model will use to
-     * generate a response.
-     * @param model The name of the Gemini model to use. Each Gemini model has
-     * different capabilities and characteristics, so selecting the appropriate
-     * model is crucial for achieving the desired results.
-     * @param temperature The temperature value to control the randomness of the
-     * output. This value ranges from 0.0 to 2.0, with higher values leading to
-     * more creative and unpredictable outputs, while lower values result in
-     * more deterministic and focused responses.
-     * @param stopSequence The stop sequence to halt the generation process.
-     * This is a specific sequence of characters that, when encountered, will
-     * signal the model to stop generating further text. This can be useful for
-     * controlling the length or structure of the generated output.
-     * @param topP The top-p value for nucleus sampling. This parameter
-     * influences the diversity of the generated text by controlling the
-     * probability distribution of tokens considered during generation. A higher
-     * top-p value (closer to 1.0) includes a wider range of tokens, potentially
-     * leading to more diverse and creative outputs.
-     * @throws ResourceException If an error occurs during the generation
-     * process. This exception encapsulates any errors that might occur while
-     * interacting with the Gemini API, such as network issues, invalid
-     * requests, or server errors.
-     */
-    public void runGeminiWithSettings(String systemInstructions,
-                                      String userInput, String model,
-                                      double temperature,
-                                      String stopSequence, double topP)
-            throws ResourceException {
-
-        // 1. Create a GeminiClient instance using the builder pattern.
-        // The API key is retrieved from the environment variable "GEMINI_API_KEY".
-        // The selected model is set for this client instance.
+        // Create a GeminiClient instance
         GeminiClient geminiClient = GeminiClientBuilder.builder()
-                .withApiKey(System.getenv("GEMINI_API_KEY"))
-                .withModel(model)
+                .withApiKey(apiKey)
                 .build();
 
-        // 2. Build the GenerationResource using the ResourceBuilder, providing the
-        // configured GeminiClient. This resource is responsible for handling
-        // content generation requests.
-        GenerationResource generationResource = ResourceBuilder.builder(
-                geminiClient).buildGenerationResource();
-
-        // 3. Construct the GenerateContentRequest using the GenerationResourceBuilder.
-        // This builder provides a fluent API for configuring all the parameters
-        // of the generation request.
-        GeminiResult result = generationResource.generateContent(
-                GenerationResourceBuilder.builder(geminiClient)
-                        // 3.1 Set the user input for the generation request.
-                        .withUserInput(userInput)
-                        // 3.2 Set the system instructions to guide the model's behavior.
-                        .withSystemInstruction(systemInstructions)
-                        // 3.3 Configure the generation parameters using the GenerationConfig builder.
-                        .withGenerationConfig(GenerationConfig.builder()
-                                // 3.3.1 Set the temperature value for controlling randomness.
-                                .withTemperature(temperature)
-                                // 3.3.2 Set the top-p value for nucleus sampling.
-                                .withTopP(topP)
-                                // 3.3.3 Set the response MIME type to plain text.
-                                .withResponseMimeType(
-                                        ResponseMimeType.TEXT_PLAIN.getMimeType())
-                                // 3.3.4 Add a stop sequence to halt generation.
-                                .withStopSequences(
-                                        Collections.singletonList(stopSequence))
-                                .build())
-                        // 3.4 Configure safety settings for various harm categories.
-                        // Each safety setting consists of a category and a threshold.
-                        .withSafetySetting()
-                        // 3.4.1 Set the category to Harassment, which filters content that is abusive,
-                        // threatening, or intended to harass or bully individuals or groups.
-                        .withCategory(HarmCategoryEnum.HARM_CATEGORY_HARASSMENT)
-                        // 3.4.2 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, which means that
-                        // content with a medium or high probability of being harmful in this category
-                        // will be blocked.
-                        .withThreshold(
-                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
-                        // 3.4.3 Chain the next safety setting using 'and()'.
-                        .and()
-                        .withSafetySetting()
-                        // 3.4.4 Set the category to Hate Speech, which blocks content that expresses
-                        // hatred, prejudice, or discrimination based on protected characteristics
-                        // like race, religion, or sexual orientation.
-                        .withCategory(
-                                HarmCategoryEnum.HARM_CATEGORY_HATE_SPEECH)
-                        // 3.4.5 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for this category as well.
-                        .withThreshold(
-                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
-                        // 3.4.6 Chain the next safety setting using 'and()'.
-                        .and()
-                        // 3.4.7 Configure safety setting for Sexually Explicit content.
-                        .withSafetySetting()
-                        // 3.4.8 Set the category to Sexually Explicit, which filters content that is
-                        // sexually suggestive, explicit, or inappropriate for general audiences.
-                        .withCategory(
-                                HarmCategoryEnum.HARM_CATEGORY_SEXUALLY_EXPLICIT)
-                        // 3.4.9 Set the threshold to BLOCK_MEDIUM_AND_ABOVE, blocking content with a medium
-                        // or high probability of being sexually explicit.
-                        .withThreshold(
-                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
-                        // 3.4.10 Chain the next safety setting using 'and()'.
-                        .and()
-                        // 3.4.11 Configure safety setting for Dangerous Content.
-                        .withSafetySetting()
-                        // 3.4.12 Set the category to Dangerous Content, which blocks content that promotes
-                        // violence, illegal activities, self-harm, or other dangerous behavior.
-                        .withCategory(
-                                HarmCategoryEnum.HARM_CATEGORY_DANGEROUS_CONTENT)
-                        // 3.4.13 Set the threshold to BLOCK_MEDIUM_AND_ABOVE for dangerous content.
-                        .withThreshold(
-                                HarmBlockThresholdEnum.BLOCK_MEDIUM_AND_ABOVE)
-                        // 3.4.14 End the safety settings chain using 'and()'.
-                        .and()
-                        // 3.5 Finally, build the GenerateContentRequest object.
-                        .build()
-        );
-
-        // 4. Print the generated text from the GeminiResult.
-        System.out.println("Generated Text: " + result.getGeneratedText());
+        // Now you can use the geminiClient to access various resources
+        // ...
     }
 }
 ```
 
-## Installation
+### 2. Generating Text with Gemini
 
-1. **Add the Gemini4J dependency to your project's `pom.xml` file:**
+Gemini4J makes it easy to generate text using Gemini's powerful language models. You can use the `GenerationResource` to send generation requests and get creative text outputs.
 
-   ```xml
-   <dependency>
-     <groupId>com.enovka</groupId>
-     <artifactId>gemini4j</artifactId>
-     <version>0.1.0</version>
-   </dependency>
-   ```
+**Example: Generating a Short Story**
 
-2. **Configure Maven to use GitHub Packages:**
+```java
+import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.GenerationResource;
+import com.enovka.gemini4j.domain.response.GeminiResult;
 
-    * **Create a `settings.xml` file:** If you don't have one, create
-      a `settings.xml` file in the `~/.m2` directory.
-    * **Add the GitHub Packages repository to your `settings.xml`:**
+public class TextGenerationExample {
 
-      ```xml
-      <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                            http://maven.apache.org/xsd/settings-1.0.0.xsd">
- 
-        <repositories>
-          <repository>
-            <id>central</id>
-            <url>https://repo1.maven.org/maven2</url>
-          </repository>
-          <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/enovka/gemini4j</url>
-            <snapshots>
-              <enabled>true</enabled>
-            </snapshots>
-          </repository>
-        </repositories>
-      </settings>
-      ```
+    public static void main(String[] args) throws ResourceException {
+        // Assuming you have a GeminiClient instance (geminiClient) from the previous step
 
-**You can find the Gemini4J library on GitHub Packages:
-** https://github.com/enovka/gemini4j/packages/2210376
+        // Create a GenerationResource instance
+        GenerationResource generationResource = ResourceBuilder.builder(geminiClient)
+                .buildGenerationResource();
 
-**Note:** If you're using a build system other than Maven, you can find the
-Gemini4J library on GitHub Packages and follow the instructions for your
-specific build system.
+        // Define your prompt
+        String prompt = "Write a short story about a talking cat.";
+
+        // Generate text using the generateText method
+        GeminiResult result = generationResource.generateTextBuilder(prompt)
+                .execute();
+
+        // Print the generated text
+        System.out.println(result.getGeneratedText());
+    }
+}
+```
+
+**Explanation:**
+
+1. **Create a `GenerationResource`:** This resource handles text generation requests.
+2. **Define Your Prompt:**  Provide the text prompt that will guide Gemini's text generation.
+3. **Generate Text:** Use the `generateTextBuilder` method, providing your prompt, and then call `execute` to send the request to the Gemini API.
+4. **Retrieve the Generated Text:** The `GeminiResult` object contains the generated text, which you can access using `result.getGeneratedText()`.
+
+### 3. Working with Embeddings
+
+Embeddings are numerical representations of text that capture semantic meaning. Gemini4J provides the `EmbedResource` to generate embeddings for text and content, enabling tasks like semantic search and similarity comparisons.
+
+**Example: Generating Embeddings for Sentences**
+
+```java
+import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.EmbedResource;
+import com.enovka.gemini4j.domain.response.EmbedContentResponse;
+
+public class EmbeddingExample {
+
+    public static void main(String[] args) throws ResourceException {
+        // Assuming you have a GeminiClient instance (geminiClient)
+
+        // Create an EmbedResource instance
+        EmbedResource embedResource = ResourceBuilder.builder(geminiClient)
+                .buildEmbedResource();
+
+        // Define the text for which you want to generate an embedding
+        String text = "This is a sentence.";
+
+        // Generate the embedding
+        EmbedContentResponse response = embedResource.embedContentBuilder(text)
+                .build();
+        response = embedResource.execute(response.build());
+
+        // Access the embedding values
+        List<Double> embeddingValues = response.getEmbedding().getValues();
+
+        // Print the embedding values
+        System.out.println(embeddingValues);
+    }
+}
+```
+
+**Explanation:**
+
+1. **Create an `EmbedResource`:** This resource handles embedding generation requests.
+2. **Define Your Text:** Provide the text for which you want to generate an embedding.
+3. **Generate the Embedding:** Use the `embedContentBuilder` method, providing your text, and then call `execute` to send the request to the Gemini API.
+4. **Access the Embedding Values:** The `EmbedContentResponse` object contains the embedding, which you can access using `response.getEmbedding().getValues()`.
+
+### 4. Managing Cached Content
+
+Cached content allows you to store pre-processed content for later use, potentially reducing latency and costs. Gemini4J provides the `CachedContentResource` to manage cached content.
+
+**Example: Creating and Retrieving Cached Content**
+
+```java
+import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.CachedContentResource;
+import com.enovka.gemini4j.domain.CachedContent;
+import com.enovka.gemini4j.domain.Content;
+import com.enovka.gemini4j.domain.Part;
+
+public class CachedContentExample {
+
+    public static void main(String[] args) throws ResourceException {
+        // Assuming you have a GeminiClient instance (geminiClient)
+
+        // Create a CachedContentResource instance
+        CachedContentResource cachedContentResource = ResourceBuilder.builder(geminiClient)
+                .buildCachedContentResource();
+
+        // Define the model and content to cache
+        String model = "models/gemini-1.5-flash-001";
+        String contentToCache = "This is the content to be cached.";
+
+        // Create cached content
+        CachedContent cachedContent = cachedContentResource.execute(
+                cachedContentResource.createCachedContentBuilder(model)
+                        .withContent(Content.builder()
+                                .withRole("user")
+                                .withParts(Collections.singletonList(Part.builder()
+                                        .withText(contentToCache)
+                                        .build()))
+                                .build())
+                        .withTtl("300s") // Time-to-live for the cached content
+                        .build()
+        );
+
+        // Retrieve cached content by name
+        String cacheName = cachedContent.getName();
+        CachedContent retrievedCachedContent = cachedContentResource.getCachedContent(cacheName);
+
+        // Print the retrieved cached content
+        System.out.println(retrievedCachedContent);
+    }
+}
+```
+
+**Explanation:**
+
+1. **Create a `CachedContentResource`:** This resource handles cached content management.
+2. **Define Model and Content:** Specify the Gemini model and the content you want to cache.
+3. **Create Cached Content:** Use the `createCachedContentBuilder` method, providing the model and content, and set a time-to-live (TTL) for the cached content. Call `execute` to create the cached content.
+4. **Retrieve Cached Content:**  Use the `getCachedContent` method, providing the cache name, to retrieve the cached content.
+
+### 5. Counting Tokens
+
+Tokens are the basic units of text that Gemini processes. Gemini4J provides the `CountTokensResource` to count the number of tokens in text and other content.
+
+**Example: Counting Tokens in a String**
+
+```java
+import com.enovka.gemini4j.resource.builder.ResourceBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.CountTokensResource;
+
+public class TokenCountingExample {
+
+    public static void main(String[] args) throws ResourceException {
+        // Assuming you have a GeminiClient instance (geminiClient)
+
+        // Create a CountTokensResource instance
+        CountTokensResource countTokensResource = ResourceBuilder.builder(geminiClient)
+                .buildCountTokensResource();
+
+        // Define the text for which you want to count tokens
+        String text = "This is a sentence.";
+
+        // Count the tokens
+        int tokenCount = countTokensResource.execute(
+                countTokensResource.countTokensBuilder(text)
+                        .build()
+        ).getTotalTokens();
+
+        // Print the token count
+        System.out.println("Token count: " + tokenCount);
+    }
+}
+```
+
+**Explanation:**
+
+1. **Create a `CountTokensResource`:** This resource handles token counting requests.
+2. **Define Your Text:** Provide the text for which you want to count tokens.
+3. **Count the Tokens:** Use the `countTokensBuilder` method, providing your text, and then call `execute` to send the request to the Gemini API.
+4. **Retrieve the Token Count:** The response object contains the total token count, which you can access using `getTotalTokens()`.
+
+This detailed documentation provides a comprehensive overview of Gemini4J's core functionalities and demonstrates how to use its key features. As the library continues to evolve, the documentation will be updated to reflect new capabilities and provide more in-depth examples.
+
 
 ## Gemini4J Roadmap: Version 1.0.0
 
