@@ -9,11 +9,7 @@
     <version>0.1.3</version>
 
     <name>Gemini4J</name>
-    <description>A powerful and easy-to-use Java library that simplifies
-        interactions with a cutting-edge language model API. This library
-        provides a comprehensive set of tools for developers to seamlessly
-        integrate advanced language capabilities into their applications.
-    </description>
+    <description>A powerful and easy-to-use Java library that simplifies interactions with a cutting-edge language model API. This library provides a comprehensive set of tools for developers to seamlessly integrate advanced language capabilities into their applications. It offers features like text generation, question answering, summarization, and more, making it a versatile tool for various NLP tasks.</description>
     <url>https://github.com/enovka/gemini4j</url>
 
     <licenses>
@@ -30,58 +26,71 @@
         </developer>
     </developers>
 
+    <scm>
+        <connection>scm:git:git://github.com/enovka/gemini4j.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:enovka/gemini4j.git</developerConnection>
+        <url>https://github.com/enovka/gemini4j/tree/main</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
-            <id>github</id>
-            <name>GitHub enovka Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/enovka/gemini4j</url>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
     <properties>
         <java.version>11</java.version>
-        <wiremock.port>8080</wiremock.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <jackson.version>2.17.1</jackson.version>
-        <project.reporting.outputEncoding>UTF-8
-        </project.reporting.outputEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.javadoc.encoding>UTF-8</maven.javadoc.encoding>
         <maven.javadoc.locale>en_US</maven.javadoc.locale>
+        <gpg.keyname>AB9E8C1FB9EA17F2CA72C088A28441C4868D74A0</gpg.keyname>
+
+        <!-- Dependencies -->
+        <jackson.version>2.17.1</jackson.version>
         <lombok.version>1.18.34</lombok.version>
-        <maven.javadoc.plugin.version>3.10.0</maven.javadoc.plugin.version>
-        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
-        <maven.project.info.reports.plugin.version>3.6.1
-        </maven.project.info.reports.plugin.version>
-        <lombok.maven.plugin.version>1.18.20.0</lombok.maven.plugin.version>
         <log4j.version>2.23.1</log4j.version>
         <junit.jupiter.version>5.10.3</junit.jupiter.version>
         <mockito.version>5.12.0</mockito.version>
-        <rest.assured.version>5.5.0</rest.assured.version>
-        <jsonassert.version>1.5.3</jsonassert.version>
         <wiremock.version>3.9.1</wiremock.version>
-        <maven.dependency.plugin.version>3.7.1</maven.dependency.plugin.version>
-        <maven.failsafe.plugin>3.3.1</maven.failsafe.plugin>
-        <maven.gpg.plugin.version>3.2.4</maven.gpg.plugin.version>
-        <maven.wrapper.plugin.version>3.3.2</maven.wrapper.plugin.version>
+        <apache.httpclient.version>4.5.14</apache.httpclient.version>
+
+        <!-- Plugins -->
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.javadoc.plugin.version>3.10.0</maven.javadoc.plugin.version>
+        <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
+        <maven.deploy.plugin.version>3.1.0</maven.deploy.plugin.version>
+        <maven.gpg.plugin.version>3.2.5</maven.gpg.plugin.version>
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
         <maven.surefire.plugin.version>3.3.1</maven.surefire.plugin.version>
+        <maven.wrapper.plugin.version>3.3.2</maven.wrapper.plugin.version>
+
     </properties>
 
     <dependencies>
-        <!-- Core Dependencies -->
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${apache.httpclient.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
-            <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>${maven.dependency.plugin.version}</version>
-        </dependency>
-        <!-- Logging -->
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -98,14 +107,13 @@
             <version>${log4j.version}</version>
         </dependency>
 
-        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Test Dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -124,7 +132,7 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- WireMock -->
+
         <dependency>
             <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
@@ -143,26 +151,7 @@
             <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Maven Plugins -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>${maven.javadoc.plugin.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-container-default</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>
@@ -185,9 +174,92 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.source.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.plugin.version}</version>
+                <configuration>
+                    <overview>src/main/javadoc/overview.html</overview>
+                    <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>
+                    <encoding>${maven.javadoc.encoding}</encoding>
+                    <charset>${maven.javadoc.encoding}</charset>
+                    <locale>${maven.javadoc.locale}</locale>
+                    <source>${maven.compiler.source}</source>
+                    <doclint>none</doclint>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>${lombok-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+                            <addOutputDirectory>false</addOutputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <keyname>${gpg.keyname}</keyname>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <extensions>true</extensions>
                 <configuration>
+                    <publishingServerId>ossrh</publishingServerId>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
 
@@ -201,60 +273,8 @@
                             <goal>wrapper</goal>
                         </goals>
                         <configuration>
-                            <mavenVersion>${maven.compiler.plugin.version}
-                            </mavenVersion>
+                            <mavenVersion>${maven.compiler.plugin.version}</mavenVersion>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-                <version>${lombok.maven.plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.google.guava</groupId>
-                        <artifactId>guava</artifactId>
-                        <version>33.2.1-jre</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>delombok</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <sourceDirectory>${basedir}/src/main/java
-                            </sourceDirectory>
-                            <addOutputDirectory>false</addOutputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.javadoc.plugin.version}</version>
-                <configuration>
-                    <overview>src/main/javadoc/overview.html</overview>
-                    <sourcepath>
-                        ${project.build.directory}/generated-sources/delombok
-                    </sourcepath>
-                    <encoding>${maven.javadoc.encoding}</encoding>
-                    <charset>${maven.javadoc.encoding}</charset>
-                    <locale>${maven.javadoc.locale}</locale>
-                    <source>${maven.compiler.source}</source>
-                    <doclint>none</doclint>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
