@@ -1,4 +1,4 @@
-package com.enovka.gemini4j;
+package com.enovka.gemini4j.infrastructure.tool;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.resource;
 
-import com.enovka.gemini4j.ResourceFiles;
+import com.enovka.gemini4j.infrastructure.tool.ResourceFiles;
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.domain.CachedContent;
