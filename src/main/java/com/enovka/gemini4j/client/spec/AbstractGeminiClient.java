@@ -1,8 +1,5 @@
 package com.enovka.gemini4j.client.spec;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
-import com.enovka.gemini4j.client.exception.GeminiClientException;
-import com.enovka.gemini4j.infrastructure.exception.GeminiInfrastructureException;
 import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
 import com.enovka.gemini4j.infrastructure.http.factory.HttpClientType;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
@@ -15,7 +12,6 @@ import lombok.Setter;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Abstract base class for Gemini client implementations, providing shared
@@ -28,7 +24,7 @@ import java.util.function.Supplier;
 public abstract class AbstractGeminiClient extends BaseClass
         implements GeminiClient {
 
-    protected final String apiKey;
+    protected String apiKey;
     /**
      * The HTTP client to use for communication with the Gemini API.
      */
@@ -65,7 +61,7 @@ public abstract class AbstractGeminiClient extends BaseClass
                         .withHttpClientType(HttpClientType.DEFAULT)
                         .build().getCustomClient();
         this.baseUrl = baseUrl != null ? baseUrl
-                : "https://generativelanguage.googleapis.com/v1beta";
+                : "https://generativelanguage.googleapis.com/v1beta/";
         this.jsonService = jsonService != null ? jsonService
                 : JsonServiceBuilder.builder().withJsonServiceType(
                         JsonServiceType.JACKSON).build().build();
@@ -80,21 +76,10 @@ public abstract class AbstractGeminiClient extends BaseClass
     }
 
     /**
-     * Executes a request to the Gemini API, handling potential
-     * {@link GeminiInfrastructureException} and wrapping it in a
-     * {@link GeminiClientException}.
-     *
-     * @param requestSupplier A supplier that provides the actual request
-     * execution logic.
-     * @param <R> The type of response object returned by the request.
-     * @return The response object returned by the request.
-     * @throws GeminiApiException If the Gemini API returns an error.
-     * @throws GeminiClientException If an error occurs within the client, such
-     * as a network error or JSON processing error.
+     * {@inheritDoc}
      */
     @Override
-    public <R> R executeRequest(Supplier<R> requestSupplier)
-            throws GeminiApiException, GeminiClientException {
-        return requestSupplier.get();
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 }

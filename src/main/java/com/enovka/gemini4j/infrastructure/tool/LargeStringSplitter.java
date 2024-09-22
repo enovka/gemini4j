@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class LargeStringSplitter {
 
-    private static final int MAX_CHUNK_SIZE_BYTES = 9000;
+    private static final int MAX_CHUNK_SIZE_BYTES = 8000;
 
     /**
      * Splits a large string into a list of smaller strings, each with a size less than

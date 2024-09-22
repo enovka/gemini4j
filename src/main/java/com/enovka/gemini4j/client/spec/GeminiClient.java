@@ -1,12 +1,9 @@
 package com.enovka.gemini4j.client.spec;
 
-import com.enovka.gemini4j.client.exception.GeminiApiException;
-import com.enovka.gemini4j.client.exception.GeminiClientException;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Interface defining the contract for interacting with the Google Gemini API.
@@ -22,6 +19,15 @@ public interface GeminiClient {
      * @return The API key.
      */
     String getApiKey();
+
+
+    /**
+     * Sets the gemini api key to be used for requests.
+     *
+     * @param apiKey The new gemini api Key.
+     * @since 0.1.7
+     */
+    void setApiKey(String apiKey);
 
     /**
      * Builds the headers for API authentication.
@@ -86,19 +92,4 @@ public interface GeminiClient {
      */
     void setJsonService(JsonService jsonService);
 
-    /**
-     * Executes a request to the Gemini API, handling potential exceptions and
-     * providing centralized error logging.
-     *
-     * @param requestSupplier A supplier that provides the actual request
-     * execution logic.
-     * @param <R> The type of response object returned by the request.
-     * @return The response object returned by the request.
-     * @throws GeminiApiException If the Gemini API returns an error.
-     * @throws GeminiClientException If an error occurs within the client, such
-     * as a network error or JSON processing error.
-     * @since 0.1.0
-     */
-    <R> R executeRequest(Supplier<R> requestSupplier) throws GeminiApiException,
-            GeminiClientException;
 }

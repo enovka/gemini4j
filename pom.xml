@@ -6,7 +6,7 @@
 
     <groupId>com.enovka</groupId>
     <artifactId>gemini4j</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.7</version>
 
     <name>Gemini4J</name>
     <description>A powerful and easy-to-use Java library that simplifies interactions with a cutting-edge language model API. This library provides a comprehensive set of tools for developers to seamlessly integrate advanced language capabilities into their applications. It offers features like text generation, question answering, summarization, and more, making it a versatile tool for various NLP tasks.</description>
