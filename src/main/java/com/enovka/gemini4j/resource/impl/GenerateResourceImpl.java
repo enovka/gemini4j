@@ -2,15 +2,15 @@ package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.model.request.GenerateRequest;
-import com.enovka.gemini4j.model.response.internal.GenerateContentResponse;
 import com.enovka.gemini4j.model.response.GenerateResponse;
+import com.enovka.gemini4j.model.response.internal.GenerateContentResponse;
 import com.enovka.gemini4j.model.type.SupportedModelMethod;
 import com.enovka.gemini4j.resource.builder.request.GenerateRequestBuilder;
 import com.enovka.gemini4j.resource.builder.request.GenerateTextRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.GenerateResource;
 import com.enovka.gemini4j.resource.spec.base.AbstractMultiTurnConversationResource;
 import com.enovka.gemini4j.resource.spec.base.AbstractResource;
-import com.enovka.gemini4j.resource.spec.GenerateResource;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class GenerateResourceImpl extends AbstractMultiTurnConversationResource<
             GenerateContentResponse response = executeRequest("POST", endpoint, request, GenerateContentResponse.class);
             multiTurnConversation.addContent(response.getCandidates().get(0).getContent());
             return GenerateResponse.builder().withGenerateContentResponse(response).build();
-        } catch (ResourceException e) {
+        } catch (Exception e) {
             throw new ResourceException("Error generating content: " + e.getMessage(), e);
         }
     }

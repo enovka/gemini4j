@@ -9,8 +9,8 @@ import com.enovka.gemini4j.model.type.SupportedModelMethod;
 import com.enovka.gemini4j.resource.builder.request.BatchEmbedRequestBuilder;
 import com.enovka.gemini4j.resource.builder.request.EmbedRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.base.AbstractResource;
 import com.enovka.gemini4j.resource.spec.EmbedResource;
+import com.enovka.gemini4j.resource.spec.base.AbstractResource;
 
 import java.util.List;
 

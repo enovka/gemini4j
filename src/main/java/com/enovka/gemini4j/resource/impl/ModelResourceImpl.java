@@ -5,8 +5,8 @@ import com.enovka.gemini4j.model.ListModel;
 import com.enovka.gemini4j.model.Model;
 import com.enovka.gemini4j.model.type.SupportedModelMethod;
 import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.base.AbstractResource;
 import com.enovka.gemini4j.resource.spec.ModelResource;
+import com.enovka.gemini4j.resource.spec.base.AbstractResource;
 
 import java.util.List;
 
@@ -22,8 +22,8 @@ import java.util.List;
 public class ModelResourceImpl extends AbstractResource<ModelResource>
         implements ModelResource {
 
-    private static final String LIST_MODELS_ENDPOINT = "/models";
-    private static final String GET_MODEL_ENDPOINT = "/%s";
+    private static final String LIST_MODELS_ENDPOINT = "models";
+    private static final String GET_MODEL_ENDPOINT = "%s";
     private static final List<SupportedModelMethod> SUPPORTED_METHODS = List.of();
 
     /**

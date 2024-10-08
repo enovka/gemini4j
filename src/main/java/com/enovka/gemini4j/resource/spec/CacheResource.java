@@ -1,14 +1,11 @@
 package com.enovka.gemini4j.resource.spec;
 
 import com.enovka.gemini4j.model.CacheContent;
-import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.request.CacheRequest;
 import com.enovka.gemini4j.model.response.ListCacheResponse;
 import com.enovka.gemini4j.resource.builder.request.CacheRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.base.Resource;
-
-import java.util.List;
 
 /**
  * Interface defining the contract for interacting with the cached content

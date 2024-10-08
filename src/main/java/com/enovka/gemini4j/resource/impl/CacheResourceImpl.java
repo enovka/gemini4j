@@ -2,16 +2,14 @@ package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.model.CacheContent;
-import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.request.CacheRequest;
 import com.enovka.gemini4j.model.response.ListCacheResponse;
 import com.enovka.gemini4j.model.type.SupportedModelMethod;
 import com.enovka.gemini4j.resource.builder.request.CacheRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.base.AbstractResource;
 import com.enovka.gemini4j.resource.spec.CacheResource;
+import com.enovka.gemini4j.resource.spec.base.AbstractResource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -2,8 +2,8 @@ package com.enovka.gemini4j.resource.builder.request;
 
 import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.request.GenerateRequest;
-import com.enovka.gemini4j.model.response.internal.GenerateContentResponse;
 import com.enovka.gemini4j.model.response.GenerateResponse;
+import com.enovka.gemini4j.model.response.internal.GenerateContentResponse;
 import com.enovka.gemini4j.resource.builder.request.spec.GenerateRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.GenerateResource;
