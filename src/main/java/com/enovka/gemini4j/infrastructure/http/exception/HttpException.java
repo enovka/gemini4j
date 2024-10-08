@@ -36,7 +36,7 @@ public class HttpException extends Throwable {
      * cause.
      *
      * @param message The error message.
-     * @param cause The cause of the exception.
+     * @param cause   The cause of the exception.
      */
     public HttpException(String message, Throwable cause) {
         this(message, cause, -1);
@@ -46,8 +46,8 @@ public class HttpException extends Throwable {
      * Constructs a new HttpException with the specified error message, cause,
      * and HTTP status code.
      *
-     * @param message The error message.
-     * @param cause The cause of the exception.
+     * @param message    The error message.
+     * @param cause      The cause of the exception.
      * @param statusCode The HTTP status code.
      */
     public HttpException(String message, Throwable cause, int statusCode) {

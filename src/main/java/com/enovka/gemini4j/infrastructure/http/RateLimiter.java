@@ -26,8 +26,8 @@ public class RateLimiter extends BaseClass {
      * Constructs a new RateLimiter with the specified rate limit parameters.
      *
      * @param requestsPerWindow The maximum number of requests allowed within
-     * the time window.
-     * @param windowDuration The duration of the sliding time window.
+     *                          the time window.
+     * @param windowDuration    The duration of the sliding time window.
      */
     public RateLimiter(int requestsPerWindow, Duration windowDuration) {
         this.requestsPerWindow = requestsPerWindow;

@@ -81,9 +81,9 @@ public abstract class AbstractHttpClient extends BaseClass
      * Sets the rate limiter for this HTTP client.
      *
      * @param requestsPerWindow The maximum number of requests allowed per time
-     * window.
-     * @param windowDuration The duration of the sliding time window for rate
-     * limiting.
+     *                          window.
+     * @param windowDuration    The duration of the sliding time window for rate
+     *                          limiting.
      */
     public void setRateLimiter(int requestsPerWindow, Duration windowDuration) {
         this.rateLimiter = new RateLimiter(requestsPerWindow, windowDuration);
@@ -104,7 +104,7 @@ public abstract class AbstractHttpClient extends BaseClass
      * Executes the actual GET request logic. This method is called after the
      * rate limit permit is acquired.
      *
-     * @param url The URL to send the GET request to.
+     * @param url     The URL to send the GET request to.
      * @param headers The headers to include in the request.
      * @return An {@link HttpResponse} object containing the response.
      * @throws HttpException If an error occurs during the request execution.
@@ -117,8 +117,8 @@ public abstract class AbstractHttpClient extends BaseClass
      * Executes the actual POST request logic. This method is called after the
      * rate limit permit is acquired.
      *
-     * @param url The URL to send the POST request to.
-     * @param body The request body.
+     * @param url     The URL to send the POST request to.
+     * @param body    The request body.
      * @param headers The headers to include in the request.
      * @return An {@link HttpResponse} object containing the response.
      * @throws HttpException If an error occurs during the request execution.
@@ -131,8 +131,8 @@ public abstract class AbstractHttpClient extends BaseClass
      * Executes the actual PATCH request logic. This method is called after the
      * rate limit permit is acquired.
      *
-     * @param url The URL to send the PATCH request to.
-     * @param body The request body.
+     * @param url     The URL to send the PATCH request to.
+     * @param body    The request body.
      * @param headers The headers to include in the request.
      * @return An {@link HttpResponse} object containing the response.
      * @throws HttpException If an error occurs during the request execution.
@@ -145,7 +145,7 @@ public abstract class AbstractHttpClient extends BaseClass
      * Executes the actual DELETE request logic. This method is called after the
      * rate limit permit is acquired.
      *
-     * @param url The URL to send the DELETE request to.
+     * @param url     The URL to send the DELETE request to.
      * @param headers The headers to include in the request.
      * @return An {@link HttpResponse} object containing the response.
      * @throws HttpException If an error occurs during the request execution.

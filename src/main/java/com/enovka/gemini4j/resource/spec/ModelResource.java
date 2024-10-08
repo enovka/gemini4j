@@ -1,8 +1,9 @@
 package com.enovka.gemini4j.resource.spec;
 
-import com.enovka.gemini4j.domain.ListModel;
-import com.enovka.gemini4j.domain.Model;
+import com.enovka.gemini4j.model.ListModel;
+import com.enovka.gemini4j.model.Model;
 import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.base.Resource;
 
 /**
  * Interface defining the contract for interacting with the Model resource of
@@ -11,7 +12,7 @@ import com.enovka.gemini4j.resource.exception.ResourceException;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public interface ModelResource {
+public interface ModelResource extends Resource {
 
     /**
      * Retrieves a list of available Gemini models.
@@ -28,7 +29,7 @@ public interface ModelResource {
      * @param modelName The name of the model to retrieve.
      * @return A {@link Model} object representing the specified model.
      * @throws ResourceException If an error occurs while fetching the model or
-     * if the model is not found.
+     *                           if the model is not found.
      * @since 0.0.2
      */
     Model getModel(String modelName) throws ResourceException;

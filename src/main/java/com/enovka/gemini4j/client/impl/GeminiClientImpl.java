@@ -17,17 +17,18 @@ public class GeminiClientImpl extends AbstractGeminiClient {
      * Constructs a new AbstractGeminiClient with the required API key, model,
      * HTTP client, base URL, and JSON service.
      *
-     * @param apiKey The API key for authentication with the Gemini API.
-     * @param model The default model to use for requests.
-     * @param httpClient The HTTP client to use for communication.
-     * @param baseUrl The base URL for the Gemini API.
+     * @param apiKey      The API key for authentication with the Gemini API.
+     * @param model       The default model to use for requests.
+     * @param httpClient  The HTTP client to use for communication.
+     * @param baseUrl     The base URL for the Gemini API.
      * @param jsonService The JSON service to use for serialization and
-     * deserialization.
+     *                    deserialization.
      */
     public GeminiClientImpl(String apiKey, String model,
                             HttpClient httpClient,
                             String baseUrl,
                             JsonService jsonService) {
         super(apiKey, model, httpClient, baseUrl, jsonService);
+
     }
 }

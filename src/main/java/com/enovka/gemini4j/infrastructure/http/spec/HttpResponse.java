@@ -36,8 +36,8 @@ public class HttpResponse {
      * Constructs a new HttpResponse.
      *
      * @param statusCode The HTTP status code.
-     * @param headers The response headers.
-     * @param body The response body.
+     * @param headers    The response headers.
+     * @param body       The response body.
      */
     public HttpResponse(int statusCode, Map<String, String> headers,
                         String body) {

@@ -2,6 +2,7 @@ package com.enovka.gemini4j.client.builder;
 
 import com.enovka.gemini4j.client.impl.GeminiClientImpl;
 import com.enovka.gemini4j.client.spec.GeminiClient;
+import com.enovka.gemini4j.infrastructure.Constants;
 import com.enovka.gemini4j.infrastructure.http.factory.HttpClientBuilder;
 import com.enovka.gemini4j.infrastructure.http.factory.HttpClientType;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
@@ -19,8 +20,8 @@ import java.time.Duration;
 public class GeminiClientBuilder {
 
     private String apiKey;
-    private String model = "models/gemini-pro-vision-001";
-    private String baseUrl = "https://generativelanguage.googleapis.com/v1beta";
+    private String model = Constants.DEFAULT_MODEL;
+    private String baseUrl = Constants.BASE_URL;
     private JsonService jsonService = JsonServiceBuilder.builder().build()
             .build();
     private Integer connectionTimeout = 5000; // Default value
@@ -116,9 +117,9 @@ public class GeminiClientBuilder {
      * Sets the rate limiter parameters for the HTTP client.
      *
      * @param requestsPerWindow The maximum number of requests allowed per time
-     * window.
-     * @param windowDuration The duration of the sliding time window for rate
-     * limiting.
+     *                          window.
+     * @param windowDuration    The duration of the sliding time window for rate
+     *                          limiting.
      * @return The builder instance for method chaining.
      */
     public GeminiClientBuilder withRateLimiter(int requestsPerWindow,
