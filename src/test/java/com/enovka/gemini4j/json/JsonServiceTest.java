@@ -1,10 +1,10 @@
 package com.enovka.gemini4j.json;
 
-import com.enovka.gemini4j.domain.Model;
 import com.enovka.gemini4j.infrastructure.json.builder.JsonServiceBuilder;
 import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
 import com.enovka.gemini4j.infrastructure.tool.BaseClass;
+import com.enovka.gemini4j.model.Model;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -42,7 +42,7 @@ public class JsonServiceTest extends BaseClass {
     public void testSerialize() throws JsonException {
         System.out.println("Starting testSerialize...");
 
-        Model model = Model.builder().withName("models/test-model")
+        Model model = Model.newBuilder().withName("models/test-model")
                 .withBaseModelId("test-model")
                 .withVersion("001")
                 .withDisplayName("Test Model")
@@ -80,7 +80,7 @@ public class JsonServiceTest extends BaseClass {
 
         System.out.println("JSON string: " + json);
 
-        Model expectedModel = Model.builder().withName("models/test-model")
+        Model expectedModel = Model.newBuilder().withName("models/test-model")
                 .withBaseModelId("test-model")
                 .withVersion("001")
                 .withDisplayName("Test Model")

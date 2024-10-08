@@ -23,7 +23,7 @@ public class JsonException extends Exception {
      * cause.
      *
      * @param message The error message.
-     * @param cause The cause of the exception.
+     * @param cause   The cause of the exception.
      */
     public JsonException(String message, Throwable cause) {
         super(message, cause);

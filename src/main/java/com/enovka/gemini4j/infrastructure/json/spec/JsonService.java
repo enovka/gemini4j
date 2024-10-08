@@ -14,7 +14,7 @@ public interface JsonService {
      * Serializes the given object to a JSON string.
      *
      * @param object The object to serialize.
-     * @param <T> The type of the object.
+     * @param <T>    The type of the object.
      * @return The JSON string representation of the object.
      * @throws JsonException If an error occurs during serialization.
      */
@@ -25,7 +25,7 @@ public interface JsonService {
      *
      * @param json The JSON string to deserialize.
      * @param type The class of the object to deserialize to.
-     * @param <T> The type of the object.
+     * @param <T>  The type of the object.
      * @return The deserialized object.
      * @throws JsonException If an error occurs during deserialization.
      */

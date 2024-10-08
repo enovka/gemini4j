@@ -15,7 +15,7 @@ public interface HttpClient {
     /**
      * Sends a GET request to the specified URL with the provided headers.
      *
-     * @param url The URL to send the request to.
+     * @param url     The URL to send the request to.
      * @param headers The headers to include in the request.
      * @return The HTTP response wrapped in an {@link HttpResponse}.
      * @throws HttpException If an error occurs during the request.
@@ -27,8 +27,8 @@ public interface HttpClient {
      * Sends a POST request to the specified URL with the provided headers and
      * body.
      *
-     * @param url The URL to send the request to.
-     * @param body The request body.
+     * @param url     The URL to send the request to.
+     * @param body    The request body.
      * @param headers The headers to include in the request.
      * @return The HTTP response wrapped in an {@link HttpResponse}.
      * @throws HttpException If an error occurs during the request.
@@ -40,8 +40,8 @@ public interface HttpClient {
      * Sends a PATCH request to the specified URL with the provided headers and
      * body.
      *
-     * @param url The URL to send the request to.
-     * @param body The request body.
+     * @param url     The URL to send the request to.
+     * @param body    The request body.
      * @param headers The headers to include in the request.
      * @return The HTTP response wrapped in an {@link HttpResponse}.
      * @throws HttpException If an error occurs during the request.
@@ -52,7 +52,7 @@ public interface HttpClient {
     /**
      * Sends a DELETE request to the specified URL with the provided headers.
      *
-     * @param url The URL to send the request to.
+     * @param url     The URL to send the request to.
      * @param headers The headers to include in the request.
      * @return The HTTP response wrapped in an {@link HttpResponse}.
      * @throws HttpException If an error occurs during the request.

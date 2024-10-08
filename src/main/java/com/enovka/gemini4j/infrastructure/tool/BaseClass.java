@@ -1,7 +1,7 @@
 package com.enovka.gemini4j.infrastructure.tool;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class that provides logging functionality for all classes in the
@@ -13,8 +13,7 @@ import java.util.logging.Logger;
  */
 public abstract class BaseClass {
 
-    private static final Logger LOGGER = Logger.getLogger(
-            BaseClass.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Logs a debug message with the class name.
@@ -22,9 +21,7 @@ public abstract class BaseClass {
      * @param message The debug message to log.
      */
     protected void logDebug(String message) {
-        LOGGER.log(Level.FINE,
-                String.format("[%s] - %s", this.getClass().getSimpleName(),
-                        message));
+        logger.debug(message);
     }
 
     /**
@@ -33,9 +30,7 @@ public abstract class BaseClass {
      * @param message The info message to log.
      */
     protected void logInfo(String message) {
-        LOGGER.log(Level.INFO,
-                String.format("[%s] - %s", this.getClass().getSimpleName(),
-                        message));
+        logger.info(message);
     }
 
     /**
@@ -44,9 +39,7 @@ public abstract class BaseClass {
      * @param message The warning message to log.
      */
     protected void logWarn(String message) {
-        LOGGER.log(Level.WARNING,
-                String.format("[%s] - %s", this.getClass().getSimpleName(),
-                        message));
+        logger.warn(message);
     }
 
     /**
@@ -55,20 +48,16 @@ public abstract class BaseClass {
      * @param message The error message to log.
      */
     protected void logError(String message) {
-        LOGGER.log(Level.SEVERE,
-                String.format("[%s] - %s", this.getClass().getSimpleName(),
-                        message));
+        logger.error(message);
     }
 
     /**
      * Logs an error message with the class name and an exception.
      *
      * @param message The error message to log.
-     * @param e The exception to log.
+     * @param e       The exception to log.
      */
     protected void logError(String message, Throwable e) {
-        LOGGER.log(Level.SEVERE,
-                String.format("[%s] - %s", this.getClass().getSimpleName(),
-                        message), e);
+        logger.error(message, e);
     }
 }

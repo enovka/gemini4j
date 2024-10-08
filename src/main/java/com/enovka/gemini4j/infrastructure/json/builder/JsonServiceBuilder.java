@@ -29,17 +29,17 @@ public class JsonServiceBuilder {
      */
     public JsonService build() {
         switch (jsonServiceType) {
-        case JACKSON:
-            return new JacksonJsonService();
-        case CUSTOM:
-            if (customJsonService == null) {
+            case JACKSON:
+                return new JacksonJsonService();
+            case CUSTOM:
+                if (customJsonService == null) {
+                    throw new IllegalArgumentException(
+                            "Custom JsonService instance is required when using JsonServiceType.CUSTOM.");
+                }
+                return customJsonService;
+            default:
                 throw new IllegalArgumentException(
-                        "Custom JsonService instance is required when using JsonServiceType.CUSTOM.");
-            }
-            return customJsonService;
-        default:
-            throw new IllegalArgumentException(
-                    "Unknown JsonServiceType: " + jsonServiceType);
+                        "Unknown JsonServiceType: " + jsonServiceType);
         }
     }
 }

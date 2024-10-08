@@ -2,6 +2,9 @@ package com.enovka.gemini4j.client.spec;
 
 import com.enovka.gemini4j.infrastructure.http.spec.HttpClient;
 import com.enovka.gemini4j.infrastructure.json.spec.JsonService;
+import com.enovka.gemini4j.model.ListModel;
+import com.enovka.gemini4j.model.Model;
+import com.enovka.gemini4j.resource.exception.ResourceException;
 
 import java.util.Map;
 
@@ -50,7 +53,7 @@ public interface GeminiClient {
      * @return The model name.
      * @since 0.0.2
      */
-    String getModel();
+    String getModelName();
 
     /**
      * Sets the model name to be used for requests.
@@ -58,7 +61,9 @@ public interface GeminiClient {
      * @param model The model name.
      * @since 0.0.2
      */
-    void setModel(String model);
+    void setModelName(String model);
+
+    Model getModel(String name) throws ResourceException;
 
     /**
      * Returns the base URL for the Gemini API.
@@ -91,5 +96,7 @@ public interface GeminiClient {
      * @since 0.0.2
      */
     void setJsonService(JsonService jsonService);
+
+    ListModel getGeminiModels() throws ResourceException;
 
 }
