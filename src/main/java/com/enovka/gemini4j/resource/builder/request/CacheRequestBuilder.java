@@ -60,7 +60,7 @@ public class CacheRequestBuilder
      * @throws IllegalArgumentException If the provided name is null or empty.
      * @since 0.2.0
      */
-    public CacheRequestBuilder withName(String name) {
+    protected CacheRequestBuilder withName(String name) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
@@ -144,7 +144,7 @@ public class CacheRequestBuilder
      * @throws IllegalArgumentException if the tool is null.
      * @since 0.2.0
      */
-    public CacheRequestBuilder withTool(Tool tool) {
+    protected CacheRequestBuilder withTool(Tool tool) {
         if (tool == null) {
             throw new IllegalArgumentException("Tool cannot be null.");
         }
@@ -161,7 +161,7 @@ public class CacheRequestBuilder
      * @return The builder instance for method chaining.
      * @since 0.2.0
      */
-    public CacheRequestBuilder withToolConfig(ToolConfig toolConfig) {
+    protected CacheRequestBuilder withToolConfig(ToolConfig toolConfig) {
         this.toolConfig = toolConfig;
         return this;
     }
@@ -200,6 +200,11 @@ public class CacheRequestBuilder
             throw new IllegalStateException(
                     "Either cachedContent or contents must be provided.");
         }
+
+        if (this.ttl != null && this.expireTime != null)
+            throw new IllegalStateException(
+                    "Set ttl or ExpireTime, only one is permitted");
+
 
         return CacheRequest.builder()
                 .withCacheContent(cachedContentBuilder.build())

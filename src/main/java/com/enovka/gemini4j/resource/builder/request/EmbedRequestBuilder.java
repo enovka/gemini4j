@@ -84,7 +84,6 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
                 .build();
     }
 
-
     /**
      * {@inheritDoc}
      *

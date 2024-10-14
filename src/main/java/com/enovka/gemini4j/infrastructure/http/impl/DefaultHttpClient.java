@@ -2,6 +2,7 @@ package com.enovka.gemini4j.infrastructure.http.impl;
 
 import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.http.spec.AbstractHttpClient;
+import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import org.apache.hc.client5.http.async.methods.SimpleHttpRequest;
 import org.apache.hc.client5.http.async.methods.SimpleHttpResponse;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -210,12 +212,11 @@ public class DefaultHttpClient extends AbstractHttpClient {
      * @param headers     The request headers.
      * @param contentType The content type of the request body.
      * @return A {@link CompletableFuture} that will resolve to the {@link HttpResponse}.
-     * @throws HttpException If an error occurs during request creation or execution.
      * @since 0.2.0
      */
     private CompletableFuture<HttpResponse> executeAsyncRequest(
             String method, String url, String body, Map<String, String> headers,
-            ContentType contentType) throws HttpException {
+            ContentType contentType) {
 
         CompletableFuture<HttpResponse> completableFuture = new CompletableFuture<>();
 
@@ -280,14 +281,78 @@ public class DefaultHttpClient extends AbstractHttpClient {
      *
      * @param url The URL string.
      * @return The created URI.
-     * @throws HttpException If the provided URL is invalid.
      * @since 0.2.0
      */
-    private URI createURI(String url) throws HttpException {
+    private URI createURI(String url) {
         try {
             return new URIBuilder(url).build();
         } catch (URISyntaxException e) {
-            throw new HttpException("Invalid URI: " + e.getMessage(), e);
+            throw new IllegalArgumentException("Invalid URI: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public CompletableFuture<HttpResponse> getAsync(String url, Map<String, String> headers, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("GET", url, null, headers, ContentType.TEXT_PLAIN);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public CompletableFuture<HttpResponse> postAsync(String url, String body, Map<String, String> headers, ContentType contentType, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("POST", url, body, headers, contentType);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public CompletableFuture<HttpResponse> patchAsync(String url, String body, Map<String, String> headers, ContentType contentType, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("PATCH", url, body, headers, contentType);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public CompletableFuture<HttpResponse> deleteAsync(String url, Map<String, String> headers, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("DELETE", url, null, headers, ContentType.TEXT_PLAIN);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    private void handleResponse(HttpResponse response, Throwable exception, AsyncCallback<HttpResponse> callback) {
+        if (exception != null) {
+            if (exception instanceof CancellationException) {
+                callback.onCanceled();
+            } else {
+                callback.onError(exception);
+            }
+        } else {
+            callback.onSuccess(response);
+        }
+        try {
+            close();
+        } catch (IOException e) {
+            logError("Error on handleResponse", e);
         }
     }
 
@@ -298,15 +363,5 @@ public class DefaultHttpClient extends AbstractHttpClient {
     public void close() throws IOException {
         this.httpAsyncClient.close(CloseMode.GRACEFUL);
         this.connectionManager.close();
-    }
-
-    @Override
-    public int getResponseTimeout() {
-        return this.responseTimeout;
-    }
-
-    @Override
-    public int getConnectionTimeout() {
-        return this.connectionTimeout;
     }
 }

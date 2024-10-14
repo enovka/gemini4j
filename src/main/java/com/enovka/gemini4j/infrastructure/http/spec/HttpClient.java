@@ -4,6 +4,7 @@ import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import org.apache.hc.core5.http.ContentType;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface defining the contract for HTTP client implementations, supporting both
@@ -91,4 +92,55 @@ public interface HttpClient {
      * @since 0.0.2
      */
     void setResponseTimeout(int responseTimeout);
+
+    /**
+     * Sends an asynchronous GET request to the specified URL with the provided headers.
+     *
+     * @param url     The URL to send the request to.
+     * @param headers The headers to include in the request.
+     * @param callback The callback to handle the asynchronous response.
+     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
+     *         used to cancel the request.
+     * @since 0.2.0
+     */
+    CompletableFuture<HttpResponse> getAsync(String url, Map<String, String> headers, AsyncCallback<HttpResponse> callback);
+
+    /**
+     * Sends an asynchronous POST request to the specified URL with the provided headers and body.
+     *
+     * @param url         The URL to send the request to.
+     * @param body        The request body.
+     * @param headers     The headers to include in the request.
+     * @param contentType The content type of the request body.
+     * @param callback The callback to handle the asynchronous response.
+     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
+     *         used to cancel the request.
+     * @since 0.2.0
+     */
+    CompletableFuture<HttpResponse> postAsync(String url, String body, Map<String, String> headers, ContentType contentType, AsyncCallback<HttpResponse> callback);
+
+    /** Sends an asynchronous PATCH request to the specified URL with the provided headers and body.
+     *
+     * @param url         The URL to send the request to.
+     * @param body        The request body.
+     * @param headers     The headers to include in the request.
+     * @param contentType The content type of the request body.
+     * @param callback The callback to handle the asynchronous response.
+     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
+     * used to cancel the request.
+     * @since 0.2.0
+     */
+    CompletableFuture<HttpResponse> patchAsync(String url, String body, Map<String, String> headers, ContentType contentType, AsyncCallback<HttpResponse> callback);
+
+    /**
+     * Sends an asynchronous DELETE request to the specified URL with the provided headers.
+     *
+     * @param url     The URL to send the request to.
+     * @param headers The headers to include in the request.
+     * @param callback The callback to handle the asynchronous response.
+     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
+     *         used to cancel the request.
+     * @since 0.2.0
+     */
+    CompletableFuture<HttpResponse> deleteAsync(String url, Map<String, String> headers, AsyncCallback<HttpResponse> callback);
 }
