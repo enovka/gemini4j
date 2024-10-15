@@ -28,4 +28,8 @@ public class ResourceException extends Exception {
     public ResourceException(String message, Throwable cause) {
         super(message + " cause error: " + cause.getMessage(), cause);
     }
+
+    public ResourceException(Throwable e) {
+        super(e);
+    }
 }

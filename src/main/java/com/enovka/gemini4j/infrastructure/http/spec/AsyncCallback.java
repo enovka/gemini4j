@@ -6,7 +6,7 @@ package com.enovka.gemini4j.infrastructure.http.spec;
  * custom logic for processing asynchronous results without blocking the main thread.
  *
  * @param <T> The type of the response object.
- * @author Everson Novka <enovka@gmail.com>
+ * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.2.0
  */
 public interface AsyncCallback<T> {

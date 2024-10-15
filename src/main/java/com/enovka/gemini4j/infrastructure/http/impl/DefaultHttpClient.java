@@ -339,20 +339,35 @@ public class DefaultHttpClient extends AbstractHttpClient {
         return future;
     }
 
+    /**
+     * Handles the asynchronous response, invoking the appropriate callback method based on the
+     * result, exception, or cancellation status. This method checks for exceptions, including
+     * {@link CancellationException}, and calls the corresponding callback methods (`onError`,
+     * `onCanceled`, or `onSuccess`) of the provided {@link AsyncCallback}.
+     *
+     * @param response  The HTTP response, which may be null if an error occurred.
+     * @param exception The exception thrown during the asynchronous operation, which may be null
+     *                  if the operation completed successfully.
+     * @param callback  The callback to handle the response.
+     * @since 0.2.0
+     */
     private void handleResponse(HttpResponse response, Throwable exception, AsyncCallback<HttpResponse> callback) {
-        if (exception != null) {
-            if (exception instanceof CancellationException) {
-                callback.onCanceled();
-            } else {
-                callback.onError(exception);
-            }
-        } else {
-            callback.onSuccess(response);
-        }
         try {
-            close();
-        } catch (IOException e) {
-            logError("Error on handleResponse", e);
+            if (exception != null) {
+                if (exception instanceof CancellationException) {
+                    callback.onCanceled();
+                } else {
+                    callback.onError(exception);
+                }
+            } else {
+                callback.onSuccess(response);
+            }
+        } finally {
+            try {
+                close();
+            } catch (IOException e) {
+                logError("Error on handleResponse", e);
+            }
         }
     }
 
