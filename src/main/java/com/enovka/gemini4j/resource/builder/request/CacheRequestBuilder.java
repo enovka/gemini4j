@@ -1,15 +1,18 @@
 package com.enovka.gemini4j.resource.builder.request;
 
+import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.model.CacheContent;
 import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.Tool;
 import com.enovka.gemini4j.model.ToolConfig;
 import com.enovka.gemini4j.model.request.CacheRequest;
 import com.enovka.gemini4j.resource.builder.request.spec.AbstractContentRequestBuilder;
+import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.CacheResource;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Builder for creating {@link CacheRequest} instances.  This builder provides a fluent API
@@ -19,8 +22,7 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.2.0
  */
-public class CacheRequestBuilder
-        extends AbstractContentRequestBuilder<CacheRequestBuilder, CacheRequest> {
+public class CacheRequestBuilder extends AbstractContentRequestBuilder<CacheRequestBuilder, CacheRequest> {
 
     List<Tool> tools = new ArrayList<>();
     private String name;
@@ -29,6 +31,8 @@ public class CacheRequestBuilder
     private String expireTime;
     private String cachedContent;
     private ToolConfig toolConfig;
+    private CacheResource cacheResource;
+    private AsyncCallback<CacheContent> asyncCallback;
 
     /**
      * Private constructor to enforce a builder pattern.  Instances of this builder should be
@@ -48,6 +52,18 @@ public class CacheRequestBuilder
      */
     public static CacheRequestBuilder builder() {
         return new CacheRequestBuilder();
+    }
+
+    /**
+     * Sets the {@link CacheResource} instance to be used for executing the request.
+     *
+     * @param cacheResource The CacheResource instance.
+     * @return The builder instance for method chaining.
+     * @since 0.2.0
+     */
+    protected CacheRequestBuilder withCacheResource(CacheResource cacheResource) {
+        this.cacheResource = cacheResource;
+        return this;
     }
 
     /**
@@ -167,12 +183,19 @@ public class CacheRequestBuilder
     }
 
     /**
-     * Builds the {@link CacheRequest} object.  This method constructs the request object
-     * using the parameters configured through the builder methods. It validates the required fields
-     * and returns a ready-to-use request object for interacting with the Gemini API.
+     * Sets the {@link AsyncCallback} to handle the asynchronous response.
      *
-     * @return The built {@link CacheRequest} object.
-     * @throws IllegalStateException If the model or content for caching is not set.
+     * @param asyncCallback The AsyncCallback instance.
+     * @return The builder instance for method chaining.
+     * @since 0.2.0
+     */
+    public CacheRequestBuilder withAsyncCallback(AsyncCallback<CacheContent> asyncCallback) {
+        this.asyncCallback = asyncCallback;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
      * @since 0.2.0
      */
     @SuppressWarnings("unchecked")
@@ -197,20 +220,38 @@ public class CacheRequestBuilder
         } else if (!contents.isEmpty()) {
             cachedContentBuilder.withContents(contents);
         } else {
-            throw new IllegalStateException(
-                    "Either cachedContent or contents must be provided.");
+            throw new IllegalStateException("Either cachedContent or contents must be provided.");
         }
 
-        if (this.ttl != null && this.expireTime != null)
-            throw new IllegalStateException(
-                    "Set ttl or ExpireTime, only one is permitted");
-
+        if (this.ttl != null && this.expireTime != null) {
+            throw new IllegalStateException("Set ttl or ExpireTime, only one is permitted");
+        }
 
         return CacheRequest.builder()
                 .withCacheContent(cachedContentBuilder.build())
                 .build();
     }
 
+    /**
+     * Executes the cache request asynchronously and returns a {@link CompletableFuture}
+     * representing the operation. This method allows for more flexible cancellation handling.
+     *
+     * @return A CompletableFuture that will resolve to a {@link CacheContent} upon
+     *         successful completion.
+     * @throws ResourceException If an error occurs during request setup.
+     * @since 0.2.0
+     */
+    public CompletableFuture<CacheContent> executeAsync() throws ResourceException {
+        if (cacheResource == null) {
+            throw new IllegalStateException("CacheResource is required for asynchronous execution.");
+        }
+        return cacheResource.executeAsync(build(), asyncCallback);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
     @Override
     public CacheRequestBuilder withContents(List<Content> contents) {
         return super.withContents(contents);
@@ -218,7 +259,6 @@ public class CacheRequestBuilder
 
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override

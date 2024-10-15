@@ -1,12 +1,14 @@
 package com.enovka.gemini4j.resource.builder.request;
 
+import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.request.GenerateRequest;
 import com.enovka.gemini4j.model.response.GenerateResponse;
-import com.enovka.gemini4j.model.response.internal.GenerateContentResponse;
 import com.enovka.gemini4j.resource.builder.request.spec.GenerateRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.GenerateResource;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Builder for creating {@link GenerateRequest} instances specifically for generating text
@@ -21,6 +23,7 @@ public class GenerateTextRequestBuilder extends GenerateRequestBuilder<GenerateT
 
     private final GenerateResource generateResource;
     private String userInput;
+    private AsyncCallback<GenerateResponse> asyncCallback;
 
     /**
      * Constructor for the GenerateTextRequestBuilder.
@@ -59,14 +62,24 @@ public class GenerateTextRequestBuilder extends GenerateRequestBuilder<GenerateT
         return this;
     }
 
+    /**
+     * Sets the {@link AsyncCallback} to handle the asynchronous response.
+     *
+     * @param asyncCallback The AsyncCallback instance.
+     * @return The builder instance for method chaining.
+     * @since 0.2.0
+     */
+    public GenerateTextRequestBuilder withAsyncCallback(AsyncCallback<GenerateResponse> asyncCallback) {
+        this.asyncCallback = asyncCallback;
+        return this;
+    }
 
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override
-    public GenerateRequest buildRequest() {
+    public GenerateRequest build() {
         if (userInput == null) {
             throw new IllegalArgumentException("User input is required for text generation.");
         }
@@ -89,18 +102,29 @@ public class GenerateTextRequestBuilder extends GenerateRequestBuilder<GenerateT
      * builds the request using the parameters set in the builder and then executes it using the
      * associated {@link GenerateResource}.
      *
-     * @return The {@link GenerateContentResponse} wrapped in a {@link GenerateResponse} from the Gemini API.
+     * @return The {@link GenerateResponse} from the Gemini API.
      * @throws ResourceException If an error occurs during the API request.
      * @since 0.2.0
      */
     public GenerateResponse execute() throws ResourceException {
-        return generateResource.execute(buildRequest());
+        return generateResource.execute(build());
     }
 
+    /**
+     * Executes the generateText request asynchronously and returns a {@link CompletableFuture}
+     * representing the operation. This method allows for more flexible cancellation handling.
+     *
+     * @return A CompletableFuture that will resolve to a {@link GenerateResponse} upon
+     *         successful completion.
+     * @throws ResourceException If an error occurs during request setup.
+     * @since 0.2.0
+     */
+    public CompletableFuture<GenerateResponse> executeAsync() throws ResourceException {
+        return generateResource.executeAsync(build(), asyncCallback);
+    }
 
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override

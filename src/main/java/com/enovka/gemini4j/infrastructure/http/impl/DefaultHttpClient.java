@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 /**
  * Default implementation of the {@link com.enovka.gemini4j.infrastructure.http.spec.HttpClient}
@@ -198,13 +199,11 @@ public class DefaultHttpClient extends AbstractHttpClient {
 
 
     /**
-     * Executes an asynchronous HTTP request. This method handles the request creation,
-     * execution, and asynchronous response handling using {@link CompletableFuture} and
-     * {@link FutureCallback}. It incorporates error handling, resource cleanup, and ensures
-     * that the {@link HttpHost} is correctly set in the request. The method uses
-     * {@link SimpleRequestBuilder} for efficient request creation and sets the request body,
-     * headers, and URI in the correct order, avoiding the "Target host is not specified"
-     * error.
+     * Executes an asynchronous HTTP request with cancellation support. This method handles request creation,
+     * execution, and asynchronous response handling using {@link CompletableFuture}. It incorporates error
+     * handling, resource cleanup, and ensures that the {@link HttpHost} is correctly set in the request.
+     * The method uses {@link SimpleRequestBuilder} for efficient request creation and sets the request body,
+     * headers, and URI in the correct order, avoiding the "Target host is not specified" error.
      *
      * @param method      The HTTP method (GET, POST, PATCH, DELETE).
      * @param url         The request URL.
@@ -235,7 +234,7 @@ public class DefaultHttpClient extends AbstractHttpClient {
 
         SimpleHttpRequest request = requestBuilder.build();
 
-        httpAsyncClient.execute(request, new FutureCallback<>() {
+        Future<SimpleHttpResponse> responseFuture = httpAsyncClient.execute(request, new FutureCallback<>() {
             @Override
             public void completed(SimpleHttpResponse result) {
                 try {
@@ -256,8 +255,16 @@ public class DefaultHttpClient extends AbstractHttpClient {
             }
         });
 
+        // Cancellation handling
+        completableFuture.whenComplete((response, exception) -> {
+            if (exception instanceof CancellationException && !responseFuture.isDone()) {
+                responseFuture.cancel(true); // Attempt to cancel the underlying request
+            }
+        });
+
         return completableFuture;
     }
+
     /**
      * Adds the provided headers to the given HTTP request builder. This method iterates over
      * the provided headers map and adds each header to the request builder. It handles the

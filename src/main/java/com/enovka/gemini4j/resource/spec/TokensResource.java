@@ -52,7 +52,7 @@ public interface TokensResource extends Resource {
      * <pre>{@code
      * String text = "This is a test sentence.";
      * TokensRequestBuilder builder = countTokensResource.countTokensBuilder(text);
-     * TokensRequest request = builder.buildRequest();
+     * TokensRequest request = builder.build();
      * TokensResponse response = countTokensResource.execute(request);
      * int tokenCount = response.getTotalTokens();
      * System.out.println("Token count: " + tokenCount);

@@ -46,7 +46,7 @@ public abstract class BaseRequestBuilder<B extends BaseRequestBuilder<B, T>, T> 
      * @return The built request object.
      * @since 0.2.0
      */
-    public abstract T buildRequest();
+    public abstract T build();
 
     /**
      * Returns the current builder instance. This method is used for method chaining and should be

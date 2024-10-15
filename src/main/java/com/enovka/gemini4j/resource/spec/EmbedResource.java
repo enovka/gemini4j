@@ -79,7 +79,7 @@ public interface EmbedResource extends Resource {
      * <pre>{@code
      * String text = "This is a test sentence.";
      * EmbedRequestBuilder builder = embedResource.embedContentBuilder(text);
-     * EmbedRequest request = builder.buildRequest();
+     * EmbedRequest request = builder.build();
      * EmbedResponse response = embedResource.execute(request);
      * List<Double> embeddingValues = response.getEmbedding().getValues();
      * System.out.println(embeddingValues);
@@ -100,7 +100,7 @@ public interface EmbedResource extends Resource {
      * <pre>{@code
      * List<String> texts = Arrays.asList("This is a test sentence.", "Another sentence for embedding.");
      * BatchEmbedRequestBuilder builder = embedResource.batchEmbedContentsBuilder(texts);
-     * BatchEmbedRequest request = builder.buildRequest();
+     * BatchEmbedRequest request = builder.build();
      * BatchEmbedResponse response = embedResource.execute(request);
      * List<Embedding> embeddings = response.getEmbeddings();
      * System.out.println(embeddings);

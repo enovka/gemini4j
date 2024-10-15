@@ -54,7 +54,7 @@ public interface GenerateResource extends MultiTurnConversationAware {
      * GenerateTextRequestBuilder builder = generationResource.generateTextBuilder(userInput);
      * builder.withTemperature(0.7);
      * builder.withMaxOutputTokens(200);
-     * GenerateRequest request = builder.buildRequest();
+     * GenerateRequest request = builder.build();
      * GenerateResponse result = generationResource.execute(request);
      * String generatedText = result.getGeneratedText();
      * System.out.println(generatedText);
@@ -80,7 +80,7 @@ public interface GenerateResource extends MultiTurnConversationAware {
      * builder.withSafetySetting(safety -> safety
      *     .withHarassment(HarmBlockThresholdEnum.BLOCK_NONE)
      *     .withHateSpeech(HarmBlockThresholdEnum.BLOCK_NONE));
-     * GenerateRequest request = builder.buildRequest();
+     * GenerateRequest request = builder.build();
      * GenerateResponse result = generationResource.execute(request);
      * String generatedText = result.getGeneratedText();
      * System.out.println(generatedText);
