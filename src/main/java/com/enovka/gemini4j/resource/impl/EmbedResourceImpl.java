@@ -1,4 +1,3 @@
-// com.enovka.gemini4j.resource.impl.EmbedResourceImpl
 package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
@@ -64,36 +63,52 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource> implement
     @Override
     public CompletableFuture<EmbedResponse> executeAsync(EmbedRequest request, AsyncCallback<EmbedResponse> callback) throws ResourceException {
         String endpoint = String.format(EMBED_CONTENT_ENDPOINT, geminiClient.getModelName());
-        CompletableFuture<EmbedResponse> future = new CompletableFuture<>();
 
         try {
-            httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
+            // Chain the CompletableFuture returned by postAsync
+            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
                 @Override
                 public void onSuccess(HttpResponse httpResponse) {
                     try {
-                        future.complete(deserializeResponse(httpResponse, EmbedResponse.class));
+                        callback.onSuccess(deserializeResponse(httpResponse, EmbedResponse.class));
                     } catch (ResourceException e) {
-                        future.completeExceptionally(e);
+                        callback.onError(e);
                     }
                 }
 
                 @Override
                 public void onError(Throwable exception) {
-                    future.completeExceptionally(new ResourceException("Error embedding content", exception));
+                    callback.onError(new ResourceException("Error embedding content", exception));
                 }
 
                 @Override
                 public void onCanceled() {
-                    future.cancel(true);
+                    callback.onCanceled();
                 }
             });
+
+            // Create a CompletableFuture<EmbedResponse> that completes when the HttpResponseFuture completes
+            CompletableFuture<EmbedResponse> embedResponseFuture = new CompletableFuture<>();
+            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+                if (throwable != null) {
+                    embedResponseFuture.completeExceptionally(throwable);
+                } else {
+                    try {
+                        embedResponseFuture.complete(deserializeResponse(httpResponse, EmbedResponse.class));
+                    } catch (ResourceException e) {
+                        embedResponseFuture.completeExceptionally(e);
+                    }
+                }
+            });
+
+            return embedResponseFuture;
         } catch (JsonException e) {
-            throw new ResourceException(e);
+            // Complete the CompletableFuture exceptionally if serialization fails
+            CompletableFuture<EmbedResponse> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
         }
-
-        return future;
     }
-
     /**
      * {@inheritDoc}
      * @since 0.2.0
@@ -111,43 +126,60 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource> implement
     @Override
     public CompletableFuture<BatchEmbedResponse> executeAsync(BatchEmbedRequest request, AsyncCallback<BatchEmbedResponse> callback) throws ResourceException {
         String endpoint = String.format(BATCH_EMBED_CONTENTS_ENDPOINT, geminiClient.getModelName());
-        CompletableFuture<BatchEmbedResponse> future = new CompletableFuture<>();
 
         try {
-            httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
+            // Chain the CompletableFuture returned by postAsync
+            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
                 @Override
                 public void onSuccess(HttpResponse httpResponse) {
                     try {
-                        future.complete(deserializeResponse(httpResponse, BatchEmbedResponse.class));
+                        callback.onSuccess(deserializeResponse(httpResponse, BatchEmbedResponse.class));
                     } catch (ResourceException e) {
-                        future.completeExceptionally(e);
+                        callback.onError(e);
                     }
                 }
 
                 @Override
                 public void onError(Throwable exception) {
-                    future.completeExceptionally(new ResourceException("Error batch embedding contents", exception));
+                    callback.onError(new ResourceException("Error batch embedding contents", exception));
                 }
 
                 @Override
                 public void onCanceled() {
-                    future.cancel(true);
+                    callback.onCanceled();
                 }
             });
+
+            // Create a CompletableFuture<BatchEmbedResponse> that completes when the HttpResponseFuture completes
+            CompletableFuture<BatchEmbedResponse> batchEmbedResponseFuture = new CompletableFuture<>();
+            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+                if (throwable != null) {
+                    batchEmbedResponseFuture.completeExceptionally(throwable);
+                } else {
+                    try {
+                        batchEmbedResponseFuture.complete(deserializeResponse(httpResponse, BatchEmbedResponse.class));
+                    } catch (ResourceException e) {
+                        batchEmbedResponseFuture.completeExceptionally(e);
+                    }
+                }
+            });
+
+            return batchEmbedResponseFuture;
         } catch (JsonException e) {
-            throw new ResourceException(e);
+            // Complete the CompletableFuture exceptionally if serialization fails
+            CompletableFuture<BatchEmbedResponse> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
         }
-
-        return future;
     }
-
     /**
      * {@inheritDoc}
      * @since 0.2.0
      */
     @Override
     public EmbedRequestBuilder embedContentBuilder(String text) {
-        return EmbedRequestBuilder.builder().withText(text);
+        return EmbedRequestBuilder.builder()
+                .withText(text);
     }
 
     /**

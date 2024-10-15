@@ -1,4 +1,3 @@
-// com.enovka.gemini4j.resource.impl.ModelResourceImpl
 package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
@@ -62,30 +61,43 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
      * @since 0.2.0
      */
     public CompletableFuture<ListModel> listModelsAsync(AsyncCallback<ListModel> callback) throws ResourceException {
-        CompletableFuture<ListModel> future = new CompletableFuture<>();
-
-        httpClient.getAsync(buildEndpointUrl(LIST_MODELS_ENDPOINT), buildHeaders(), new AsyncCallback<>() {
+        // Chain the CompletableFuture returned by getAsync
+        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(LIST_MODELS_ENDPOINT), buildHeaders(), new AsyncCallback<>() {
             @Override
             public void onSuccess(HttpResponse httpResponse) {
                 try {
-                    future.complete(deserializeResponse(httpResponse, ListModel.class));
+                    callback.onSuccess(deserializeResponse(httpResponse, ListModel.class));
                 } catch (ResourceException e) {
-                    future.completeExceptionally(e);
+                    callback.onError(e);
                 }
             }
 
             @Override
             public void onError(Throwable exception) {
-                future.completeExceptionally(new ResourceException("Error listing models", exception));
+                callback.onError(new ResourceException("Error listing models", exception));
             }
 
             @Override
             public void onCanceled() {
-                future.cancel(true);
+                callback.onCanceled();
             }
         });
 
-        return future;
+        // Create a CompletableFuture<ListModel> that completes when the HttpResponseFuture completes
+        CompletableFuture<ListModel> listModelFuture = new CompletableFuture<>();
+        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+            if (throwable != null) {
+                listModelFuture.completeExceptionally(throwable);
+            } else {
+                try {
+                    listModelFuture.complete(deserializeResponse(httpResponse, ListModel.class));
+                } catch (ResourceException e) {
+                    listModelFuture.completeExceptionally(e);
+                }
+            }
+        });
+
+        return listModelFuture;
     }
 
     /**
@@ -110,30 +122,44 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
      */
     public CompletableFuture<Model> getModelAsync(String modelName, AsyncCallback<Model> callback) throws ResourceException {
         String endpoint = String.format(GET_MODEL_ENDPOINT, modelName);
-        CompletableFuture<Model> future = new CompletableFuture<>();
 
-        httpClient.getAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
+        // Chain the CompletableFuture returned by getAsync
+        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
             @Override
             public void onSuccess(HttpResponse httpResponse) {
                 try {
-                    future.complete(deserializeResponse(httpResponse, Model.class));
+                    callback.onSuccess(deserializeResponse(httpResponse, Model.class));
                 } catch (ResourceException e) {
-                    future.completeExceptionally(e);
+                    callback.onError(e);
                 }
             }
 
             @Override
             public void onError(Throwable exception) {
-                future.completeExceptionally(new ResourceException("Error getting model", exception));
+                callback.onError(new ResourceException("Error getting model", exception));
             }
 
             @Override
             public void onCanceled() {
-                future.cancel(true);
+                callback.onCanceled();
             }
         });
 
-        return future;
+        // Create a CompletableFuture<Model> that completes when the HttpResponseFuture completes
+        CompletableFuture<Model> modelFuture = new CompletableFuture<>();
+        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+            if (throwable != null) {
+                modelFuture.completeExceptionally(throwable);
+            } else {
+                try {
+                    modelFuture.complete(deserializeResponse(httpResponse, Model.class));
+                } catch (ResourceException e) {
+                    modelFuture.completeExceptionally(e);
+                }
+            }
+        });
+
+        return modelFuture;
     }
 
     /**

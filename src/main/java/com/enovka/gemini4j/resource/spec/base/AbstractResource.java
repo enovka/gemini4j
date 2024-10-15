@@ -161,7 +161,7 @@ public abstract class AbstractResource<T> extends BaseClass implements Resource 
 
     /**
      * Adds a query parameter to the provided URL. This method handles the addition of query
-     * parameters, correctly appending "?" for the first parameter and "&" for subsequent
+     * parameters, correctly appending "?" for the first parameter and "amp;" for subsequent
      * parameters.  It ensures that null parameters are not added to the URL.
      *
      * @param url        The {@link StringBuilder} representing the URL to which the parameter

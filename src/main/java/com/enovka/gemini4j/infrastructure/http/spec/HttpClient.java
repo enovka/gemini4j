@@ -3,6 +3,7 @@ package com.enovka.gemini4j.infrastructure.http.spec;
 import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import org.apache.hc.core5.http.ContentType;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -92,6 +93,16 @@ public interface HttpClient {
      * @since 0.0.2
      */
     void setResponseTimeout(int responseTimeout);
+
+    /**
+     * Closes this HTTP client and releases any associated resources.  Subclasses must
+     * implement this method to provide the specific resource cleanup logic, such as closing
+     * connections and shutting down the asynchronous client.
+     *
+     * @throws IOException If an I/O error occurs during the closing process.
+     * @since 0.2.0
+     */
+    void close() throws IOException;
 
     /**
      * Sends an asynchronous GET request to the specified URL with the provided headers.

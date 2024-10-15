@@ -8,7 +8,6 @@ import org.apache.hc.core5.concurrent.FutureCallback;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -343,17 +342,6 @@ public abstract class AbstractHttpClient extends BaseClass implements HttpClient
         }
         return new HttpResponse(response.getCode(), responseHeaders, responseBody);
     }
-
-    /**
-     * Closes this HTTP client and releases any associated resources.  Subclasses must
-     * implement this method to provide the specific resource cleanup logic, such as closing
-     * connections and shutting down the asynchronous client.
-     *
-     * @throws IOException If an I/O error occurs during the closing process.
-     * @since 0.2.0
-     */
-    public abstract void close() throws IOException;
-
 
     /**
      * A FutureCallback that simply logs the result or exception.

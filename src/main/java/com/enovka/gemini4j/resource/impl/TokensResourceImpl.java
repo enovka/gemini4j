@@ -1,4 +1,3 @@
-// com.enovka.gemini4j.resource.impl.TokensResourceImpl
 package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
@@ -54,7 +53,6 @@ public class TokensResourceImpl extends AbstractResource<TokensResource> impleme
         return SUPPORTED_METHODS;
     }
 
-
     /**
      * {@inheritDoc}
      * @since 0.1.3
@@ -62,7 +60,7 @@ public class TokensResourceImpl extends AbstractResource<TokensResource> impleme
     @Override
     public TokensResponse execute(TokensRequest request) throws ResourceException {
         String endpoint = String.format(COUNT_TOKENS_ENDPOINT, geminiClient.getModelName());
-        return executeRequest("POST", endpoint, request, TokensResponse.class); // Use executeRequest
+        return executeRequest("POST", endpoint, request, TokensResponse.class);
     }
 
     /**
@@ -77,34 +75,51 @@ public class TokensResourceImpl extends AbstractResource<TokensResource> impleme
      */
     public CompletableFuture<TokensResponse> executeAsync(TokensRequest request, AsyncCallback<TokensResponse> callback) throws ResourceException {
         String endpoint = String.format(COUNT_TOKENS_ENDPOINT, geminiClient.getModelName());
-        CompletableFuture<TokensResponse> future = new CompletableFuture<>();
 
         try {
-            httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
+            // Chain the CompletableFuture returned by postAsync
+            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
                 @Override
                 public void onSuccess(HttpResponse httpResponse) {
                     try {
-                        future.complete(deserializeResponse(httpResponse, TokensResponse.class));
+                        callback.onSuccess(deserializeResponse(httpResponse, TokensResponse.class));
                     } catch (ResourceException e) {
-                        future.completeExceptionally(e);
+                        callback.onError(e);
                     }
                 }
 
                 @Override
                 public void onError(Throwable exception) {
-                    future.completeExceptionally(new ResourceException("Error counting tokens", exception));
+                    callback.onError(new ResourceException("Error counting tokens", exception));
                 }
 
                 @Override
                 public void onCanceled() {
-                    future.cancel(true);
+                    callback.onCanceled();
                 }
             });
-        } catch (JsonException e) {
-            throw new ResourceException(e);
-        }
 
-        return future;
+            // Create a CompletableFuture<TokensResponse> that completes when the HttpResponseFuture completes
+            CompletableFuture<TokensResponse> tokensResponseFuture = new CompletableFuture<>();
+            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+                if (throwable != null) {
+                    tokensResponseFuture.completeExceptionally(throwable);
+                } else {
+                    try {
+                        tokensResponseFuture.complete(deserializeResponse(httpResponse, TokensResponse.class));
+                    } catch (ResourceException e) {
+                        tokensResponseFuture.completeExceptionally(e);
+                    }
+                }
+            });
+
+            return tokensResponseFuture;
+        } catch (JsonException e) {
+            // Complete the CompletableFuture exceptionally if serialization fails
+            CompletableFuture<TokensResponse> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
+        }
     }
 
     /**

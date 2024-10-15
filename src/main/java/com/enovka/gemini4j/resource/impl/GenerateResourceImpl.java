@@ -3,6 +3,7 @@ package com.enovka.gemini4j.resource.impl;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
+import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.model.request.GenerateRequest;
 import com.enovka.gemini4j.model.response.GenerateResponse;
 import com.enovka.gemini4j.model.response.internal.GenerateContentResponse;
@@ -71,34 +72,52 @@ public class GenerateResourceImpl extends AbstractMultiTurnConversationResource<
         try {
             request = prepareMultiTurnRequest(request);
             String endpoint = String.format(GENERATE_CONTENT_ENDPOINT, geminiClient.getModelName());
-            CompletableFuture<GenerateResponse> future = new CompletableFuture<>();
 
-            httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
+            // Chain the CompletableFuture returned by postAsync
+            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.postAsync(buildEndpointUrl(endpoint), jsonService.serialize(request), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
                 @Override
                 public void onSuccess(HttpResponse httpResponse) {
                     try {
                         GenerateContentResponse response = deserializeResponse(httpResponse, GenerateContentResponse.class);
                         multiTurnConversation.addContent(response.getCandidates().get(0).getContent());
-                        future.complete(GenerateResponse.builder().withGenerateContentResponse(response).build());
+                        callback.onSuccess(GenerateResponse.builder().withGenerateContentResponse(response).build());
                     } catch (ResourceException e) {
-                        future.completeExceptionally(e);
+                        callback.onError(e);
                     }
                 }
 
                 @Override
                 public void onError(Throwable exception) {
-                    future.completeExceptionally(new ResourceException("Error generating content", exception));
+                    callback.onError(new ResourceException("Error generating content", exception));
                 }
 
                 @Override
                 public void onCanceled() {
-                    future.cancel(true);
+                    callback.onCanceled();
                 }
             });
 
+            // Create a CompletableFuture<GenerateResponse> that completes when the HttpResponseFuture completes
+            CompletableFuture<GenerateResponse> generateResponseFuture = new CompletableFuture<>();
+            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+                if (throwable != null) {
+                    generateResponseFuture.completeExceptionally(throwable);
+                } else {
+                    try {
+                        GenerateContentResponse response = deserializeResponse(httpResponse, GenerateContentResponse.class);
+                        generateResponseFuture.complete(GenerateResponse.builder().withGenerateContentResponse(response).build());
+                    } catch (ResourceException e) {
+                        generateResponseFuture.completeExceptionally(e);
+                    }
+                }
+            });
+
+            return generateResponseFuture;
+        } catch (JsonException e) {
+            // Complete the CompletableFuture exceptionally if serialization fails
+            CompletableFuture<GenerateResponse> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
             return future;
-        } catch (Exception e) {
-            throw new ResourceException("Error generating content: " + e.getMessage(), e);
         }
     }
 

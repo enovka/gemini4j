@@ -1,4 +1,3 @@
-// com.enovka.gemini4j.resource.impl.CacheResourceImpl
 package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
@@ -65,34 +64,50 @@ public class CacheResourceImpl extends AbstractResource<CacheResource>
      * @since 0.2.0
      */
     public CompletableFuture<CacheContent> executeAsync(CacheRequest request, AsyncCallback<CacheContent> callback) throws ResourceException {
-        CompletableFuture<CacheContent> future = new CompletableFuture<>();
-
         try {
-            httpClient.postAsync(buildEndpointUrl(CACHED_CONTENTS_ENDPOINT), jsonService.serialize(request.getCacheContent()), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
+            // Chain the CompletableFuture returned by postAsync
+            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.postAsync(buildEndpointUrl(CACHED_CONTENTS_ENDPOINT), jsonService.serialize(request.getCacheContent()), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
                 @Override
                 public void onSuccess(HttpResponse httpResponse) {
                     try {
-                        future.complete(deserializeResponse(httpResponse, CacheContent.class));
+                        callback.onSuccess(deserializeResponse(httpResponse, CacheContent.class));
                     } catch (ResourceException e) {
-                        future.completeExceptionally(e);
+                        callback.onError(e);
                     }
                 }
 
                 @Override
                 public void onError(Throwable exception) {
-                    future.completeExceptionally(new ResourceException("Error creating cached content", exception));
+                    callback.onError(new ResourceException("Error creating cached content", exception));
                 }
 
                 @Override
                 public void onCanceled() {
-                    future.cancel(true);
+                    callback.onCanceled();
                 }
             });
-        } catch (JsonException e) {
-            throw new ResourceException(e);
-        }
 
-        return future;
+            // Create a CompletableFuture<CacheContent> that completes when the HttpResponseFuture completes
+            CompletableFuture<CacheContent> cacheContentFuture = new CompletableFuture<>();
+            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+                if (throwable != null) {
+                    cacheContentFuture.completeExceptionally(throwable);
+                } else {
+                    try {
+                        cacheContentFuture.complete(deserializeResponse(httpResponse, CacheContent.class));
+                    } catch (ResourceException e) {
+                        cacheContentFuture.completeExceptionally(e);
+                    }
+                }
+            });
+
+            return cacheContentFuture;
+        } catch (JsonException e) {
+            // Complete the CompletableFuture exceptionally if serialization fails
+            CompletableFuture<CacheContent> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
+        }
     }
 
     /**
@@ -122,30 +137,44 @@ public class CacheResourceImpl extends AbstractResource<CacheResource>
         StringBuilder uri = new StringBuilder(CACHED_CONTENTS_ENDPOINT);
         addQueryParam(uri, "pageSize", pageSize);
         addQueryParam(uri, "pageToken", pageToken);
-        CompletableFuture<ListCacheResponse> future = new CompletableFuture<>();
 
-        httpClient.getAsync(buildEndpointUrl(uri.toString()), buildHeaders(), new AsyncCallback<>() {
+        // Chain the CompletableFuture returned by getAsync
+        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(uri.toString()), buildHeaders(), new AsyncCallback<>() {
             @Override
             public void onSuccess(HttpResponse httpResponse) {
                 try {
-                    future.complete(deserializeResponse(httpResponse, ListCacheResponse.class));
+                    callback.onSuccess(deserializeResponse(httpResponse, ListCacheResponse.class));
                 } catch (ResourceException e) {
-                    future.completeExceptionally(e);
+                    callback.onError(e);
                 }
             }
 
             @Override
             public void onError(Throwable exception) {
-                future.completeExceptionally(new ResourceException("Error listing cached contents", exception));
+                callback.onError(new ResourceException("Error listing cached contents", exception));
             }
 
             @Override
             public void onCanceled() {
-                future.cancel(true);
+                callback.onCanceled();
             }
         });
 
-        return future;
+        // Create a CompletableFuture<ListCacheResponse> that completes when the HttpResponseFuture completes
+        CompletableFuture<ListCacheResponse> listCacheResponseFuture = new CompletableFuture<>();
+        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+            if (throwable != null) {
+                listCacheResponseFuture.completeExceptionally(throwable);
+            } else {
+                try {
+                    listCacheResponseFuture.complete(deserializeResponse(httpResponse, ListCacheResponse.class));
+                } catch (ResourceException e) {
+                    listCacheResponseFuture.completeExceptionally(e);
+                }
+            }
+        });
+
+        return listCacheResponseFuture;
     }
 
     /**
@@ -170,30 +199,44 @@ public class CacheResourceImpl extends AbstractResource<CacheResource>
      */
     public CompletableFuture<CacheContent> getCachedContentAsync(String name, AsyncCallback<CacheContent> callback) throws ResourceException {
         String endpoint = CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", "");
-        CompletableFuture<CacheContent> future = new CompletableFuture<>();
 
-        httpClient.getAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
+        // Chain the CompletableFuture returned by getAsync
+        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
             @Override
             public void onSuccess(HttpResponse httpResponse) {
                 try {
-                    future.complete(deserializeResponse(httpResponse, CacheContent.class));
+                    callback.onSuccess(deserializeResponse(httpResponse, CacheContent.class));
                 } catch (ResourceException e) {
-                    future.completeExceptionally(e);
+                    callback.onError(e);
                 }
             }
 
             @Override
             public void onError(Throwable exception) {
-                future.completeExceptionally(new ResourceException("Error getting cached content", exception));
+                callback.onError(new ResourceException("Error getting cached content", exception));
             }
 
             @Override
             public void onCanceled() {
-                future.cancel(true);
+                callback.onCanceled();
             }
         });
 
-        return future;
+        // Create a CompletableFuture<CacheContent> that completes when the HttpResponseFuture completes
+        CompletableFuture<CacheContent> cacheContentFuture = new CompletableFuture<>();
+        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+            if (throwable != null) {
+                cacheContentFuture.completeExceptionally(throwable);
+            } else {
+                try {
+                    cacheContentFuture.complete(deserializeResponse(httpResponse, CacheContent.class));
+                } catch (ResourceException e) {
+                    cacheContentFuture.completeExceptionally(e);
+                }
+            }
+        });
+
+        return cacheContentFuture;
     }
 
     /**
@@ -224,34 +267,51 @@ public class CacheResourceImpl extends AbstractResource<CacheResource>
         StringBuilder uri = new StringBuilder(CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", ""));
         addQueryParam(uri, UPDATE_MASK_QUERY_PARAM, updateMask);
         clearAttributesForUpdate(cacheContent);
-        CompletableFuture<CacheContent> future = new CompletableFuture<>();
 
         try {
-            httpClient.patchAsync(buildEndpointUrl(uri.toString()), jsonService.serialize(cacheContent), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
+            // Chain the CompletableFuture returned by patchAsync
+            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.patchAsync(buildEndpointUrl(uri.toString()), jsonService.serialize(cacheContent), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
                 @Override
                 public void onSuccess(HttpResponse httpResponse) {
                     try {
-                        future.complete(deserializeResponse(httpResponse, CacheContent.class));
+                        callback.onSuccess(deserializeResponse(httpResponse, CacheContent.class));
                     } catch (ResourceException e) {
-                        future.completeExceptionally(e);
+                        callback.onError(e);
                     }
                 }
 
                 @Override
                 public void onError(Throwable exception) {
-                    future.completeExceptionally(new ResourceException("Error updating cached content", exception));
+                    callback.onError(new ResourceException("Error updating cached content", exception));
                 }
 
                 @Override
                 public void onCanceled() {
-                    future.cancel(true);
+                    callback.onCanceled();
                 }
             });
-        } catch (JsonException e) {
-            throw new ResourceException(e);
-        }
 
-        return future;
+            // Create a CompletableFuture<CacheContent> that completes when the HttpResponseFuture completes
+            CompletableFuture<CacheContent> cacheContentFuture = new CompletableFuture<>();
+            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+                if (throwable != null) {
+                    cacheContentFuture.completeExceptionally(throwable);
+                } else {
+                    try {
+                        cacheContentFuture.complete(deserializeResponse(httpResponse, CacheContent.class));
+                    } catch (ResourceException e) {
+                        cacheContentFuture.completeExceptionally(e);
+                    }
+                }
+            });
+
+            return cacheContentFuture;
+        } catch (JsonException e) {
+            // Complete the CompletableFuture exceptionally if serialization fails
+            CompletableFuture<CacheContent> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
+        }
     }
 
     private void clearAttributesForUpdate(CacheContent cacheContent) {
@@ -284,26 +344,36 @@ public class CacheResourceImpl extends AbstractResource<CacheResource>
      */
     public CompletableFuture<Void> deleteCachedContentAsync(String name, AsyncCallback<Void> callback) throws ResourceException {
         String endpoint = CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", "");
-        CompletableFuture<Void> future = new CompletableFuture<>();
 
-        httpClient.deleteAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
+        // Chain the CompletableFuture returned by deleteAsync
+        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.deleteAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
             @Override
             public void onSuccess(HttpResponse httpResponse) {
-                future.complete(null);
+                callback.onSuccess(null);
             }
 
             @Override
             public void onError(Throwable exception) {
-                future.completeExceptionally(new ResourceException("Error deleting cached content", exception));
+                callback.onError(new ResourceException("Error deleting cached content", exception));
             }
 
             @Override
             public void onCanceled() {
-                future.cancel(true);
+                callback.onCanceled();
             }
         });
 
-        return future;
+        // Create a CompletableFuture<Void> that completes when the HttpResponseFuture completes
+        CompletableFuture<Void> voidCompletableFuture = new CompletableFuture<>();
+        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
+            if (throwable != null) {
+                voidCompletableFuture.completeExceptionally(throwable);
+            } else {
+                voidCompletableFuture.complete(null);
+            }
+        });
+
+        return voidCompletableFuture;
     }
 
     /**

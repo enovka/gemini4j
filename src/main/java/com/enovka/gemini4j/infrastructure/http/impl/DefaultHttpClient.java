@@ -359,22 +359,14 @@ public class DefaultHttpClient extends AbstractHttpClient {
      * @since 0.2.0
      */
     private void handleResponse(HttpResponse response, Throwable exception, AsyncCallback<HttpResponse> callback) {
-        try {
-            if (exception != null) {
-                if (exception instanceof CancellationException) {
-                    callback.onCanceled();
-                } else {
-                    callback.onError(exception);
-                }
+        if (exception != null) {
+            if (exception instanceof CancellationException) {
+                callback.onCanceled();
             } else {
-                callback.onSuccess(response);
+                callback.onError(exception);
             }
-        } finally {
-            try {
-                close();
-            } catch (IOException e) {
-                logError("Error on handleResponse", e);
-            }
+        } else {
+            callback.onSuccess(response);
         }
     }
 
