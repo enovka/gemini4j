@@ -6,7 +6,7 @@ import com.enovka.gemini4j.model.type.SupportedModelMethod;
 import java.util.List;
 
 public interface Resource {
-    List<SupportedModelMethod> getModelMethodList();
+    List<SupportedModelMethod> getSupportedMethods();
 
     /**
      * Returns the associated {@link GeminiClient}.

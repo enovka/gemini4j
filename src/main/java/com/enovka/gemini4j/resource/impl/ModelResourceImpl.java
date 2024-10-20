@@ -1,20 +1,18 @@
 package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
-import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.enovka.gemini4j.model.ListModel;
 import com.enovka.gemini4j.model.Model;
+import com.enovka.gemini4j.model.request.spec.Request;
 import com.enovka.gemini4j.model.type.SupportedModelMethod;
 import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.ModelResource;
 import com.enovka.gemini4j.resource.spec.base.AbstractResource;
+import com.enovka.gemini4j.resource.spec.base.AsyncResponse;
+import com.enovka.gemini4j.resource.spec.base.BaseAbstractResource;
 import org.apache.hc.core5.http.ContentType;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Implementation of the {@link ModelResource} interface for interacting with
@@ -25,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public class ModelResourceImpl extends AbstractResource<ModelResource>
+public class ModelResourceImpl extends BaseAbstractResource<Model, Request>
         implements ModelResource {
 
     private static final String LIST_MODELS_ENDPOINT = "models";
@@ -47,57 +45,26 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
      * @since 0.2.0
      */
     @Override
-    public ListModel listModels() throws ResourceException {
-        return executeRequest("GET", LIST_MODELS_ENDPOINT, null, ListModel.class);
+    protected String getEndpointForRequest(Request request) {
+        return "";
     }
 
     /**
-     * Retrieves a list of available Gemini models asynchronously.
-     *
-     * @param callback The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
-     *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
+     * {@inheritDoc}
      * @since 0.2.0
      */
-    public CompletableFuture<ListModel> listModelsAsync(AsyncCallback<ListModel> callback) throws ResourceException {
-        // Chain the CompletableFuture returned by getAsync
-        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(LIST_MODELS_ENDPOINT), buildHeaders(), new AsyncCallback<>() {
-            @Override
-            public void onSuccess(HttpResponse httpResponse) {
-                try {
-                    callback.onSuccess(deserializeResponse(httpResponse, ListModel.class));
-                } catch (ResourceException e) {
-                    callback.onError(e);
-                }
-            }
+    @Override
+    public ListModel listModels() throws ResourceException {
+        return executeRequest("GET", LIST_MODELS_ENDPOINT, null, ContentType.APPLICATION_JSON, ListModel.class);
+    }
 
-            @Override
-            public void onError(Throwable exception) {
-                callback.onError(new ResourceException("Error listing models", exception));
-            }
-
-            @Override
-            public void onCanceled() {
-                callback.onCanceled();
-            }
-        });
-
-        // Create a CompletableFuture<ListModel> that completes when the HttpResponseFuture completes
-        CompletableFuture<ListModel> listModelFuture = new CompletableFuture<>();
-        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
-            if (throwable != null) {
-                listModelFuture.completeExceptionally(throwable);
-            } else {
-                try {
-                    listModelFuture.complete(deserializeResponse(httpResponse, ListModel.class));
-                } catch (ResourceException e) {
-                    listModelFuture.completeExceptionally(e);
-                }
-            }
-        });
-
-        return listModelFuture;
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public AsyncResponse<ListModel> listModelsAsync() {
+        return executeRequestAsync("GET", LIST_MODELS_ENDPOINT, null, ContentType.APPLICATION_JSON, ListModel.class);
     }
 
     /**
@@ -107,59 +74,7 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
     @Override
     public Model getModel(String modelName) throws ResourceException {
         String endpoint = String.format(GET_MODEL_ENDPOINT, modelName);
-        return executeRequest("GET", endpoint, null, Model.class);
-    }
-
-    /**
-     * Retrieves a specific Gemini model by its name asynchronously.
-     *
-     * @param modelName The name of the model to retrieve.
-     * @param callback  The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
-     *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<Model> getModelAsync(String modelName, AsyncCallback<Model> callback) throws ResourceException {
-        String endpoint = String.format(GET_MODEL_ENDPOINT, modelName);
-
-        // Chain the CompletableFuture returned by getAsync
-        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
-            @Override
-            public void onSuccess(HttpResponse httpResponse) {
-                try {
-                    callback.onSuccess(deserializeResponse(httpResponse, Model.class));
-                } catch (ResourceException e) {
-                    callback.onError(e);
-                }
-            }
-
-            @Override
-            public void onError(Throwable exception) {
-                callback.onError(new ResourceException("Error getting model", exception));
-            }
-
-            @Override
-            public void onCanceled() {
-                callback.onCanceled();
-            }
-        });
-
-        // Create a CompletableFuture<Model> that completes when the HttpResponseFuture completes
-        CompletableFuture<Model> modelFuture = new CompletableFuture<>();
-        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
-            if (throwable != null) {
-                modelFuture.completeExceptionally(throwable);
-            } else {
-                try {
-                    modelFuture.complete(deserializeResponse(httpResponse, Model.class));
-                } catch (ResourceException e) {
-                    modelFuture.completeExceptionally(e);
-                }
-            }
-        });
-
-        return modelFuture;
+        return executeRequest("GET", endpoint, null, ContentType.APPLICATION_JSON, Model.class);
     }
 
     /**
@@ -167,13 +82,17 @@ public class ModelResourceImpl extends AbstractResource<ModelResource>
      * @since 0.2.0
      */
     @Override
-    public List<SupportedModelMethod> getModelMethodList() {
-        return SUPPORTED_METHODS;
+    public AsyncResponse<Model> getModelAsync(String modelName) {
+        String endpoint = String.format(GET_MODEL_ENDPOINT, modelName);
+        return executeRequestAsync("GET", endpoint, null, ContentType.APPLICATION_JSON, Model.class);
     }
 
-    private Map<String, String> buildHeaders() {
-        Map<String, String> headers = new HashMap<>(geminiClient.buildAuthHeaders());
-        headers.put("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
-        return headers;
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public List<SupportedModelMethod> getSupportedMethods() {
+        return SUPPORTED_METHODS;
     }
 }

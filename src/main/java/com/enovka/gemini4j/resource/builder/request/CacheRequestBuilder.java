@@ -1,18 +1,14 @@
 package com.enovka.gemini4j.resource.builder.request;
 
-import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.model.CacheContent;
 import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.Tool;
 import com.enovka.gemini4j.model.ToolConfig;
 import com.enovka.gemini4j.model.request.CacheRequest;
 import com.enovka.gemini4j.resource.builder.request.spec.AbstractContentRequestBuilder;
-import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.CacheResource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Builder for creating {@link CacheRequest} instances.  This builder provides a fluent API
@@ -31,8 +27,6 @@ public class CacheRequestBuilder extends AbstractContentRequestBuilder<CacheRequ
     private String expireTime;
     private String cachedContent;
     private ToolConfig toolConfig;
-    private CacheResource cacheResource;
-    private AsyncCallback<CacheContent> asyncCallback;
 
     /**
      * Private constructor to enforce a builder pattern.  Instances of this builder should be
@@ -52,18 +46,6 @@ public class CacheRequestBuilder extends AbstractContentRequestBuilder<CacheRequ
      */
     public static CacheRequestBuilder builder() {
         return new CacheRequestBuilder();
-    }
-
-    /**
-     * Sets the {@link CacheResource} instance to be used for executing the request.
-     *
-     * @param cacheResource The CacheResource instance.
-     * @return The builder instance for method chaining.
-     * @since 0.2.0
-     */
-    protected CacheRequestBuilder withCacheResource(CacheResource cacheResource) {
-        this.cacheResource = cacheResource;
-        return this;
     }
 
     /**
@@ -183,18 +165,6 @@ public class CacheRequestBuilder extends AbstractContentRequestBuilder<CacheRequ
     }
 
     /**
-     * Sets the {@link AsyncCallback} to handle the asynchronous response.
-     *
-     * @param asyncCallback The AsyncCallback instance.
-     * @return The builder instance for method chaining.
-     * @since 0.2.0
-     */
-    public CacheRequestBuilder withAsyncCallback(AsyncCallback<CacheContent> asyncCallback) {
-        this.asyncCallback = asyncCallback;
-        return this;
-    }
-
-    /**
      * {@inheritDoc}
      * @since 0.2.0
      */
@@ -230,22 +200,6 @@ public class CacheRequestBuilder extends AbstractContentRequestBuilder<CacheRequ
         return CacheRequest.builder()
                 .withCacheContent(cachedContentBuilder.build())
                 .build();
-    }
-
-    /**
-     * Executes the cache request asynchronously and returns a {@link CompletableFuture}
-     * representing the operation. This method allows for more flexible cancellation handling.
-     *
-     * @return A CompletableFuture that will resolve to a {@link CacheContent} upon
-     *         successful completion.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<CacheContent> executeAsync() throws ResourceException {
-        if (cacheResource == null) {
-            throw new IllegalStateException("CacheResource is required for asynchronous execution.");
-        }
-        return cacheResource.executeAsync(build(), asyncCallback);
     }
 
     /**

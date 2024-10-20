@@ -104,14 +104,14 @@ public class ModelResourceTest {
     }
 
     /**
-     * Tests the {@link ModelResource#getModelMethodList()} method. Verifies that the returned list
+     * Tests the {@link ModelResource#getSupportedMethods()} method. Verifies that the returned list
      * of supported model methods is not null and matches the expected list.
      *
      * @since 0.2.0
      */
     @Test
-    void getModelMethodList_shouldReturnSupportedMethods() {
-        List<SupportedModelMethod> supportedMethods = modelResource.getModelMethodList();
+    void getSupportedMethods_shouldReturnSupportedMethods() {
+        List<SupportedModelMethod> supportedMethods = modelResource.getSupportedMethods();
 
         assertNotNull(supportedMethods, "Supported methods list should not be null");
         assertIterableEquals(List.of(), supportedMethods, "Supported methods list should be empty"); // Using assertIterableEquals from JUnit 5.11.2

@@ -1,7 +1,6 @@
 package com.enovka.gemini4j.model.response.internal;
 
 import com.enovka.gemini4j.model.Candidate;
-import com.enovka.gemini4j.model.ErrorResponse;
 import com.enovka.gemini4j.model.PromptFeedback;
 import com.enovka.gemini4j.model.UsageMetadata;
 import com.enovka.gemini4j.model.response.spec.AbstractResponse;
@@ -32,8 +31,8 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 @SuperBuilder(setterPrefix = "with")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class GenerateContentResponse extends AbstractResponse {
 
     /**
@@ -66,22 +65,4 @@ public class GenerateContentResponse extends AbstractResponse {
      */
     @JsonProperty("usageMetadata")
     private UsageMetadata usageMetadata;
-
-    /**
-     * Constructs a new `GenerateContentResponse` instance directly using provided values for all fields.
-     * This constructor is public to support object creation during the `build()` process of the associated Builder.
-     *
-     * @param candidates     The list of candidate responses.
-     * @param promptFeedback Feedback on the prompt.
-     * @param usageMetadata  Metadata about token usage.
-     * @param error          Error information, if any.
-     */
-    public GenerateContentResponse(List<Candidate> candidates, PromptFeedback promptFeedback, UsageMetadata usageMetadata, ErrorResponse error) {
-        super();
-
-        this.candidates = candidates;
-        this.promptFeedback = promptFeedback;
-        this.usageMetadata = usageMetadata;
-        this.error = error;
-    }
 }

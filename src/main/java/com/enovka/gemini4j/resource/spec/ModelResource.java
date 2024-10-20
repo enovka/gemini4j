@@ -1,13 +1,10 @@
-// com.enovka.gemini4j.resource.spec.ModelResource
 package com.enovka.gemini4j.resource.spec;
 
-import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.model.ListModel;
 import com.enovka.gemini4j.model.Model;
 import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.base.AsyncResponse;
 import com.enovka.gemini4j.resource.spec.base.Resource;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface defining the contract for interacting with the Model resource of the Gemini API.
@@ -29,13 +26,11 @@ public interface ModelResource extends Resource {
     /**
      * Retrieves a list of available Gemini models asynchronously.
      *
-     * @param callback The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
+     * @return A {@link AsyncResponse} representing the asynchronous operation, which can be
      *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
      * @since 0.2.0
      */
-    CompletableFuture<ListModel> listModelsAsync(AsyncCallback<ListModel> callback) throws ResourceException;
+    AsyncResponse<ListModel> listModelsAsync();
 
     /**
      * Retrieves a specific Gemini model by its name.
@@ -52,11 +47,9 @@ public interface ModelResource extends Resource {
      * Retrieves a specific Gemini model by its name asynchronously.
      *
      * @param modelName The name of the model to retrieve.
-     * @param callback  The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
+     * @return A {@link AsyncResponse} representing the asynchronous operation, which can be
      *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
      * @since 0.2.0
      */
-    CompletableFuture<Model> getModelAsync(String modelName, AsyncCallback<Model> callback) throws ResourceException;
+    AsyncResponse<Model> getModelAsync(String modelName);
 }

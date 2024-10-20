@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
+@Builder(toBuilder = true, setterPrefix = "with")
 public class SafetySetting {
 
     /**

@@ -100,14 +100,14 @@ public class TokensResourceTest {
 
 
     /**
-     * Tests the {@link TokensResource#getModelMethodList()} method.  Verifies that the returned list
+     * Tests the {@link TokensResource#getSupportedMethods()} method.  Verifies that the returned list
      * of supported model methods is not null and contains only the expected method.
      *
      * @since 0.2.0
      */
     @Test
     void getModelMethodList_shouldReturnCorrectMethod() {
-        List<SupportedModelMethod> supportedMethods = tokensResource.getModelMethodList();
+        List<SupportedModelMethod> supportedMethods = tokensResource.getSupportedMethods();
         assertNotNull(supportedMethods, "Supported methods list should not be null");
         assertEquals(List.of(SupportedModelMethod.COUNT_TOKENS), supportedMethods, "Supported methods list should contain only COUNT_TOKENS");
     }
@@ -126,7 +126,7 @@ public class TokensResourceTest {
     }
 
     /**
-     * Tests the {@link TokensResource#countTokensBuilder(String)} method.  Verifies that a valid
+     * Tests the {@link TokensResource} class. Verifies that a valid
      * TokensRequestBuilder is returned when a valid text input is provided.
      *
      * @since 0.2.0
@@ -134,7 +134,7 @@ public class TokensResourceTest {
     @Test
     void countTokensBuilder_withValidText_shouldReturnValidBuilder() {
         String validText = "This is a test sentence.";
-        TokensRequestBuilder builder = tokensResource.countTokensBuilder(validText);
+        TokensRequestBuilder builder = TokensRequestBuilder.builder().withUserContent(validText);
         assertNotNull(builder, "Builder should not be null");
         TokensRequest request = builder.build();
         assertNotNull(request, "Request should not be null");
@@ -143,24 +143,24 @@ public class TokensResourceTest {
 
 
     /**
-     * Tests the {@link TokensResource#countTokensBuilder(String)} method with null text input.
+     * Tests the {@link TokensResource} class with null text input.
      * Verifies that an IllegalArgumentException is thrown when a null text input is provided.
      *
      * @since 0.2.0
      */
     @Test
     void countTokensBuilder_withNullText_shouldThrowIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> tokensResource.countTokensBuilder(null));
+        assertThrows(IllegalArgumentException.class, () -> tokensResource.execute(null));
     }
 
     /**
-     * Tests the {@link TokensResource#countTokensBuilder(String)} method with empty text input.
+     * Tests the {@link TokensResource} class with empty text input.
      * Verifies that an IllegalArgumentException is thrown when an empty text input is provided.
      *
      * @since 0.2.0
      */
     @Test
     void countTokensBuilder_withEmptyText_shouldThrowIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> tokensResource.countTokensBuilder(""));
+        assertThrows(IllegalArgumentException.class, () -> tokensResource.execute(TokensRequestBuilder.builder().withUserContent("").build()));
     }
 }

@@ -1,43 +1,46 @@
 package com.enovka.gemini4j.resource.impl;
 
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
-import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
-import com.enovka.gemini4j.infrastructure.json.exception.JsonException;
 import com.enovka.gemini4j.model.CacheContent;
+import com.enovka.gemini4j.model.CacheResponse;
 import com.enovka.gemini4j.model.request.CacheRequest;
+import com.enovka.gemini4j.model.request.spec.Request;
+import com.enovka.gemini4j.model.response.EmptyResponse;
 import com.enovka.gemini4j.model.response.ListCacheResponse;
 import com.enovka.gemini4j.model.type.SupportedModelMethod;
-import com.enovka.gemini4j.resource.builder.request.CacheRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
 import com.enovka.gemini4j.resource.spec.CacheResource;
-import com.enovka.gemini4j.resource.spec.base.AbstractResource;
-import org.apache.hc.core5.http.ContentType;
+import com.enovka.gemini4j.resource.spec.base.AsyncResponse;
+import com.enovka.gemini4j.resource.spec.base.BaseAbstractResource;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
- * Implementation of the {@link CacheResource} interface for interacting with the cached
- * content resource of the Gemini API. This class provides methods for creating, listing, getting,
- * updating, and deleting cached content. It leverages the functionality provided by the
- * {@link AbstractResource} base class for common HTTP operations and error handling.
+ * <p>Concrete implementation of the {@link CacheResource} interface, providing a high-level
+ * API for interacting with the Gemini API's cached content resource. This class extends
+ * {@link BaseAbstractResource} and leverages its simplified request execution mechanism,
+ * offering convenient methods for creating, retrieving, listing, updating, and deleting
+ * cached content. Both synchronous and asynchronous operations are supported through the
+ * use of {@link AsyncResponse} objects.</p>
+ *
+ * <p>This class abstracts away the low-level details of HTTP requests and responses, allowing
+ * developers to focus on the specific actions they want to perform with cached content.
+ * It handles request building, serialization, execution, deserialization, and error handling
+ * internally, providing a clean and intuitive interface for managing cached content in the
+ * Gemini API.</p>
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 0.0.2
+ * @see <a href="https://ai.google.dev/gemini-api/docs/reference/rest/v1beta/cachedContents">Gemini API Cached Contents Documentation</a>
+ * @since 0.2.0
  */
-public class CacheResourceImpl extends AbstractResource<CacheResource>
-        implements CacheResource {
+public class CacheResourceImpl extends BaseAbstractResource<CacheResponse, CacheRequest> implements CacheResource {
 
-    private static final String CACHED_CONTENTS_ENDPOINT = "cachedContents";
-    private static final String UPDATE_MASK_QUERY_PARAM = "updateMask";
+    private static final String DEFAULT_CACHE_ENDPOINT = "cachedContents";
 
     /**
-     * Constructs a new {@code CacheResourceImpl} with the provided {@link GeminiClient}.
+     * Constructs a new {@code CacheResourceImpl} instance with the given {@link GeminiClient}.
      *
-     * @param geminiClient The Gemini client for making API calls.
+     * @param geminiClient The Gemini client for API communication.
      * @since 0.2.0
      */
     public CacheResourceImpl(GeminiClient geminiClient) {
@@ -49,354 +52,66 @@ public class CacheResourceImpl extends AbstractResource<CacheResource>
      * @since 0.2.0
      */
     @Override
-    public CacheContent execute(CacheRequest request) throws ResourceException {
-        return executeRequest("POST", CACHED_CONTENTS_ENDPOINT, request.getCacheContent(), CacheContent.class);
-    }
-
-    /**
-     * Executes a request asynchronously to create cached content.
-     *
-     * @param request  The {@link CacheRequest} containing the content to cache and other parameters.
-     * @param callback The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
-     *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<CacheContent> executeAsync(CacheRequest request, AsyncCallback<CacheContent> callback) throws ResourceException {
-        try {
-            // Chain the CompletableFuture returned by postAsync
-            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.postAsync(buildEndpointUrl(CACHED_CONTENTS_ENDPOINT), jsonService.serialize(request.getCacheContent()), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
-                @Override
-                public void onSuccess(HttpResponse httpResponse) {
-                    try {
-                        callback.onSuccess(deserializeResponse(httpResponse, CacheContent.class));
-                    } catch (ResourceException e) {
-                        callback.onError(e);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable exception) {
-                    callback.onError(new ResourceException("Error creating cached content", exception));
-                }
-
-                @Override
-                public void onCanceled() {
-                    callback.onCanceled();
-                }
-            });
-
-            // Create a CompletableFuture<CacheContent> that completes when the HttpResponseFuture completes
-            CompletableFuture<CacheContent> cacheContentFuture = new CompletableFuture<>();
-            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
-                if (throwable != null) {
-                    cacheContentFuture.completeExceptionally(throwable);
-                } else {
-                    try {
-                        cacheContentFuture.complete(deserializeResponse(httpResponse, CacheContent.class));
-                    } catch (ResourceException e) {
-                        cacheContentFuture.completeExceptionally(e);
-                    }
-                }
-            });
-
-            return cacheContentFuture;
-        } catch (JsonException e) {
-            // Complete the CompletableFuture exceptionally if serialization fails
-            CompletableFuture<CacheContent> future = new CompletableFuture<>();
-            future.completeExceptionally(e);
-            return future;
+    protected String getEndpointForRequest(Request request) {
+        if (request instanceof CacheRequest) {
+            CacheContent cacheContent = ((CacheRequest) request).getCacheContent();
+            return cacheContent.getName() != null ? cacheContent.getName() : DEFAULT_CACHE_ENDPOINT;
         }
+        return null;
     }
 
-    /**
-     * {@inheritDoc}
-     * @since 0.2.0
-     */
+    @Override
+    public CacheResponse createCachedContent(CacheRequest request) throws ResourceException {
+        return post(request, CacheResponse.class);
+    }
+
+    @Override
+    public AsyncResponse<CacheResponse> createCachedContentAsync(CacheRequest request) {
+        return postAsync(request, CacheResponse.class);
+    }
+
     @Override
     public ListCacheResponse listCachedContents(Integer pageSize, String pageToken) throws ResourceException {
-        StringBuilder uri = new StringBuilder(CACHED_CONTENTS_ENDPOINT);
-        addQueryParam(uri, "pageSize", pageSize);
-        addQueryParam(uri, "pageToken", pageToken);
-        return executeRequest("GET", uri.toString(), null, ListCacheResponse.class);
+        return null;
     }
 
-    /**
-     * Lists cached contents asynchronously.
-     *
-     * @param pageSize  The maximum number of cached contents to return.
-     * @param pageToken A page token, received from a previous cachedContents.list call.
-     * @param callback The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
-     *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<ListCacheResponse> listCachedContentsAsync(Integer pageSize, String pageToken, AsyncCallback<ListCacheResponse> callback) throws ResourceException {
-        StringBuilder uri = new StringBuilder(CACHED_CONTENTS_ENDPOINT);
-        addQueryParam(uri, "pageSize", pageSize);
-        addQueryParam(uri, "pageToken", pageToken);
-
-        // Chain the CompletableFuture returned by getAsync
-        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(uri.toString()), buildHeaders(), new AsyncCallback<>() {
-            @Override
-            public void onSuccess(HttpResponse httpResponse) {
-                try {
-                    callback.onSuccess(deserializeResponse(httpResponse, ListCacheResponse.class));
-                } catch (ResourceException e) {
-                    callback.onError(e);
-                }
-            }
-
-            @Override
-            public void onError(Throwable exception) {
-                callback.onError(new ResourceException("Error listing cached contents", exception));
-            }
-
-            @Override
-            public void onCanceled() {
-                callback.onCanceled();
-            }
-        });
-
-        // Create a CompletableFuture<ListCacheResponse> that completes when the HttpResponseFuture completes
-        CompletableFuture<ListCacheResponse> listCacheResponseFuture = new CompletableFuture<>();
-        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
-            if (throwable != null) {
-                listCacheResponseFuture.completeExceptionally(throwable);
-            } else {
-                try {
-                    listCacheResponseFuture.complete(deserializeResponse(httpResponse, ListCacheResponse.class));
-                } catch (ResourceException e) {
-                    listCacheResponseFuture.completeExceptionally(e);
-                }
-            }
-        });
-
-        return listCacheResponseFuture;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @since 0.2.0
-     */
     @Override
-    public CacheContent getCachedContent(String name) throws ResourceException {
-        String endpoint = CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", "");
-        return executeRequest("GET", endpoint, null, CacheContent.class);
+    public AsyncResponse<ListCacheResponse> listCachedContentsAsync(Integer pageSize, String pageToken) {
+        return null;
     }
 
-    /**
-     * Reads a cached content asynchronously.
-     *
-     * @param name     The resource name referring to the content cache entry.
-     * @param callback The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
-     *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<CacheContent> getCachedContentAsync(String name, AsyncCallback<CacheContent> callback) throws ResourceException {
-        String endpoint = CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", "");
-
-        // Chain the CompletableFuture returned by getAsync
-        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.getAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
-            @Override
-            public void onSuccess(HttpResponse httpResponse) {
-                try {
-                    callback.onSuccess(deserializeResponse(httpResponse, CacheContent.class));
-                } catch (ResourceException e) {
-                    callback.onError(e);
-                }
-            }
-
-            @Override
-            public void onError(Throwable exception) {
-                callback.onError(new ResourceException("Error getting cached content", exception));
-            }
-
-            @Override
-            public void onCanceled() {
-                callback.onCanceled();
-            }
-        });
-
-        // Create a CompletableFuture<CacheContent> that completes when the HttpResponseFuture completes
-        CompletableFuture<CacheContent> cacheContentFuture = new CompletableFuture<>();
-        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
-            if (throwable != null) {
-                cacheContentFuture.completeExceptionally(throwable);
-            } else {
-                try {
-                    cacheContentFuture.complete(deserializeResponse(httpResponse, CacheContent.class));
-                } catch (ResourceException e) {
-                    cacheContentFuture.completeExceptionally(e);
-                }
-            }
-        });
-
-        return cacheContentFuture;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @since 0.2.0
-     */
     @Override
-    public CacheContent updateCachedContent(CacheContent cacheContent, String updateMask, String name) throws ResourceException {
-        StringBuilder uri = new StringBuilder(CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", ""));
-        addQueryParam(uri, UPDATE_MASK_QUERY_PARAM, updateMask);
-        clearAttributesForUpdate(cacheContent);
-        return executeRequest("PATCH", uri.toString(), cacheContent, CacheContent.class);
+    public CacheResponse getCachedContent(String name) throws ResourceException {
+        return get(name, CacheResponse.class);
     }
 
-    /**
-     * Updates a cached content asynchronously.
-     *
-     * @param cacheContent The {@link CacheContent} containing the content to update and other parameters.
-     * @param updateMask    The list of fields to update.
-     * @param name         The resource name referring to the content cache entry.
-     * @param callback     The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
-     *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<CacheContent> updateCachedContentAsync(CacheContent cacheContent, String updateMask, String name, AsyncCallback<CacheContent> callback) throws ResourceException {
-        StringBuilder uri = new StringBuilder(CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", ""));
-        addQueryParam(uri, UPDATE_MASK_QUERY_PARAM, updateMask);
-        clearAttributesForUpdate(cacheContent);
-
-        try {
-            // Chain the CompletableFuture returned by patchAsync
-            CompletableFuture<HttpResponse> httpResponseFuture = httpClient.patchAsync(buildEndpointUrl(uri.toString()), jsonService.serialize(cacheContent), buildHeaders(), ContentType.APPLICATION_JSON, new AsyncCallback<>() {
-                @Override
-                public void onSuccess(HttpResponse httpResponse) {
-                    try {
-                        callback.onSuccess(deserializeResponse(httpResponse, CacheContent.class));
-                    } catch (ResourceException e) {
-                        callback.onError(e);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable exception) {
-                    callback.onError(new ResourceException("Error updating cached content", exception));
-                }
-
-                @Override
-                public void onCanceled() {
-                    callback.onCanceled();
-                }
-            });
-
-            // Create a CompletableFuture<CacheContent> that completes when the HttpResponseFuture completes
-            CompletableFuture<CacheContent> cacheContentFuture = new CompletableFuture<>();
-            httpResponseFuture.whenComplete((httpResponse, throwable) -> {
-                if (throwable != null) {
-                    cacheContentFuture.completeExceptionally(throwable);
-                } else {
-                    try {
-                        cacheContentFuture.complete(deserializeResponse(httpResponse, CacheContent.class));
-                    } catch (ResourceException e) {
-                        cacheContentFuture.completeExceptionally(e);
-                    }
-                }
-            });
-
-            return cacheContentFuture;
-        } catch (JsonException e) {
-            // Complete the CompletableFuture exceptionally if serialization fails
-            CompletableFuture<CacheContent> future = new CompletableFuture<>();
-            future.completeExceptionally(e);
-            return future;
-        }
+    @Override
+    public AsyncResponse<CacheResponse> getCachedContentAsync(String name) {
+        return getAsync(name, CacheResponse.class);
     }
 
-    private void clearAttributesForUpdate(CacheContent cacheContent) {
-        cacheContent.setUsageMetadata(null);
-        cacheContent.setCreateTime(null);
-        cacheContent.setUpdateTime(null);
-        cacheContent.setName(null);
-        cacheContent.setContents(null);
+    @Override
+    public CacheResponse updateCachedContent(CacheRequest cache) throws ResourceException {
+        return patch(cache, CacheResponse.class);
     }
 
-    /**
-     * {@inheritDoc}
-     * @since 0.2.0
-     */
+    @Override
+    public AsyncResponse<CacheResponse> updateCachedContentAsync(CacheRequest cache) {
+        return patchAsync(cache, CacheResponse.class);
+    }
+
     @Override
     public void deleteCachedContent(String name) throws ResourceException {
-        String endpoint = CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", "");
-        executeRequest("DELETE", endpoint, null, Void.class);
+        delete(name, EmptyResponse.class);
     }
 
-    /**
-     * Deletes a cached content asynchronously.
-     *
-     * @param name     The resource name referring to the content cache entry.
-     * @param callback The callback to handle the asynchronous response.
-     * @return A {@link CompletableFuture} representing the asynchronous operation, which can be
-     *         used to cancel the request.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<Void> deleteCachedContentAsync(String name, AsyncCallback<Void> callback) throws ResourceException {
-        String endpoint = CACHED_CONTENTS_ENDPOINT + "/" + name.replace("cachedContents/", "");
-
-        // Chain the CompletableFuture returned by deleteAsync
-        CompletableFuture<HttpResponse> httpResponseFuture = httpClient.deleteAsync(buildEndpointUrl(endpoint), buildHeaders(), new AsyncCallback<>() {
-            @Override
-            public void onSuccess(HttpResponse httpResponse) {
-                callback.onSuccess(null);
-            }
-
-            @Override
-            public void onError(Throwable exception) {
-                callback.onError(new ResourceException("Error deleting cached content", exception));
-            }
-
-            @Override
-            public void onCanceled() {
-                callback.onCanceled();
-            }
-        });
-
-        // Create a CompletableFuture<Void> that completes when the HttpResponseFuture completes
-        CompletableFuture<Void> voidCompletableFuture = new CompletableFuture<>();
-        httpResponseFuture.whenComplete((httpResponse, throwable) -> {
-            if (throwable != null) {
-                voidCompletableFuture.completeExceptionally(throwable);
-            } else {
-                voidCompletableFuture.complete(null);
-            }
-        });
-
-        return voidCompletableFuture;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @since 0.2.0
-     */
     @Override
-    public CacheRequestBuilder createCachedContentBuilder(String modelName) {
-        return CacheRequestBuilder.builder().withModel(modelName);
+    public AsyncResponse<EmptyResponse> deleteCachedContentAsync(String name) {
+        return deleteAsync(name, EmptyResponse.class);
     }
 
-    /**
-     * {@inheritDoc}
-     * @since 0.2.0
-     */
     @Override
-    public List<SupportedModelMethod> getModelMethodList() {
+    public List<SupportedModelMethod> getSupportedMethods() {
         return List.of(SupportedModelMethod.CREATE_CACHED_CONTENT);
-    }
-
-    private Map<String, String> buildHeaders() {
-        Map<String, String> headers = new HashMap<>(geminiClient.buildAuthHeaders());
-        headers.put("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
-        return headers;
     }
 }

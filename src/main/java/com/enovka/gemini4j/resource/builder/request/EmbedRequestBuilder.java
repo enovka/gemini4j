@@ -1,16 +1,11 @@
 package com.enovka.gemini4j.resource.builder.request;
 
-import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.Part;
 import com.enovka.gemini4j.model.request.EmbedRequest;
-import com.enovka.gemini4j.model.response.EmbedResponse;
 import com.enovka.gemini4j.resource.builder.request.spec.AbstractEmbedRequestBuilder;
-import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.EmbedResource;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Builder for creating {@link EmbedRequest} instances. This builder, inheriting from
@@ -24,8 +19,6 @@ import java.util.concurrent.CompletableFuture;
 public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedRequestBuilder, EmbedRequest> {
 
     private Content content;
-    private EmbedResource embedResource;
-    private AsyncCallback<EmbedResponse> asyncCallback;
 
     /**
      * Private constructor to enforce a builder pattern. Instances of this builder should be
@@ -45,18 +38,6 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
      */
     public static EmbedRequestBuilder builder() {
         return new EmbedRequestBuilder();
-    }
-
-    /**
-     * Sets the {@link EmbedResource} instance to be used for executing the request.
-     *
-     * @param embedResource The EmbedResource instance.
-     * @return The builder instance for method chaining.
-     * @since 0.2.0
-     */
-    protected EmbedRequestBuilder withEmbedResource(EmbedResource embedResource) {
-        this.embedResource = embedResource;
-        return this;
     }
 
     /**
@@ -80,18 +61,6 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
     }
 
     /**
-     * Sets the {@link AsyncCallback} to handle the asynchronous response.
-     *
-     * @param asyncCallback The AsyncCallback instance.
-     * @return The builder instance for method chaining.
-     * @since 0.2.0
-     */
-    public EmbedRequestBuilder withAsyncCallback(AsyncCallback<EmbedResponse> asyncCallback) {
-        this.asyncCallback = asyncCallback;
-        return this;
-    }
-
-    /**
      * {@inheritDoc}
      * @since 0.2.0
      */
@@ -111,22 +80,6 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
                 .withTitle(title)       // Inherited from AbstractEmbedRequestBuilder
                 .withOutputDimensionality(outputDimensionality) // Inherited from AbstractEmbedRequestBuilder
                 .build();
-    }
-
-    /**
-     * Executes the embed request asynchronously and returns a {@link CompletableFuture}
-     * representing the operation. This method allows for more flexible cancellation handling.
-     *
-     * @return A CompletableFuture that will resolve to an {@link EmbedResponse} upon
-     *         successful completion.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<EmbedResponse> executeAsync() throws ResourceException {
-        if (embedResource == null) {
-            throw new IllegalStateException("EmbedResource is required for asynchronous execution.");
-        }
-        return embedResource.executeAsync(build(), asyncCallback);
     }
 
     /**

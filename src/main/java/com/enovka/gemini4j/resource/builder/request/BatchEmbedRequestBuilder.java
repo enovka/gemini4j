@@ -1,18 +1,13 @@
 package com.enovka.gemini4j.resource.builder.request;
 
-import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.model.Content;
 import com.enovka.gemini4j.model.Part;
 import com.enovka.gemini4j.model.request.BatchEmbedRequest;
 import com.enovka.gemini4j.model.request.EmbedRequest;
-import com.enovka.gemini4j.model.response.BatchEmbedResponse;
 import com.enovka.gemini4j.resource.builder.request.spec.AbstractEmbedRequestBuilder;
-import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.EmbedResource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Builder for creating {@link BatchEmbedRequest} instances. This builder, inheriting from
@@ -26,8 +21,6 @@ import java.util.concurrent.CompletableFuture;
 public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchEmbedRequestBuilder, BatchEmbedRequest> {
 
     private final List<EmbedRequest> requests = new ArrayList<>();
-    private EmbedResource embedResource;
-    private AsyncCallback<BatchEmbedResponse> asyncCallback;
 
     /**
      * Private constructor to enforce a builder pattern. Instances of this builder should be
@@ -47,18 +40,6 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
      */
     public static BatchEmbedRequestBuilder builder() {
         return new BatchEmbedRequestBuilder();
-    }
-
-    /**
-     * Sets the {@link EmbedResource} instance to be used for executing the request.
-     *
-     * @param embedResource The EmbedResource instance.
-     * @return The builder instance for method chaining.
-     * @since 0.2.0
-     */
-    protected BatchEmbedRequestBuilder withEmbedResource(EmbedResource embedResource) {
-        this.embedResource = embedResource;
-        return this;
     }
 
     /**
@@ -110,18 +91,6 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
     }
 
     /**
-     * Sets the {@link AsyncCallback} to handle the asynchronous response.
-     *
-     * @param asyncCallback The AsyncCallback instance.
-     * @return The builder instance for method chaining.
-     * @since 0.2.0
-     */
-    public BatchEmbedRequestBuilder withAsyncCallback(AsyncCallback<BatchEmbedResponse> asyncCallback) {
-        this.asyncCallback = asyncCallback;
-        return this;
-    }
-
-    /**
      * {@inheritDoc}
      * @since 0.2.0
      */
@@ -149,22 +118,6 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
         return BatchEmbedRequest.builder()
                 .withRequests(requests)
                 .build();
-    }
-
-    /**
-     * Executes the batch embed request asynchronously and returns a {@link CompletableFuture}
-     * representing the operation. This method allows for more flexible cancellation handling.
-     *
-     * @return A CompletableFuture that will resolve to a {@link BatchEmbedResponse} upon
-     *         successful completion.
-     * @throws ResourceException If an error occurs during request setup.
-     * @since 0.2.0
-     */
-    public CompletableFuture<BatchEmbedResponse> executeAsync() throws ResourceException {
-        if (embedResource == null) {
-            throw new IllegalStateException("EmbedResource is required for asynchronous execution.");
-        }
-        return embedResource.executeAsync(build(), asyncCallback);
     }
 
     /**

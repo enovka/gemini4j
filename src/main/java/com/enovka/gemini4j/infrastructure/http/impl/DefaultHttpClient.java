@@ -52,10 +52,8 @@ public class DefaultHttpClient extends AbstractHttpClient {
     private static final int DEFAULT_VALIDATE_AFTER_INACTIVITY_MS = 2000;
     private static final TimeValue DEFAULT_CONNECTION_TTL = TimeValue.ofMinutes(5);
 
-
     private final CloseableHttpAsyncClient httpAsyncClient;
     private final PoolingAsyncClientConnectionManager connectionManager;
-
 
     /**
      * Constructs a new DefaultHttpClient with default settings, including a connection pool
@@ -113,7 +111,6 @@ public class DefaultHttpClient extends AbstractHttpClient {
                                 .build())
                 .setMaxConnTotal(maxConnections) // Set the maximum total connections
                 .setMaxConnPerRoute(maxConnections) // Set the maximum connections per route
-                .setValidateAfterInactivity(TimeValue.ofMilliseconds(DEFAULT_VALIDATE_AFTER_INACTIVITY_MS))
                 .build();
     }
 
@@ -197,7 +194,6 @@ public class DefaultHttpClient extends AbstractHttpClient {
         return executeAsyncRequest("DELETE", url, null, headers, ContentType.TEXT_PLAIN);
     }
 
-
     /**
      * Executes an asynchronous HTTP request with cancellation support. This method handles request creation,
      * execution, and asynchronous response handling using {@link CompletableFuture}. It incorporates error
@@ -218,10 +214,8 @@ public class DefaultHttpClient extends AbstractHttpClient {
             ContentType contentType) {
 
         CompletableFuture<HttpResponse> completableFuture = new CompletableFuture<>();
-
         URI uri = createURI(url);
         HttpHost httpHost = new HttpHost(uri.getScheme(), uri.getHost(), uri.getPort());
-
         SimpleRequestBuilder requestBuilder = SimpleRequestBuilder.create(method)
                 .setHttpHost(httpHost)
                 .setUri(uri);
@@ -229,11 +223,8 @@ public class DefaultHttpClient extends AbstractHttpClient {
         if (body != null) {
             requestBuilder.setBody(body, contentType);
         }
-
         addHeadersToRequest(requestBuilder, headers);
-
         SimpleHttpRequest request = requestBuilder.build();
-
         Future<SimpleHttpResponse> responseFuture = httpAsyncClient.execute(request, new FutureCallback<>() {
             @Override
             public void completed(SimpleHttpResponse result) {
@@ -255,7 +246,6 @@ public class DefaultHttpClient extends AbstractHttpClient {
             }
         });
 
-        // Cancellation handling
         completableFuture.whenComplete((response, exception) -> {
             if (exception instanceof CancellationException && !responseFuture.isDone()) {
                 responseFuture.cancel(true); // Attempt to cancel the underlying request
@@ -358,7 +348,7 @@ public class DefaultHttpClient extends AbstractHttpClient {
      * @param callback  The callback to handle the response.
      * @since 0.2.0
      */
-    private void handleResponse(HttpResponse response, Throwable exception, AsyncCallback<HttpResponse> callback) {
+    protected void handleResponse(HttpResponse response, Throwable exception, AsyncCallback<HttpResponse> callback) {
         if (exception != null) {
             if (exception instanceof CancellationException) {
                 callback.onCanceled();

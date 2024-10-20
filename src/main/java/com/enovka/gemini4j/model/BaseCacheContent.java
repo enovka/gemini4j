@@ -1,16 +1,19 @@
 package com.enovka.gemini4j.model;
 
+import com.enovka.gemini4j.model.response.spec.AbstractResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseCacheContent {
+public class BaseCacheContent extends AbstractResponse {
 
     /**
      * Optional. Identifier. The resource name referring to the cached content.

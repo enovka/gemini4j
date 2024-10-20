@@ -2,7 +2,6 @@ package com.enovka.gemini4j.resource;
 
 import com.enovka.gemini4j.client.builder.GeminiClientBuilder;
 import com.enovka.gemini4j.client.spec.GeminiClient;
-import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.model.Embedding;
 import com.enovka.gemini4j.model.request.BatchEmbedRequest;
 import com.enovka.gemini4j.model.request.EmbedRequest;
@@ -19,8 +18,6 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,7 +36,6 @@ public class EmbedResourceAsyncTest {
 
     private static final String GEMINI_API_KEY = System.getenv("GEMINI_API_KEY");
     private static GeminiClient geminiClient;
-    private static EmbedResource embedResource;
 
     /**
      * Initializes the Gemini client and EmbedResource before all tests.
@@ -54,8 +50,6 @@ public class EmbedResourceAsyncTest {
                 .withResponseTimeout(60000 * 20)
                 .withRateLimiter(5, Duration.ofMinutes(1))
                 .build();
-
-        embedResource = ResourceBuilder.builder(geminiClient).buildEmbedResource();
     }
 
     /**
@@ -82,29 +76,8 @@ public class EmbedResourceAsyncTest {
                 .withModel(geminiClient.getModelName())
                 .withText("This is a test sentence.")
                 .build();
-
-        CompletableFuture<EmbedResponse> completableFuture = embedResource.executeAsync(request, new AsyncCallback<>() {
-            @Override
-            public void onSuccess(EmbedResponse response) {
-                assertNotNull(response, "Response should not be null");
-                assertNotNull(response.getEmbedding(), "Embedding should not be null");
-                assertFalse(response.getEmbedding().getValues().isEmpty(), "Embedding values should not be empty");
-            }
-
-            @Override
-            public void onError(Throwable exception) {
-                fail("onError callback should not be called in this test case. " + exception.getMessage());
-            }
-
-            @Override
-            public void onCanceled() {
-                fail("onCanceled callback should not be called in this test case.");
-            }
-        });
-
-        // Await completion of the CompletableFuture
-        EmbedResponse response = completableFuture.get(60, TimeUnit.SECONDS);
-
+        EmbedResource embedResource = ResourceBuilder.builder(geminiClient).buildEmbedResource();
+        EmbedResponse response = embedResource.execute(request);
         // Assertions
         assertNotNull(response, "Response should not be null");
         assertNotNull(response.getEmbedding(), "Embedding should not be null");
@@ -126,30 +99,9 @@ public class EmbedResourceAsyncTest {
                 .withTexts(texts)
                 .build();
 
-        CompletableFuture<BatchEmbedResponse> completableFuture = embedResource.executeAsync(request, new AsyncCallback<>() {
-            @Override
-            public void onSuccess(BatchEmbedResponse response) {
-                assertNotNull(response, "Response should not be null");
-                assertNotNull(response.getEmbeddings(), "Embeddings should not be null");
-                assertEquals(texts.size(), response.getEmbeddings().size(), "Number of embeddings should match");
-                for (Embedding embedding : response.getEmbeddings()) {
-                    assertFalse(embedding.getValues().isEmpty(), "Embedding values should not be empty");
-                }
-            }
+        EmbedResource embedResource = ResourceBuilder.builder(geminiClient).buildEmbedResource();
 
-            @Override
-            public void onError(Throwable exception) {
-                fail("onError callback should not be called in this test case. " + exception.getMessage());
-            }
-
-            @Override
-            public void onCanceled() {
-                fail("onCanceled callback should not be called in this test case.");
-            }
-        });
-
-        // Await completion of the CompletableFuture
-        BatchEmbedResponse response = completableFuture.get(60, TimeUnit.SECONDS);
+        BatchEmbedResponse response = embedResource.execute(request);
 
         // Assertions
         assertNotNull(response, "Response should not be null");
