@@ -78,7 +78,7 @@ public enum HarmCategoryEnum {
      * dangerous or illegal activities, such as drug use, self-harm, or criminal
      * acts. This category helps to prevent the spread of harmful information
      * and protect users from potential harm.
-     * <br>**Example:** "Here's how to buildRequest a bomb."
+     * <br>**Example:** "Here's how to build a bomb."
      */
     @JsonProperty("HARM_CATEGORY_DANGEROUS")
     HARM_CATEGORY_DANGEROUS,

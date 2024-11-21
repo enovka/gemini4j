@@ -3,29 +3,29 @@ package com.enovka.gemini4j.resource.impl;
 import com.enovka.gemini4j.client.spec.GeminiClient;
 import com.enovka.gemini4j.model.request.BatchEmbedRequest;
 import com.enovka.gemini4j.model.request.EmbedRequest;
+import com.enovka.gemini4j.model.request.spec.Request;
 import com.enovka.gemini4j.model.response.BatchEmbedResponse;
 import com.enovka.gemini4j.model.response.EmbedResponse;
 import com.enovka.gemini4j.model.type.SupportedModelMethod;
-import com.enovka.gemini4j.resource.builder.request.BatchEmbedRequestBuilder;
-import com.enovka.gemini4j.resource.builder.request.EmbedRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
-import com.enovka.gemini4j.resource.spec.base.AbstractResource;
 import com.enovka.gemini4j.resource.spec.EmbedResource;
+import com.enovka.gemini4j.resource.spec.base.AbstractResource;
+import com.enovka.gemini4j.resource.spec.base.AsyncResponse;
+import com.enovka.gemini4j.resource.spec.base.BaseAbstractResource;
+import org.apache.hc.core5.http.ContentType;
 
 import java.util.List;
 
 /**
- * Implementation of the {@link EmbedResource} interface for interacting with
- * the embedding resource of the Gemini API. This class provides methods for
- * generating embeddings for text and other types of content using the
- * text-embedding-004 model.  It leverages the functionality provided by the
- * {@link AbstractResource} base class for common HTTP operations and error handling.
+ * Implementation of the {@link EmbedResource} interface for interacting with the embedding
+ * resource of the Gemini API. This class provides methods for generating embeddings for text and
+ * other types of content using the text-embedding-004 model. It leverages the functionality
+ * provided by the {@link AbstractResource} base class for common HTTP operations and error handling.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 0.0.2
+ * @since 0.2.0
  */
-public class EmbedResourceImpl extends AbstractResource<EmbedResource>
-        implements EmbedResource {
+public class EmbedResourceImpl extends BaseAbstractResource<EmbedResponse, EmbedRequest> implements EmbedResource {
 
     private static final String EMBED_CONTENT_ENDPOINT = "%s:embedContent";
     private static final String BATCH_EMBED_CONTENTS_ENDPOINT = "%s:batchEmbedContents";
@@ -41,32 +41,37 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
         super(geminiClient);
     }
 
+    @Override
+    protected String getEndpointForRequest(Request request) {
+        return EMBED_CONTENT_ENDPOINT;
+    }
+
     /**
-     * Generates a single embedding.
-     *
-     * @param request The embedding request.
-     * @return The embedding response.
-     * @throws ResourceException If an error occurs.
+     * {@inheritDoc}
      * @since 0.2.0
      */
     @Override
     public EmbedResponse execute(EmbedRequest request) throws ResourceException {
-        String endpoint = String.format(EMBED_CONTENT_ENDPOINT, geminiClient.getModelName());
-        return executeRequest("POST", endpoint, request, EmbedResponse.class);
+        return post(request, EmbedResponse.class);
     }
 
     /**
-     * Generates multiple embeddings in a batch.
-     *
-     * @param request The batch embedding request.
-     * @return The batch embedding response.
-     * @throws ResourceException If an error occurs.
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public AsyncResponse<EmbedResponse> executeAsync(EmbedRequest request){
+        String endpoint = String.format(EMBED_CONTENT_ENDPOINT, geminiClient.getModelName());
+        return executeRequestAsync("POST", endpoint, request, ContentType.APPLICATION_JSON, EmbedResponse.class);
+    }
+    /**
+     * {@inheritDoc}
      * @since 0.2.0
      */
     @Override
     public BatchEmbedResponse execute(BatchEmbedRequest request) throws ResourceException {
         String endpoint = String.format(BATCH_EMBED_CONTENTS_ENDPOINT, geminiClient.getModelName());
-        return executeRequest("POST", endpoint, request, BatchEmbedResponse.class);
+        return executeRequest("POST", endpoint, request, ContentType.APPLICATION_JSON, BatchEmbedResponse.class);
     }
 
     /**
@@ -74,8 +79,9 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
      * @since 0.2.0
      */
     @Override
-    public EmbedRequestBuilder embedContentBuilder(String text) {
-        return EmbedRequestBuilder.builder().withText(text);
+    public AsyncResponse<BatchEmbedResponse> executeAsync(BatchEmbedRequest request) {
+        String endpoint = String.format(BATCH_EMBED_CONTENTS_ENDPOINT, geminiClient.getModelName());
+        return executeRequestAsync("POST", endpoint, request, ContentType.APPLICATION_JSON, BatchEmbedResponse.class);
     }
 
     /**
@@ -83,12 +89,8 @@ public class EmbedResourceImpl extends AbstractResource<EmbedResource>
      * @since 0.2.0
      */
     @Override
-    public BatchEmbedRequestBuilder batchEmbedContentsBuilder(List<String> texts) {
-        return BatchEmbedRequestBuilder.builder().withTexts(texts);
-    }
-
-    @Override
-    public List<SupportedModelMethod> getModelMethodList() {
+    public List<SupportedModelMethod> getSupportedMethods() {
         return SUPPORTED_METHODS;
     }
+
 }

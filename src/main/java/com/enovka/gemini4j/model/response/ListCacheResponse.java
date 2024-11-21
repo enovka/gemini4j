@@ -1,6 +1,6 @@
 package com.enovka.gemini4j.model.response;
 
-import com.enovka.gemini4j.model.CacheContentResponse;
+import com.enovka.gemini4j.model.CacheResponse;
 import com.enovka.gemini4j.model.response.spec.AbstractResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class ListCacheResponse extends AbstractResponse {
      * List of cached contents.
      */
     @JsonProperty("cachedContents")
-    private List<CacheContentResponse> cachedContents;
+    private List<CacheResponse> cachedContents;
 
     /**
      * A token, which can be sent as `pageToken` to retrieve the next page. If

@@ -15,12 +15,22 @@ public class TokensRequestBuilder extends AbstractContentRequestBuilder<TokensRe
 
     private GenerateRequest generateRequest;
 
-
+    /**
+     * Private constructor to enforce a builder pattern. Instances of this builder should be
+     * created using the {@link #builder()} method.
+     *
+     * @since 0.2.0
+     */
     private TokensRequestBuilder() {
         super();
     }
 
-
+    /**
+     * Creates a new instance of the {@link TokensRequestBuilder}.
+     *
+     * @return A new {@code TokensRequestBuilder} instance.
+     * @since 0.2.0
+     */
     public static TokensRequestBuilder builder() {
         return new TokensRequestBuilder();
     }
@@ -40,13 +50,7 @@ public class TokensRequestBuilder extends AbstractContentRequestBuilder<TokensRe
     }
 
     /**
-     * Builds the {@link TokensRequest} object.  This method assembles the request object
-     * using the provided model and content or GenerateRequest. It throws an
-     * {@link IllegalArgumentException} if neither content nor a GenerateRequest is
-     * provided.
-     *
-     * @return The constructed TokensRequest object.
-     * @throws IllegalArgumentException If neither content nor generateRequest is provided.
+     * {@inheritDoc}
      * @since 0.2.0
      */
     @Override
@@ -62,10 +66,8 @@ public class TokensRequestBuilder extends AbstractContentRequestBuilder<TokensRe
                 .build();
     }
 
-
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override

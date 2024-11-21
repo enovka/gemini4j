@@ -45,14 +45,13 @@ public class ModelResourceTest {
     void init() {
         geminiClient = GeminiClientBuilder.builder()
                 .withApiKey(GEMINI_API_KEY)
-                .withModel("models/gemini-1.5-pro-001")
+                .withModel("models/gemini-1.5-flash-001")
                 .withResponseTimeout(60000 * 20)
                 .withRateLimiter(5, Duration.ofMinutes(1))
                 .build();
 
         modelResource = ResourceBuilder.builder(geminiClient).buildModelResource();
     }
-
 
     /**
      * Tests the {@link ModelResource#listModels()} method.  Verifies that the returned ListModel is
@@ -71,7 +70,6 @@ public class ModelResourceTest {
         Model firstModel = listModel.getModels().get(0);
         assertNotNull(firstModel.getName(), "First model name should not be null");
     }
-
 
     /**
      * Tests the {@link ModelResource#getModel(String)} method with a valid model name.  Verifies that
@@ -92,7 +90,6 @@ public class ModelResourceTest {
         assertEquals(expectedModel.getName(), actualModel.getName(), "Model names should match");
     }
 
-
     /**
      * Tests the {@link ModelResource#getModel(String)} method with an invalid model name.  Verifies
      * that a ResourceException is thrown when trying to retrieve a model that doesn't exist.
@@ -106,16 +103,15 @@ public class ModelResourceTest {
         assertThrows(ResourceException.class, () -> modelResource.getModel(invalidModelName));
     }
 
-
     /**
-     * Tests the {@link ModelResource#getModelMethodList()} method. Verifies that the returned list
+     * Tests the {@link ModelResource#getSupportedMethods()} method. Verifies that the returned list
      * of supported model methods is not null and matches the expected list.
      *
      * @since 0.2.0
      */
     @Test
-    void getModelMethodList_shouldReturnSupportedMethods() {
-        List<SupportedModelMethod> supportedMethods = modelResource.getModelMethodList();
+    void getSupportedMethods_shouldReturnSupportedMethods() {
+        List<SupportedModelMethod> supportedMethods = modelResource.getSupportedMethods();
 
         assertNotNull(supportedMethods, "Supported methods list should not be null");
         assertIterableEquals(List.of(), supportedMethods, "Supported methods list should be empty"); // Using assertIterableEquals from JUnit 5.11.2

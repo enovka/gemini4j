@@ -7,6 +7,7 @@ import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import org.apache.hc.core5.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,47 +97,39 @@ public class HttpClientTest {
     }
 
     /**
-     * Tests a successful POST request with headers and a body using the default
-     * {@link HttpClient} implementation.
+     * Tests a successful POST request with headers and a body using the updated
+     * {@link HttpClient} implementation, which now requires a {@code ContentType}
+     * argument for the {@code post} method.  This test verifies that the client
+     * correctly sends the POST request with the specified headers and body and
+     * receives the expected response.  It uses WireMock to stub the HTTP interaction
+     * and asserts on the status code and response body.
      *
      * @throws HttpException If an error occurs during the HTTP request.
+     * @since 0.0.1
      */
     @Test
     public void testPostRequestWithHeadersAndBody() throws HttpException {
         System.out.println("Starting testPostRequestWithHeadersAndBody...");
 
         // Stub a POST request with specific headers and body
-        System.out.println(
-                "Stubbing POST request on URL: " + wireMockServer.baseUrl()
-                        + "/test");
         stubFor(post(urlEqualTo("/test"))
                 .withHeader("Content-Type", equalTo("application/json"))
-                .withRequestBody(
-                        equalToJson("{\"message\": \"Hello, World!\"}"))
-                .willReturn(aResponse().withStatus(201)
-                        .withBody("{\"id\": \"123\"}")));
+                .withRequestBody(equalToJson("{\"message\": \"Hello, World!\"}"))
+                .willReturn(aResponse().withStatus(201).withBody("{\"id\": \"123\"}")));
 
         // Prepare headers and body for the request
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
-        System.out.println("Request headers: " + headers);
         String requestBody = "{\"message\": \"Hello, World!\"}";
-        System.out.println("Request body: " + requestBody);
 
-        // Execute the POST request
-        System.out.println("Executing POST request...");
-        HttpResponse response = httpClient.post(
-                wireMockServer.baseUrl() + "/test", requestBody, headers);
-        System.out.println("POST request executed.");
+        // Execute the POST request, providing the ContentType
+        HttpResponse response = httpClient.post(wireMockServer.baseUrl() + "/test", requestBody, headers, ContentType.APPLICATION_JSON);
 
         // Assertions
-        System.out.println("Response status code: " + response.getStatusCode());
-        System.out.println("Response body: " + response.getBody());
         assertEquals(201, response.getStatusCode());
         assertEquals("{\"id\": \"123\"}", response.getBody());
 
-        System.out.println(
-                "testPostRequestWithHeadersAndBody completed successfully.");
+        System.out.println("testPostRequestWithHeadersAndBody completed successfully.");
     }
 
     /**

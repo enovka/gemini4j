@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * Builder for creating {@link EmbedRequest} instances. This builder, inheriting from
  * {@link AbstractEmbedRequestBuilder}, simplifies the construction of requests for
- * generating embeddings from text content. It provides a fluent API for configuring the necessary parameters.
+ * generating embeddings from text content. It provides a fluent API for configuring the
+ * necessary parameters.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.2.0
@@ -19,7 +20,12 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
 
     private Content content;
 
-
+    /**
+     * Private constructor to enforce a builder pattern. Instances of this builder should be
+     * created using the {@link #builder()} method.
+     *
+     * @since 0.2.0
+     */
     private EmbedRequestBuilder() {
         super();
     }
@@ -54,15 +60,8 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
         return self();
     }
 
-
     /**
-     * Builds the {@link EmbedRequest} object.  This method constructs the embedding
-     * request using the configured content and parameters inherited from the
-     * {@link AbstractEmbedRequestBuilder}.  It validates that both the model and content are
-     * set.
-     *
-     * @return The fully configured {@link EmbedRequest} object.
-     * @throws IllegalStateException If the model or content is not set.
+     * {@inheritDoc}
      * @since 0.2.0
      */
     @Override
@@ -74,7 +73,6 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
             throw new IllegalStateException("Content is required for EmbedRequest.");
         }
 
-
         return EmbedRequest.builder()
                 .withModel(model)
                 .withContent(content)
@@ -84,10 +82,8 @@ public class EmbedRequestBuilder extends AbstractEmbedRequestBuilder<EmbedReques
                 .build();
     }
 
-
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override

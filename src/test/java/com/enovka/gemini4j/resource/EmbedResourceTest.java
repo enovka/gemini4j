@@ -147,14 +147,14 @@ public class EmbedResourceTest {
 
 
     /**
-     * Tests the getModelMethodList() method. Verifies that the returned list of supported
+     * Tests the getSupportedMethods() method. Verifies that the returned list of supported
      * model methods is not null and contains only the expected method.
      *
      * @since 0.2.0
      */
     @Test
     void getModelMethodList_shouldReturnCorrectMethod() {
-        List<SupportedModelMethod> supportedMethods = embedResource.getModelMethodList();
+        List<SupportedModelMethod> supportedMethods = embedResource.getSupportedMethods();
         assertNotNull(supportedMethods, "Supported methods list should not be null");
         assertEquals(List.of(SupportedModelMethod.EMBED_CONTENT), supportedMethods, "Supported methods list should contain only EMBED_CONTENT");
     }

@@ -1,41 +1,33 @@
 package com.enovka.gemini4j.model.request;
 
-import com.enovka.gemini4j.model.*;
+import com.enovka.gemini4j.model.Content;
+import com.enovka.gemini4j.model.GenerateConfig;
+import com.enovka.gemini4j.model.Tool;
+import com.enovka.gemini4j.model.ToolConfig;
+import com.enovka.gemini4j.model.request.spec.AbstractContentRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 /**
- * Request to generate a completion from the model.
+ * Request to generate a completion from the model. This class now extends
+ * {@link AbstractContentRequest} and inherits common request parameters,
+ * simplifying its structure and promoting code reuse.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 0.0.2
+ * @since 0.2.0
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Builder(setterPrefix = "with", toBuilder = true)
-public class GenerateRequest {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(setterPrefix = "with", toBuilder = true)
+public class GenerateRequest extends AbstractContentRequest {
 
-    /**
-     * Required. The name of the Model to use for generating the completion.
-     * <p>
-     * Format: `name=models/{model}`.
-     */
-    @JsonProperty("model")
-    private String model;
-
-    /**
-     * Required. The content of the current conversation with the model.
-     * <p>
-     * For single-turn queries, this is a single instance. For multi-turn
-     * queries, this is a repeated field that contains conversation history +
-     * the latest request.
-     */
-    @JsonProperty("contents")
-    private List<Content> contents;
 
     /**
      * Optional. A list of Tools the model may use to generate the next
@@ -46,6 +38,7 @@ public class GenerateRequest {
      * knowledge and scope of the model. The only supported tool is currently
      * Function.
      */
+    @Singular
     @JsonProperty("tools")
     private List<Tool> tools;
 
@@ -54,24 +47,6 @@ public class GenerateRequest {
      */
     @JsonProperty("toolConfig")
     private ToolConfig toolConfig;
-
-    /**
-     * Optional. A list of unique SafetySetting instances for blocking unsafe
-     * content.
-     * <p>
-     * This will be enforced on the GenerateRequest.contents and
-     * GenerateContentResponse.candidates. There should not be more than one
-     * setting for each SafetyCategory type. The API will block any contents and
-     * responses that fail to meet the thresholds set by these settings. This
-     * list overrides the default settings for each SafetyCategory specified in
-     * the safetySettings. If there is no SafetySetting for a given
-     * SafetyCategory provided in the list, the API will use the default safety
-     * setting for that category. Harm categories HARM_CATEGORY_HATE_SPEECH,
-     * HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT,
-     * HARM_CATEGORY_HARASSMENT are supported.
-     */
-    @JsonProperty("safetySettings")
-    private List<SafetySetting> safetySettings;
 
     /**
      * Optional. Developer set system instruction. Currently, text only.
@@ -93,5 +68,4 @@ public class GenerateRequest {
      */
     @JsonProperty("cachedContent")
     private String cachedContent;
-
 }

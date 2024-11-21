@@ -1,10 +1,8 @@
 package com.enovka.gemini4j.infrastructure.tool;
 
 import com.enovka.gemini4j.model.Content;
-import com.enovka.gemini4j.model.Part;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -84,56 +82,6 @@ public class MultiTurnConversation extends BaseClass {
      */
     public void clearConversationHistory() {
         this.conversationHistory.clear();
-    }
-
-    /**
-     * Returns the latest relevant context from the conversation history, considering the model's
-     * maximum context window size. This method now accurately calculates token counts for different
-     * Part data types and efficiently manages context retrieval.
-     *
-     * @param maxContextTokens The maximum number of tokens allowed in the context window.
-     * @return The latest relevant context as a list of Content objects.
-     */
-    public List<Content> getLatestContext(int maxContextTokens) {
-        if (!contextTrackingEnabled || conversationHistory.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        LinkedList<Content> latestContext = new LinkedList<>();
-        int currentTokenCount = 0;
-
-        for (int i = conversationHistory.size() - 1; i >= 0; i--) {
-            Content content = conversationHistory.get(i);
-            int contentTokenCount = calculateContentTokenCount(content);
-
-            if (currentTokenCount + contentTokenCount <= maxContextTokens) {
-                latestContext.addFirst(content);
-                currentTokenCount += contentTokenCount;
-            } else {
-                break;
-            }
-        }
-
-        return latestContext;
-    }
-
-    /**
-     * Calculates the token count for a given Content object. This method now correctly handles
-     * different Part data types and provides a more accurate token count estimation.
-     *
-     * @param content The Content object to calculate the token count for.
-     * @return The estimated token count for the Content object.
-     */
-    private int calculateContentTokenCount(Content content) {
-        int contentTokenCount = 0;
-        for (Part part : content.getParts()) {
-            if (part.getText() != null) {
-                contentTokenCount += part.getText().length(); // Approximate token count for text
-            } else if (part.getInlineData() != null) {
-                contentTokenCount += part.getInlineData().getData().length() / 4; // Estimate for base64 encoded data
-            }
-        }
-        return contentTokenCount;
     }
 
 }

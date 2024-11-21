@@ -1,67 +1,42 @@
 package com.enovka.gemini4j.model.request;
 
 import com.enovka.gemini4j.model.Content;
-import com.enovka.gemini4j.model.request.spec.Request;
-import com.enovka.gemini4j.model.type.TaskTypeEnum;
+import com.enovka.gemini4j.model.request.spec.AbstractContentRequest;
+import com.enovka.gemini4j.model.request.spec.AbstractEmbedRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 /**
- * Request containing the {@link Content} for the model to embed.
+ * Request containing the {@link Content} for the model to embed.  This class
+ * now extends {@link AbstractContentRequest} and inherits common request
+ * parameters, simplifying its structure and promoting code reuse.  It retains
+ * fields specific to embedding requests, such as {@code taskType},
+ * {@code title}, and {@code outputDimensionality}.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
- * @since 0.0.2
+ * @since 0.2.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
-@EqualsAndHashCode(callSuper = false)
-public class EmbedRequest implements Request {
-
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(setterPrefix = "with", toBuilder = true)
+public class EmbedRequest extends AbstractEmbedRequest {
     /**
-     * Required. The model's resource name. This serves as an ID for the Model
-     * to use.
-     * <p>
-     * This name should match a model name returned by the models.List method.
-     * <p>
-     * Format: models/{model}
-     */
-    @JsonProperty("model")
-    private String model;
-
-    /**
-     * Required. The content to embed. Only the `parts.text` fields will be
-     * counted.
+     * Required. The content of the request. This field typically contains
+     * of {@link Content} object, representing the input data for the request.
+     * Each {@link Content} object encapsulates the text, images, or other media
+     * elements that form the request's input.  The structure and format of the
+     * content should adhere to the Gemini API specifications for the specific
+     * request type.
      */
     @JsonProperty("content")
     private Content content;
 
-    /**
-     * Optional. Optional task type for which the embeddings will be used. Can
-     * only be set for models/embedding-001.
-     */
-    @JsonProperty("taskType")
-    private TaskTypeEnum taskType;
-
-    /**
-     * Optional. An optional title for the text. Only applicable when TaskType
-     * is RETRIEVAL_DOCUMENT.
-     * <p>
-     * Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality
-     * embeddings for retrieval.
-     */
-    @JsonProperty("title")
-    private String title;
-
-    /**
-     * Optional. Optional reduced dimension for the output embedding. If set,
-     * excessive values in the output embedding are truncated from the end.
-     * Supported by newer models since 2024, and the earlier model
-     * (models/embedding-001) cannot specify this value.
-     */
-    @JsonProperty("outputDimensionality")
-    private Integer outputDimensionality;
 }

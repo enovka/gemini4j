@@ -15,9 +15,12 @@ import com.enovka.gemini4j.resource.builder.request.spec.AbstractGenerateRequest
  */
 public class GenerateRequestBuilder extends AbstractGenerateRequestBuilder<GenerateRequestBuilder, GenerateRequest> {
 
-
+    /**
+     * Constructor for the GenerateRequestBuilder.
+     *
+     * @since 0.2.0
+     */
     private GenerateRequestBuilder() {
-
     }
 
     /**
@@ -52,6 +55,15 @@ public class GenerateRequestBuilder extends AbstractGenerateRequestBuilder<Gener
         return GenerateRequest.builder()
                 .withCachedContent(this.cachedContent)
                 .build();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public GenerateRequest build() {
+        return super.build();
     }
 
     /**

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1-beta
  */
-public abstract class BaseClass {
+public class BaseClass {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

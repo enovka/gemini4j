@@ -31,4 +31,9 @@ public class GeminiClientImpl extends AbstractGeminiClient {
         super(apiKey, model, httpClient, baseUrl, jsonService);
 
     }
+
+    @Override
+    public void close() throws Exception {
+        this.httpClient.close();
+    }
 }

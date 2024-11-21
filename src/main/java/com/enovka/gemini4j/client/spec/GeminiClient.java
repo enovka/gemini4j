@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
  */
-public interface GeminiClient {
+public interface GeminiClient extends AutoCloseable{
 
     /**
      * Returns the API key used for authentication.

@@ -2,9 +2,7 @@ package com.enovka.gemini4j.model.response.spec;
 
 import com.enovka.gemini4j.model.ErrorResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -19,10 +17,11 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @Accessors(chain = true)
-@SuperBuilder(setterPrefix = "with")
+@SuperBuilder(setterPrefix = "with", toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public abstract class AbstractResponse {
-
     /**
      * Gemini API object error.  This field will contain details about any errors
      * encountered during the API request.  A successful request will have this
@@ -31,7 +30,4 @@ public abstract class AbstractResponse {
      */
     @JsonProperty("error")
     protected ErrorResponse error;
-
-    public AbstractResponse() {
-    }
 }

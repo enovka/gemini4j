@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(setterPrefix = "with", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CacheContentResponse extends BaseCacheContent {
+public class CacheResponse extends BaseCacheContent {
 
     /**
      * Output only. The update timestamp of the cached content. This field is returned by the Gemini API

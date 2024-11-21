@@ -56,6 +56,10 @@ public class HttpException extends Throwable {
         this.statusCode = statusCode;
     }
 
+    public HttpException(String message, int statusCode) {
+        this(message, null, statusCode);
+    }
+
     /**
      * Returns the error message.
      *

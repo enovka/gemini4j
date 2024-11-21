@@ -2,27 +2,44 @@ package com.enovka.gemini4j.infrastructure.http.impl;
 
 import com.enovka.gemini4j.infrastructure.http.exception.HttpException;
 import com.enovka.gemini4j.infrastructure.http.spec.AbstractHttpClient;
+import com.enovka.gemini4j.infrastructure.http.spec.AsyncCallback;
 import com.enovka.gemini4j.infrastructure.http.spec.HttpResponse;
-import org.apache.http.Header;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.async.methods.SimpleHttpRequest;
+import org.apache.hc.client5.http.async.methods.SimpleHttpResponse;
+import org.apache.hc.client5.http.async.methods.SimpleRequestBuilder;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
+import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
+import org.apache.hc.core5.concurrent.FutureCallback;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.io.CloseMode;
+import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
+import org.apache.hc.core5.pool.PoolReusePolicy;
+import org.apache.hc.core5.reactor.IOReactorConfig;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 /**
  * Default implementation of the {@link com.enovka.gemini4j.infrastructure.http.spec.HttpClient}
- * interface using Apache HttpClient. This class provides methods for executing various HTTP requests
- * (GET, POST, PATCH, DELETE) and handles common HTTP-related tasks such as setting headers, managing
- * timeouts, and processing responses. It is designed to be thread-safe and efficient for
- * concurrent use.
+ * interface, utilizing Apache HttpClient 5's asynchronous API. This class executes HTTP
+ * requests (GET, POST, PATCH, DELETE) asynchronously, managing headers, timeouts, and
+ * responses efficiently. It leverages non-blocking operations and connection pooling for
+ * optimal performance.  This implementation incorporates best practices from the HttpClient
+ * tutorial and examples, including correct usage of {@link CompletableFuture} and
+ * {@link FutureCallback}, streamlined request creation with {@link SimpleRequestBuilder}, and
+ * robust error handling.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.1
@@ -30,22 +47,23 @@ import java.util.concurrent.TimeUnit;
 public class DefaultHttpClient extends AbstractHttpClient {
 
     private static final int DEFAULT_MAX_CONNECTIONS = 50;
-    private static final int DEFAULT_CONNECTION_TIMEOUT = 12000;
-    private static final int DEFAULT_RESPONSE_TIMEOUT = 600000; //10 minutes
-    private static final int DEFAULT_VALIDATE_AFTER_INACTIVITY = 2000;
-    private static final int DEFAULT_CONNECTION_TTL = 5;
+    private static final int DEFAULT_CONNECTION_TIMEOUT_MS = 12000;
+    private static final int DEFAULT_RESPONSE_TIMEOUT_MS = 600000; // 10 minutes
+    private static final int DEFAULT_VALIDATE_AFTER_INACTIVITY_MS = 2000;
+    private static final TimeValue DEFAULT_CONNECTION_TTL = TimeValue.ofMinutes(5);
 
-    private final CloseableHttpClient httpClient;
+    private final CloseableHttpAsyncClient httpAsyncClient;
+    private final PoolingAsyncClientConnectionManager connectionManager;
 
     /**
-     * Constructs a new DefaultHttpClient with default settings, including a connection pool optimized
-     * for multithreading. Uses default values for connection timeout, response timeout, and maximum
-     * connections.
+     * Constructs a new DefaultHttpClient with default settings, including a connection pool
+     * optimized for multithreading. Uses default values for connection timeout, response
+     * timeout, and maximum connections.
      *
      * @since 0.0.1
      */
     public DefaultHttpClient() {
-        this(DEFAULT_CONNECTION_TIMEOUT, DEFAULT_RESPONSE_TIMEOUT, DEFAULT_MAX_CONNECTIONS);
+        this(DEFAULT_CONNECTION_TIMEOUT_MS, DEFAULT_RESPONSE_TIMEOUT_MS, DEFAULT_MAX_CONNECTIONS);
     }
 
     /**
@@ -60,10 +78,67 @@ public class DefaultHttpClient extends AbstractHttpClient {
      */
     public DefaultHttpClient(int connectionTimeout, int responseTimeout, int maxConnections) {
         validateMaxConnections(maxConnections);
-        //TODO need fix responseTimeout
-        this.httpClient = createHttpClient(connectionTimeout, responseTimeout, maxConnections);
         this.connectionTimeout = connectionTimeout;
         this.responseTimeout = responseTimeout;
+
+        this.connectionManager = createConnectionManager(maxConnections, connectionTimeout);
+        this.httpAsyncClient = createHttpAsyncClient(connectionManager, responseTimeout);
+        this.httpAsyncClient.start();
+    }
+
+    /**
+     * Creates and configures a {@link PoolingAsyncClientConnectionManager} for managing the
+     * connection pool. This method sets the maximum total connections, default maximum
+     * connections per route, connection time-to-live, and validation parameters. It uses the
+     * builder pattern for clear and concise configuration.  HTTP/2 specific configurations are
+     * not applied here, as this connection manager is intended for general use and might be
+     * used with HTTP/1.1 as well.
+     *
+     * @param maxConnections    The maximum number of concurrent connections allowed.
+     * @param connectionTimeout The connection timeout in milliseconds.
+     * @return A configured {@link PoolingAsyncClientConnectionManager} instance.
+     * @since 0.2.0
+     */
+    private PoolingAsyncClientConnectionManager createConnectionManager(int maxConnections, int connectionTimeout) {
+        return PoolingAsyncClientConnectionManagerBuilder.create()
+                .setPoolConcurrencyPolicy(PoolConcurrencyPolicy.STRICT)
+                .setConnPoolPolicy(PoolReusePolicy.LIFO)
+                .setDefaultConnectionConfig(
+                        org.apache.hc.client5.http.config.ConnectionConfig.custom()
+                                .setConnectTimeout(Timeout.ofMilliseconds(connectionTimeout))
+                                .setSocketTimeout(Timeout.ofMilliseconds(connectionTimeout))
+                                .setTimeToLive(DEFAULT_CONNECTION_TTL)
+                                .build())
+                .setMaxConnTotal(maxConnections) // Set the maximum total connections
+                .setMaxConnPerRoute(maxConnections) // Set the maximum connections per route
+                .build();
+    }
+
+    /**
+     * Creates and configures a {@link CloseableHttpAsyncClient} with the provided connection
+     * manager and response timeout. This method sets up the I/O reactor configuration and request
+     * configuration for the asynchronous HTTP client.
+     *
+     * @param connectionManager The connection manager to use.
+     * @param responseTimeout   The response timeout in milliseconds.
+     * @return A configured {@link CloseableHttpAsyncClient} instance.
+     * @since 0.2.0
+     */
+    private CloseableHttpAsyncClient createHttpAsyncClient(PoolingAsyncClientConnectionManager connectionManager, int responseTimeout) {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setResponseTimeout(Timeout.ofMilliseconds(responseTimeout))
+                .setConnectionRequestTimeout(Timeout.ofMilliseconds(connectionTimeout))
+                .build();
+
+        IOReactorConfig ioReactorConfig = IOReactorConfig.custom()
+                .setSoTimeout(Timeout.ofMilliseconds(responseTimeout))
+                .build();
+
+        return HttpAsyncClients.custom()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(requestConfig)
+                .setIOReactorConfig(ioReactorConfig)
+                .build();
     }
 
     /**
@@ -80,198 +155,217 @@ public class DefaultHttpClient extends AbstractHttpClient {
     }
 
     /**
-     * Creates and configures a thread-safe {@link CloseableHttpClient} instance with a connection
-     * pool and timeouts.
+     * {@inheritDoc}
      *
-     * @param connectionTimeout The connection timeout in milliseconds.
-     * @param responseTimeout   The response timeout in milliseconds.
-     * @param maxConnections    The maximum number of concurrent connections allowed.
-     * @return A configured {@link CloseableHttpClient} instance.
      * @since 0.2.0
      */
-    private CloseableHttpClient createHttpClient(int connectionTimeout, int responseTimeout, int maxConnections) {
-        PoolingHttpClientConnectionManager connectionManager = createConnectionManager(maxConnections);
-
-        RequestConfig requestConfig = createRequestConfig(connectionTimeout, responseTimeout);
-        return HttpClientBuilder.create()
-                .setConnectionManager(connectionManager)
-                .setDefaultRequestConfig(requestConfig)
-                .build();
-    }
-
-    /**
-     * Creates and configures a {@link PoolingHttpClientConnectionManager} for managing the connection
-     * pool.
-     *
-     * @param maxConnections The maximum number of concurrent connections allowed.
-     * @return A configured {@link PoolingHttpClientConnectionManager} instance.
-     * @since 0.2.0
-     */
-    private PoolingHttpClientConnectionManager createConnectionManager(int maxConnections) {
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(DEFAULT_CONNECTION_TTL, TimeUnit.MINUTES);
-        connectionManager.setMaxTotal(maxConnections);
-        connectionManager.setDefaultMaxPerRoute(maxConnections);
-        connectionManager.setValidateAfterInactivity(DEFAULT_VALIDATE_AFTER_INACTIVITY);
-        return connectionManager;
-    }
-
-    /**
-     * Creates a {@link RequestConfig} with the specified timeouts.
-     *
-     * @param connectionTimeout The connection timeout in milliseconds.
-     * @param responseTimeout   The response timeout in milliseconds.
-     * @return A configured {@link RequestConfig} instance.
-     * @since 0.2.0
-     */
-    private RequestConfig createRequestConfig(int connectionTimeout, int responseTimeout) {
-        return RequestConfig.custom()
-                .setConnectTimeout(connectionTimeout)
-                .setSocketTimeout(responseTimeout)
-                .setConnectionRequestTimeout(connectionTimeout)
-                .build();
+    @Override
+    protected CompletableFuture<HttpResponse> executeAsyncGetRequest(String url, Map<String, String> headers) throws HttpException {
+        return executeAsyncRequest("GET", url, null, headers, ContentType.TEXT_PLAIN);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.2.0
      */
     @Override
-    protected HttpResponse executeGetRequest(String url, Map<String, String> headers) throws HttpException {
-        HttpGet request = new HttpGet(url);
-        addHeadersToRequest(request, headers);
-        try {
-            return executeRequest(request);
-        } catch (IOException e) {
-            throw new HttpException("Error executing GET request: " + e.getMessage(), e);
-        }
+    protected CompletableFuture<HttpResponse> executeAsyncPostRequest(String url, String body, Map<String, String> headers, ContentType contentType) throws HttpException {
+        return executeAsyncRequest("POST", url, body, headers, contentType);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.2.0
      */
     @Override
-    protected HttpResponse executePostRequest(String url, String body, Map<String, String> headers) throws HttpException {
-        HttpPost request = new HttpPost(url);
-        try {
-            preparePostRequest(request, body, headers);
-            return executeRequest(request);
-        } catch (IOException e) {
-            throw new HttpException("Error executing POST request: " + e.getMessage(), e);
-        }
+    protected CompletableFuture<HttpResponse> executeAsyncPatchRequest(String url, String body, Map<String, String> headers, ContentType contentType) throws HttpException {
+        return executeAsyncRequest("PATCH", url, body, headers, contentType);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.2.0
      */
     @Override
-    protected HttpResponse executePatchRequest(String url, String body, Map<String, String> headers) throws HttpException {
-        HttpPatch request = new HttpPatch(url);
-        try {
-            preparePostRequest(request, body, headers);
-            return executeRequest(request);
-        } catch (IOException e) {
-            throw new HttpException("Error executing PATCH request: " + e.getMessage(), e);
-        }
+    protected CompletableFuture<HttpResponse> executeAsyncDeleteRequest(String url, Map<String, String> headers) throws HttpException {
+        return executeAsyncRequest("DELETE", url, null, headers, ContentType.TEXT_PLAIN);
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected HttpResponse executeDeleteRequest(String url, Map<String, String> headers) throws HttpException {
-        HttpDelete request = new HttpDelete(url);
-        addHeadersToRequest(request, headers);
-        try {
-            return executeRequest(request);
-        } catch (IOException e) {
-            throw new HttpException("Error executing DELETE request: " + e.getMessage(), e);
-        }
-    }
-
-
-    /**
-     * Prepares a POST or PATCH request by setting headers and the request body.
+     * Executes an asynchronous HTTP request with cancellation support. This method handles request creation,
+     * execution, and asynchronous response handling using {@link CompletableFuture}. It incorporates error
+     * handling, resource cleanup, and ensures that the {@link HttpHost} is correctly set in the request.
+     * The method uses {@link SimpleRequestBuilder} for efficient request creation and sets the request body,
+     * headers, and URI in the correct order, avoiding the "Target host is not specified" error.
      *
-     * @param request The {@link HttpEntityEnclosingRequestBase} (HttpPost or HttpPatch).
-     * @param body    The request body as a String.
-     * @param headers The request headers.
-     * @throws IOException If an I/O error occurs while setting the request entity.
+     * @param method      The HTTP method (GET, POST, PATCH, DELETE).
+     * @param url         The request URL.
+     * @param body        The request body (for POST and PATCH).
+     * @param headers     The request headers.
+     * @param contentType The content type of the request body.
+     * @return A {@link CompletableFuture} that will resolve to the {@link HttpResponse}.
      * @since 0.2.0
      */
-    private void preparePostRequest(HttpEntityEnclosingRequestBase request, String body, Map<String, String> headers) throws IOException {
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-type", "application/json");
+    private CompletableFuture<HttpResponse> executeAsyncRequest(
+            String method, String url, String body, Map<String, String> headers,
+            ContentType contentType) {
 
-        addHeadersToRequest(request, headers);
-        request.setEntity(new StringEntity(body));
-    }
+        CompletableFuture<HttpResponse> completableFuture = new CompletableFuture<>();
+        URI uri = createURI(url);
+        HttpHost httpHost = new HttpHost(uri.getScheme(), uri.getHost(), uri.getPort());
+        SimpleRequestBuilder requestBuilder = SimpleRequestBuilder.create(method)
+                .setHttpHost(httpHost)
+                .setUri(uri);
 
-    /**
-     * Executes the given HTTP request and handles the response.
-     *
-     * @param request The HTTP request to execute.
-     * @return An {@link HttpResponse} object representing the response.
-     * @throws HttpException If an error occurs during request execution or response handling.
-     * @throws IOException   If an I/O error occurs during request execution or response handling.
-     * @since 0.2.0
-     */
-    private HttpResponse executeRequest(HttpUriRequest request) throws HttpException, IOException {
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            return handleResponse(response);
+        if (body != null) {
+            requestBuilder.setBody(body, contentType);
         }
+        addHeadersToRequest(requestBuilder, headers);
+        SimpleHttpRequest request = requestBuilder.build();
+        Future<SimpleHttpResponse> responseFuture = httpAsyncClient.execute(request, new FutureCallback<>() {
+            @Override
+            public void completed(SimpleHttpResponse result) {
+                try {
+                    completableFuture.complete(createHttpResponse(result));
+                } catch (HttpException e) {
+                    completableFuture.completeExceptionally(e);
+                }
+            }
+
+            @Override
+            public void failed(Exception ex) {
+                completableFuture.completeExceptionally(new HttpException("Error executing " + method + " request: " + ex.getMessage(), ex));
+            }
+
+            @Override
+            public void cancelled() {
+                completableFuture.completeExceptionally(new HttpException(method + " request cancelled"));
+            }
+        });
+
+        completableFuture.whenComplete((response, exception) -> {
+            if (exception instanceof CancellationException && !responseFuture.isDone()) {
+                responseFuture.cancel(true); // Attempt to cancel the underlying request
+            }
+        });
+
+        return completableFuture;
     }
 
-
     /**
-     * Adds the provided headers to the given HTTP request.
+     * Adds the provided headers to the given HTTP request builder. This method iterates over
+     * the provided headers map and adds each header to the request builder. It handles the
+     * case where the headers map is null.
      *
-     * @param request The HTTP request to add headers to.
-     * @param headers The headers to add.
+     * @param requestBuilder The {@link SimpleRequestBuilder} to add headers to.
+     * @param headers        The headers to add, as a map of header names to values.
      * @since 0.2.0
      */
-    private void addHeadersToRequest(HttpUriRequest request, Map<String, String> headers) {
+    private void addHeadersToRequest(SimpleRequestBuilder requestBuilder, Map<String, String> headers) {
         if (headers != null) {
-            headers.forEach(request::addHeader);
+            headers.forEach(requestBuilder::addHeader);
         }
     }
 
-
     /**
-     * Handles the HTTP response, checking for errors and creating an {@link HttpResponse} object.
+     * Creates a URI from the given URL string, handling potential URISyntaxException.  This
+     * method uses the {@link URIBuilder} class to safely construct a URI, ensuring proper
+     * encoding and handling of URL components.  It throws an {@link HttpException} if the
+     * provided URL is invalid.
      *
-     * @param response The Apache HTTP client response.
-     * @return An {@link HttpResponse} object representing the response.
-     * @throws HttpException If an error occurs during response processing or if the response status code is 400 or higher.
-     * @throws IOException   If an I/O error occurs during response processing.
+     * @param url The URL string.
+     * @return The created URI.
      * @since 0.2.0
      */
-    private HttpResponse handleResponse(CloseableHttpResponse response) throws HttpException, IOException {
-        if (response == null) {
-            throw new HttpException("Bad request. Response is null.");
+    private URI createURI(String url) {
+        try {
+            return new URIBuilder(url).build();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URI: " + e.getMessage(), e);
         }
-
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode >= 400) {
-            String errorMessage = EntityUtils.toString(response.getEntity());
-            throw new HttpException("Bad request. " + errorMessage + " Status code: " + statusCode, null, statusCode);
-        }
-
-        return createHttpResponse(response);
     }
 
     /**
-     * Creates an {@link HttpResponse} from a {@link CloseableHttpResponse}.
-     *
-     * @param response The CloseableHttpResponse to convert.
-     * @return An HttpResponse containing the status code, headers, and body of the response.
-     * @throws IOException If an I/O error occurs while reading the response body or headers.
+     * {@inheritDoc}
      * @since 0.2.0
      */
-    private HttpResponse createHttpResponse(CloseableHttpResponse response) throws IOException {
-        Map<String, String> responseHeaders = new HashMap<>();
-        for (Header header : response.getAllHeaders()) {
-            responseHeaders.put(header.getName(), header.getValue());
+    @Override
+    public CompletableFuture<HttpResponse> getAsync(String url, Map<String, String> headers, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("GET", url, null, headers, ContentType.TEXT_PLAIN);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public CompletableFuture<HttpResponse> postAsync(String url, String body, Map<String, String> headers, ContentType contentType, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("POST", url, body, headers, contentType);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public CompletableFuture<HttpResponse> patchAsync(String url, String body, Map<String, String> headers, ContentType contentType, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("PATCH", url, body, headers, contentType);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
+    @Override
+    public CompletableFuture<HttpResponse> deleteAsync(String url, Map<String, String> headers, AsyncCallback<HttpResponse> callback) {
+        acquireRateLimitPermit();
+        CompletableFuture<HttpResponse> future = executeAsyncRequest("DELETE", url, null, headers, ContentType.TEXT_PLAIN);
+        future.whenComplete((response, exception) -> handleResponse(response, exception, callback));
+        return future;
+    }
+
+    /**
+     * Handles the asynchronous response, invoking the appropriate callback method based on the
+     * result, exception, or cancellation status. This method checks for exceptions, including
+     * {@link CancellationException}, and calls the corresponding callback methods (`onError`,
+     * `onCanceled`, or `onSuccess`) of the provided {@link AsyncCallback}.
+     *
+     * @param response  The HTTP response, which may be null if an error occurred.
+     * @param exception The exception thrown during the asynchronous operation, which may be null
+     *                  if the operation completed successfully.
+     * @param callback  The callback to handle the response.
+     * @since 0.2.0
+     */
+    protected void handleResponse(HttpResponse response, Throwable exception, AsyncCallback<HttpResponse> callback) {
+        if (exception != null) {
+            if (exception instanceof CancellationException) {
+                callback.onCanceled();
+            } else {
+                callback.onError(exception);
+            }
+        } else {
+            callback.onSuccess(response);
         }
-        String responseBody = EntityUtils.toString(response.getEntity());
-        return new HttpResponse(response.getStatusLine().getStatusCode(), responseHeaders, responseBody);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.httpAsyncClient.close(CloseMode.GRACEFUL);
+        this.connectionManager.close();
     }
 }

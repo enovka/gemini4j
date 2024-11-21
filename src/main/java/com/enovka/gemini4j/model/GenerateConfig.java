@@ -1,8 +1,10 @@
 package com.enovka.gemini4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -23,7 +25,9 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
+@Builder(toBuilder = true, setterPrefix = "with")
+@NoArgsConstructor
+@AllArgsConstructor
 public class GenerateConfig {
 
     /**

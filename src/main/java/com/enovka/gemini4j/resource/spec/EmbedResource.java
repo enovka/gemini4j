@@ -4,17 +4,14 @@ import com.enovka.gemini4j.model.request.BatchEmbedRequest;
 import com.enovka.gemini4j.model.request.EmbedRequest;
 import com.enovka.gemini4j.model.response.BatchEmbedResponse;
 import com.enovka.gemini4j.model.response.EmbedResponse;
-import com.enovka.gemini4j.resource.builder.request.BatchEmbedRequestBuilder;
-import com.enovka.gemini4j.resource.builder.request.EmbedRequestBuilder;
 import com.enovka.gemini4j.resource.exception.ResourceException;
+import com.enovka.gemini4j.resource.spec.base.AsyncResponse;
 import com.enovka.gemini4j.resource.spec.base.Resource;
 
-import java.util.List;
-
 /**
- * Interface defining the contract for interacting with the embedding resource
- * of the Gemini API. This resource provides methods for generating embeddings
- * for text and other types of content using the text-embedding-004 model.
+ * Interface defining the contract for interacting with the embedding resource of the Gemini API.
+ * This resource provides methods for generating embeddings for text and other types of content
+ * using the text-embedding-004 model.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.0.2
@@ -22,76 +19,44 @@ import java.util.List;
 public interface EmbedResource extends Resource {
 
     /**
-     * Executes an embedding generation request for the given content using the
+     * Executes an embedding generation request for the given content using the text-embedding-004 model.
+     *
+     * @param request The {@link EmbedRequest} containing the content to embed and other parameters.
+     * @return An {@link EmbedResponse} containing the generated embedding.
+     * @throws ResourceException If an error occurs during the embedding generation process.
+     * @since 0.1.3
+     */
+    EmbedResponse execute(EmbedRequest request) throws ResourceException;
+
+    /**
+     * Executes an embedding generation request asynchronously for the given content using the
      * text-embedding-004 model.
      *
-     * @param request The {@link EmbedRequest} containing the content to
-     *                embed and other parameters.
-     * @return An {@link EmbedResponse} containing the generated
-     * embedding.
-     * @throws ResourceException If an error occurs during the embedding
-     *                           generation process.
+     * @param request  The {@link EmbedRequest} containing the content to embed and other parameters.
+     * @return A {@link AsyncResponse} representing the asynchronous operation, which can be
+     *         used to cancel the request.
+     * @since 0.2.0
+     */
+    AsyncResponse<EmbedResponse> executeAsync(EmbedRequest request);
+
+    /**
+     * Executes a batch embedding generation request for multiple contents using the text-embedding-004 model.
+     *
+     * @param request The {@link BatchEmbedRequest} containing a list of {@link EmbedRequest} objects.
+     * @return A {@link BatchEmbedResponse} containing a list of generated embeddings.
+     * @throws ResourceException If an error occurs during the batch embedding generation process.
      * @since 0.1.3
      */
-    EmbedResponse execute(EmbedRequest request)
-            throws ResourceException;
+    BatchEmbedResponse execute(BatchEmbedRequest request) throws ResourceException;
 
     /**
-     * Executes a batch embedding generation request for multiple contents using
-     * the text-embedding-004 model.
+     * Executes a batch embedding generation request asynchronously for multiple contents using the
+     * text-embedding-004 model.
      *
-     * @param request The {@link BatchEmbedRequest} containing a list of
-     *                {@link EmbedRequest} objects.
-     * @return A {@link BatchEmbedResponse} containing a list of
-     * generated embeddings.
-     * @throws ResourceException If an error occurs during the batch embedding
-     *                           generation process.
-     * @since 0.1.3
+     * @param request  The {@link BatchEmbedRequest} containing a list of {@link EmbedRequest} objects.
+     * @return A {@link AsyncResponse} representing the asynchronous operation, which can be
+     *         used to cancel the request.
+     * @since 0.2.0
      */
-    BatchEmbedResponse execute(
-            BatchEmbedRequest request)
-            throws ResourceException;
-
-    /**
-     * Creates a new {@link EmbedRequestBuilder} instance to buildRequest an
-     * {@link EmbedRequest} for generating an embedding for the given
-     * text using the text-embedding-004 model.
-     *
-     * <p>Example usage:
-     *
-     * <pre>{@code
-     * String text = "This is a test sentence.";
-     * EmbedRequestBuilder builder = embedResource.embedContentBuilder(text);
-     * EmbedRequest request = builder.buildRequest();
-     * EmbedResponse response = embedResource.execute(request);
-     * List<Double> embeddingValues = response.getEmbedding().getValues();
-     * System.out.println(embeddingValues);
-     * }</pre>
-     *
-     * @param text The text to embed.
-     * @return A new {@link EmbedRequestBuilder} instance.
-     */
-    EmbedRequestBuilder embedContentBuilder(String text);
-
-    /**
-     * Creates a new {@link BatchEmbedRequestBuilder} instance to buildRequest
-     * a {@link BatchEmbedRequestBuilder} for generating embeddings for
-     * the given list of texts using the text-embedding-004 model.
-     *
-     * <p>Example usage:
-     *
-     * <pre>{@code
-     * List<String> texts = Arrays.asList("This is a test sentence.", "Another sentence for embedding.");
-     * BatchEmbedRequestBuilder builder = embedResource.batchEmbedContentsBuilder(texts);
-     * BatchEmbedRequest request = builder.buildRequest();
-     * BatchEmbedResponse response = embedResource.execute(request);
-     * List<Embedding> embeddings = response.getEmbeddings();
-     * System.out.println(embeddings);
-     * }</pre>
-     *
-     * @param texts The list of texts to embed.
-     * @return A new {@link BatchEmbedRequestBuilder} instance.
-     */
-    BatchEmbedRequestBuilder batchEmbedContentsBuilder(
-            List<String> texts);
+    AsyncResponse<BatchEmbedResponse> executeAsync(BatchEmbedRequest request);
 }

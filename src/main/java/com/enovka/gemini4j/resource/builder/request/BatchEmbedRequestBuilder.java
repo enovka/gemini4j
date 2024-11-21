@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * Builder for creating {@link BatchEmbedRequest} instances. This builder, inheriting from
  * {@link AbstractEmbedRequestBuilder}, facilitates the creation of batch requests for generating
- * embeddings from multiple text inputs. It simplifies the process of embedding multiple pieces of text
- * in a single API call, reducing overhead and improving efficiency.
+ * embeddings from multiple text inputs. It simplifies the process of embedding multiple pieces
+ * of text in a single API call, reducing overhead and improving efficiency.
  *
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.2.0
@@ -22,6 +22,12 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
 
     private final List<EmbedRequest> requests = new ArrayList<>();
 
+    /**
+     * Private constructor to enforce a builder pattern. Instances of this builder should be
+     * created using the {@link #builder()} method.
+     *
+     * @since 0.2.0
+     */
     private BatchEmbedRequestBuilder() {
         super();
     }
@@ -35,7 +41,6 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
     public static BatchEmbedRequestBuilder builder() {
         return new BatchEmbedRequestBuilder();
     }
-
 
     /**
      * Adds a text input to the batch of texts to be embedded.  Each text added through this method
@@ -68,7 +73,6 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
         return this;
     }
 
-
     /**
      * Adds multiple text strings to the batch of texts to be embedded, processing each string as
      * an individual embedding request.
@@ -86,20 +90,16 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
         return this;
     }
 
-
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override
-
     public BatchEmbedRequest build() {
         if (requests.isEmpty()) {
             throw new IllegalStateException(
                     "At least one embed content request is required for batch embedding.");
         }
-
 
         // Apply inherited properties to individual requests if not set individually.
         requests.forEach(request -> {
@@ -120,10 +120,8 @@ public class BatchEmbedRequestBuilder extends AbstractEmbedRequestBuilder<BatchE
                 .build();
     }
 
-
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override

@@ -18,7 +18,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-@Builder(setterPrefix = "with", toBuilder = true)
+@Builder(toBuilder = true, setterPrefix = "with")
 public class Tool {
 
     /**

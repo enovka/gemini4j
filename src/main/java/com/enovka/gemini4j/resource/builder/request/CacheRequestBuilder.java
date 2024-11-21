@@ -10,7 +10,6 @@ import com.enovka.gemini4j.resource.builder.request.spec.AbstractContentRequestB
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Builder for creating {@link CacheRequest} instances.  This builder provides a fluent API
  * for configuring requests related to cached content in the Gemini API, including setting the
@@ -19,8 +18,7 @@ import java.util.List;
  * @author Everson Novka &lt;enovka@gmail.com&gt;
  * @since 0.2.0
  */
-public class CacheRequestBuilder
-        extends AbstractContentRequestBuilder<CacheRequestBuilder, CacheRequest> {
+public class CacheRequestBuilder extends AbstractContentRequestBuilder<CacheRequestBuilder, CacheRequest> {
 
     List<Tool> tools = new ArrayList<>();
     private String name;
@@ -60,7 +58,7 @@ public class CacheRequestBuilder
      * @throws IllegalArgumentException If the provided name is null or empty.
      * @since 0.2.0
      */
-    public CacheRequestBuilder withName(String name) {
+    protected CacheRequestBuilder withName(String name) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
@@ -144,7 +142,7 @@ public class CacheRequestBuilder
      * @throws IllegalArgumentException if the tool is null.
      * @since 0.2.0
      */
-    public CacheRequestBuilder withTool(Tool tool) {
+    protected CacheRequestBuilder withTool(Tool tool) {
         if (tool == null) {
             throw new IllegalArgumentException("Tool cannot be null.");
         }
@@ -161,18 +159,13 @@ public class CacheRequestBuilder
      * @return The builder instance for method chaining.
      * @since 0.2.0
      */
-    public CacheRequestBuilder withToolConfig(ToolConfig toolConfig) {
+    protected CacheRequestBuilder withToolConfig(ToolConfig toolConfig) {
         this.toolConfig = toolConfig;
         return this;
     }
 
     /**
-     * Builds the {@link CacheRequest} object.  This method constructs the request object
-     * using the parameters configured through the builder methods. It validates the required fields
-     * and returns a ready-to-use request object for interacting with the Gemini API.
-     *
-     * @return The built {@link CacheRequest} object.
-     * @throws IllegalStateException If the model or content for caching is not set.
+     * {@inheritDoc}
      * @since 0.2.0
      */
     @SuppressWarnings("unchecked")
@@ -197,8 +190,11 @@ public class CacheRequestBuilder
         } else if (!contents.isEmpty()) {
             cachedContentBuilder.withContents(contents);
         } else {
-            throw new IllegalStateException(
-                    "Either cachedContent or contents must be provided.");
+            throw new IllegalStateException("Either cachedContent or contents must be provided.");
+        }
+
+        if (this.ttl != null && this.expireTime != null) {
+            throw new IllegalStateException("Set ttl or ExpireTime, only one is permitted");
         }
 
         return CacheRequest.builder()
@@ -206,6 +202,10 @@ public class CacheRequestBuilder
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     * @since 0.2.0
+     */
     @Override
     public CacheRequestBuilder withContents(List<Content> contents) {
         return super.withContents(contents);
@@ -213,7 +213,6 @@ public class CacheRequestBuilder
 
     /**
      * {@inheritDoc}
-     *
      * @since 0.2.0
      */
     @Override
